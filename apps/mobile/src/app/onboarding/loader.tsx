@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, BackHandler, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, BackHandler, Platform, StyleSheet, View } from 'react-native';
 import Animated, { Easing, FadeIn, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -52,12 +52,12 @@ export default function Loader() {
       }
     }, TOTAL_MS + 150);
     // The loader can't be backed out of mid-way (Android back is swallowed).
-    const sub = BackHandler.addEventListener('hardwareBackPress', () => true);
+    const sub = Platform.OS === 'android' ? BackHandler.addEventListener('hardwareBackPress', () => true) : null;
     return () => {
       cancelled = true;
       timers.forEach(clearTimeout);
       clearTimeout(done);
-      sub.remove();
+      sub?.remove();
     };
   }, [progress, steps, t]);
 

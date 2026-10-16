@@ -33,8 +33,8 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - [x] Web preview works (DB warm-up in `src/db/client.web.ts`); welcome screen matches the prototype
 
 ### Next up (in order)
-- [ ] **BUG: result screen renders blank on web after the loader.** Likely causes: the `reveal` param plus native header options, `Celebrate` (Skia confetti on web), or `useChildModel` returning null before the live query loads. Reproduce with `qa/flow.js`, fix, re-run the flow
-- [ ] Finish the scripted QA flow through paywall → success → tabs; compare each screenshot with `docs/prototype/shots/v2/` (light and dark) and fix the differences
+- [x] Fixed: result screen was blank on web. Skia confetti crashed because CanvasKit isn't loaded in browsers. `src/ui/Celebrate.web.tsx` skips confetti on web only; the loader's BackHandler is now Android-only. Verified: the result renders with the hero, methods and CTA
+- [ ] Finish the scripted QA flow (note: the default units follow locale; the script must tap `cm`/`kg` before filling `height-field`/`weight-field`, or fill `height-field-ft`/`-in`) through paywall → success → tabs; compare each screenshot with `docs/prototype/shots/v2/` (light and dark) and fix the differences
 - [ ] Mobile Jest tests (jest-expo): ChoiceList auto-advance lock, MeasureField unit switch precision, paywall price and CTA logic, savePercent
 - [ ] Maestro flows in `.maestro/` (onboarding parent and teen, result, paywall close, check-in, delete data)
 - [ ] `apps/web`: static site (Astro or Vite) with the calculator importing `@tallsoon/engine`, plus /method, /pricing, /privacy, /terms, /support
