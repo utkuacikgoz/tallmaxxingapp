@@ -1,0 +1,1242 @@
+{
+ "method": "Khamis-Roche 1994 Pediatrics 94(4):504-507, erratum 1995 95(3):457 (erratum-corrected values as reported by secondary sources; primary PDF not accessed - paywalled)",
+ "formula": "PAS_in = intercept + stature_coef*stature_in + weight_coef*weight_lb + midparent_coef*midparent_in",
+ "metric": "No published metric table found. Convert inputs (cm/2.54, kg/0.45359237), output *2.54. Do not ship a derived metric table as 'published'.",
+ "validity": "Ages 4.0-17.5 y; healthy white (non-Hispanic) American children (Fels Longitudinal Study, 223 M / 210 F, SW Ohio); not for pathologic growth conditions.",
+ "error": "Average 90% error bounds ~ +/-5.3 cm (2.1 in) boys, +/-4.3 cm (1.7 in) girls; 50% bounds ~ +/-2.2 cm boys, +/-1.7 cm girls (per InfantChart citing paper; uwmsk calculator also reports 50%/90% bounds). Age-specific bounds not obtained.",
+ "midparent_note": "Sources implement midparent = simple mean of mother and father height (no sex adjustment, no +/-6.5 cm). Whether the paper requires adjusting self-reported parental heights was NOT verified (primary PDF not accessed).",
+ "rows": [
+  {
+   "sex": "male",
+   "age": 4.0,
+   "intercept": -10.2567,
+   "stature_coef": 1.23812,
+   "weight_coef": -0.087235,
+   "midparent_coef": 0.50286,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0087235 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 4.5,
+   "intercept": -10.719,
+   "stature_coef": 1.15964,
+   "weight_coef": -0.074454,
+   "midparent_coef": 0.52887,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0074454 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 5.0,
+   "intercept": -11.0213,
+   "stature_coef": 1.10674,
+   "weight_coef": -0.064778,
+   "midparent_coef": 0.53919,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=0.0064778 (ratio -10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 5.5,
+   "intercept": -11.1556,
+   "stature_coef": 1.0748,
+   "weight_coef": -0.05776,
+   "midparent_coef": 0.53691,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.005776 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 6.0,
+   "intercept": -11.1138,
+   "stature_coef": 1.05923,
+   "weight_coef": -0.052947,
+   "midparent_coef": 0.52513,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0052947 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 6.5,
+   "intercept": -11.0221,
+   "stature_coef": 1.05542,
+   "weight_coef": -0.049892,
+   "midparent_coef": 0.50692,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0049892 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 7.0,
+   "intercept": -10.9984,
+   "stature_coef": 1.05877,
+   "weight_coef": -0.048144,
+   "midparent_coef": 0.48538,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0048144 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 7.5,
+   "intercept": -11.0214,
+   "stature_coef": 1.06467,
+   "weight_coef": -0.047256,
+   "midparent_coef": 0.46361,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.047256 (ratio 1.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 8.0,
+   "intercept": -11.0696,
+   "stature_coef": 1.06853,
+   "weight_coef": -0.046778,
+   "midparent_coef": 0.44469,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0046778 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 8.5,
+   "intercept": -11.122,
+   "stature_coef": 1.06572,
+   "weight_coef": -0.046261,
+   "midparent_coef": 0.43171,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0046261 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 9.0,
+   "intercept": -11.1571,
+   "stature_coef": 1.05166,
+   "weight_coef": -0.045254,
+   "midparent_coef": 0.42776,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.045254 (ratio 1.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 9.5,
+   "intercept": -11.1405,
+   "stature_coef": 1.02174,
+   "weight_coef": -0.043311,
+   "midparent_coef": 0.43593,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0043311 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 10.0,
+   "intercept": -11.038,
+   "stature_coef": 0.97135,
+   "weight_coef": -0.039981,
+   "midparent_coef": 0.45932,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0039981 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 10.5,
+   "intercept": -10.8286,
+   "stature_coef": 0.89589,
+   "weight_coef": -0.034814,
+   "midparent_coef": 0.50101,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0034814 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 11.0,
+   "intercept": -10.4917,
+   "stature_coef": 0.81239,
+   "weight_coef": -0.02905,
+   "midparent_coef": 0.54781,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.002905 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 11.5,
+   "intercept": -10.0065,
+   "stature_coef": 0.74134,
+   "weight_coef": -0.024167,
+   "midparent_coef": 0.58409,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0024167 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 12.0,
+   "intercept": -9.3522,
+   "stature_coef": 0.68325,
+   "weight_coef": -0.020076,
+   "midparent_coef": 0.60927,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0020076 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 12.5,
+   "intercept": -8.6055,
+   "stature_coef": 0.63869,
+   "weight_coef": -0.016681,
+   "midparent_coef": 0.62279,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0016681 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 13.0,
+   "intercept": -7.8632,
+   "stature_coef": 0.60818,
+   "weight_coef": -0.013895,
+   "midparent_coef": 0.62407,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0013895 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 13.5,
+   "intercept": -7.1348,
+   "stature_coef": 0.59228,
+   "weight_coef": -0.011624,
+   "midparent_coef": 0.61253,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0011624 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 14.0,
+   "intercept": -6.4299,
+   "stature_coef": 0.59151,
+   "weight_coef": -0.009776,
+   "midparent_coef": 0.58762,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0009776 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 14.5,
+   "intercept": -5.7578,
+   "stature_coef": 0.60643,
+   "weight_coef": -0.008261,
+   "midparent_coef": 0.54875,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0008261 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 15.0,
+   "intercept": -5.1282,
+   "stature_coef": 0.63757,
+   "weight_coef": -0.006988,
+   "midparent_coef": 0.49536,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0006988 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 15.5,
+   "intercept": -4.5092,
+   "stature_coef": 0.68548,
+   "weight_coef": -0.005863,
+   "midparent_coef": 0.42687,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0005863 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 16.0,
+   "intercept": -3.9292,
+   "stature_coef": 0.75069,
+   "weight_coef": -0.004795,
+   "midparent_coef": 0.34271,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0004795 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 16.5,
+   "intercept": -3.4873,
+   "stature_coef": 0.83375,
+   "weight_coef": -0.003695,
+   "midparent_coef": 0.24231,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0003695 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 17.0,
+   "intercept": -3.283,
+   "stature_coef": 0.9352,
+   "weight_coef": -0.00247,
+   "midparent_coef": 0.1251,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.000247 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "male",
+   "age": 17.5,
+   "intercept": -3.4156,
+   "stature_coef": 1.05558,
+   "weight_coef": -0.001027,
+   "midparent_coef": -0.0095,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0001027 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 4.0,
+   "intercept": -8.1325,
+   "stature_coef": 1.24768,
+   "weight_coef": -0.19435,
+   "midparent_coef": 0.44774,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.019435 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 4.5,
+   "intercept": -6.47656,
+   "stature_coef": 1.22177,
+   "weight_coef": -0.18519,
+   "midparent_coef": 0.41381,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.018519 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 5.0,
+   "intercept": -5.13582,
+   "stature_coef": 1.19932,
+   "weight_coef": -0.1753,
+   "midparent_coef": 0.38467,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.01753 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 5.5,
+   "intercept": -4.13791,
+   "stature_coef": 1.1788,
+   "weight_coef": -0.16484,
+   "midparent_coef": 0.36039,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.016484 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 6.0,
+   "intercept": -3.51039,
+   "stature_coef": 1.15866,
+   "weight_coef": -0.154,
+   "midparent_coef": 0.34105,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0154 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 6.5,
+   "intercept": -3.14322,
+   "stature_coef": 1.13737,
+   "weight_coef": -0.14294,
+   "midparent_coef": 0.32672,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.014294 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 7.0,
+   "intercept": -2.87645,
+   "stature_coef": 1.11342,
+   "weight_coef": -0.13184,
+   "midparent_coef": 0.31748,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.013184 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 7.5,
+   "intercept": -2.66291,
+   "stature_coef": 1.08525,
+   "weight_coef": -0.12086,
+   "midparent_coef": 0.3134,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.012086 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 8.0,
+   "intercept": -2.45559,
+   "stature_coef": 1.05135,
+   "weight_coef": -0.11019,
+   "midparent_coef": 0.31457,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.011019 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 8.5,
+   "intercept": -2.20728,
+   "stature_coef": 1.01018,
+   "weight_coef": -0.09999,
+   "midparent_coef": 0.32105,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.009999 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 9.0,
+   "intercept": -1.87098,
+   "stature_coef": 0.9602,
+   "weight_coef": -0.09044,
+   "midparent_coef": 0.33291,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.009044 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 9.5,
+   "intercept": -1.0633,
+   "stature_coef": 0.89989,
+   "weight_coef": -0.08171,
+   "midparent_coef": 0.35025,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.008171 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 10.0,
+   "intercept": 0.33468,
+   "stature_coef": 0.82771,
+   "weight_coef": -0.07397,
+   "midparent_coef": 0.37312,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.007397 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 10.5,
+   "intercept": 1.97366,
+   "stature_coef": 0.74213,
+   "weight_coef": -0.06739,
+   "midparent_coef": 0.40161,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.006739 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 11.0,
+   "intercept": 3.50436,
+   "stature_coef": 0.67173,
+   "weight_coef": -0.06136,
+   "midparent_coef": 0.42042,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.006136 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 11.5,
+   "intercept": 4.57747,
+   "stature_coef": 0.6415,
+   "weight_coef": -0.05518,
+   "midparent_coef": 0.41686,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.005518 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 12.0,
+   "intercept": 4.84365,
+   "stature_coef": 0.64452,
+   "weight_coef": -0.04894,
+   "midparent_coef": 0.3949,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.004894 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 12.5,
+   "intercept": 4.27869,
+   "stature_coef": 0.67386,
+   "weight_coef": -0.04272,
+   "midparent_coef": 0.3585,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.004272 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 13.0,
+   "intercept": 3.21417,
+   "stature_coef": 0.7226,
+   "weight_coef": -0.03661,
+   "midparent_coef": 0.31163,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.003661 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 13.5,
+   "intercept": 1.83456,
+   "stature_coef": 0.78383,
+   "weight_coef": -0.03067,
+   "midparent_coef": 0.25826,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.003067 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 14.0,
+   "intercept": 0.32425,
+   "stature_coef": 0.85062,
+   "weight_coef": -0.025,
+   "midparent_coef": 0.20235,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0025 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 14.5,
+   "intercept": -1.13224,
+   "stature_coef": 0.91605,
+   "weight_coef": -0.01967,
+   "midparent_coef": 0.14787,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.001967 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 15.0,
+   "intercept": -2.35055,
+   "stature_coef": 0.97319,
+   "weight_coef": -0.01477,
+   "midparent_coef": 0.0988,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.001477 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 15.5,
+   "intercept": -3.10326,
+   "stature_coef": 1.01514,
+   "weight_coef": -0.01037,
+   "midparent_coef": 0.05909,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.001037 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 16.0,
+   "intercept": -3.17885,
+   "stature_coef": 1.03496,
+   "weight_coef": -0.00655,
+   "midparent_coef": 0.03272,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.000655 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 16.5,
+   "intercept": -2.41657,
+   "stature_coef": 1.02573,
+   "weight_coef": -0.0034,
+   "midparent_coef": 0.02364,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.00034 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 17.0,
+   "intercept": -0.65579,
+   "stature_coef": 0.98054,
+   "weight_coef": -0.001,
+   "midparent_coef": 0.03584,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=-0.0001 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  },
+  {
+   "sex": "female",
+   "age": 17.5,
+   "intercept": 2.26429,
+   "stature_coef": 0.89246,
+   "weight_coef": 0.00057,
+   "midparent_coef": 0.07327,
+   "units": "inches/pounds (predicted adult stature in inches; stature in, weight lb, midparent in = (mother+father)/2)",
+   "source_urls": [
+    "https://calcvita.com/en/calculators/child-height-predictor",
+    "https://www.infantchart.com/height-predictor/",
+    "https://github.com/josedv82/matuR (data/table.rda)"
+   ],
+   "verified_by_n_sources": 2,
+   "field_verification": {
+    "intercept": 3,
+    "stature_coef": 3,
+    "midparent_coef": 3,
+    "weight_coef": 2
+   },
+   "notes": "matuR weight_coef=5.7e-05 (ratio 10.00); matuR weight column is ~1/10 of erratum-corrected value (likely original-paper/uncorrected scale) and has sign/scale typos at some rows; rejected"
+  }
+ ]
+}

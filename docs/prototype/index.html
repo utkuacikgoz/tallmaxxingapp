@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F2F7">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
+<title>KinHeight · clickable prototype</title>
+<style>
+/* ===== Tokens: iOS system colors (light / dark), single app tint (teal), apricot used sparingly ===== */
+:root{
+  color-scheme:light dark;
+  --bg:#F2F2F7; --card:#FFFFFF; --cardElev:#FFFFFF; --sheetBg:#F2F2F7;
+  --label:#000000; --label2:rgba(60,60,67,.6); --label3:rgba(60,60,67,.3);
+  --sep:rgba(60,60,67,.29);
+  --fill:rgba(120,120,128,.2); --fill2:rgba(120,120,128,.16); --fill3:rgba(118,118,128,.12);
+  --tint:#2F7D6D; --tintFill:rgba(47,125,109,.14); --onTint:#FFFFFF;
+  --accent:#F2A65A; --accentText:#B05F12;
+  --red:#FF3B30; --orange:#C25E00; --gray:#8E8E93;
+  --nav:rgba(242,242,247,.82); --bar:rgba(249,249,249,.86); --banner:rgba(250,250,250,.9); --alert:rgba(242,242,242,.92);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Helvetica Neue",system-ui,Arial,sans-serif;
+  --rounded:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sat:54px; --sab:34px; --m:16px;
+  --r-list:12px; --r-btn:14px; --r-sheet:16px;
+  --push:cubic-bezier(.32,.72,0,1);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#000000; --card:#1C1C1E; --cardElev:#2C2C2E; --sheetBg:#1C1C1E;
+  --label:#FFFFFF; --label2:rgba(235,235,245,.6); --label3:rgba(235,235,245,.3);
+  --sep:rgba(84,84,88,.65);
+  --fill:rgba(120,120,128,.36); --fill2:rgba(120,120,128,.32); --fill3:rgba(118,118,128,.24);
+  --tint:#5FB8A5; --tintFill:rgba(95,184,165,.2); --onTint:#03231C;
+  --accent:#F4B677; --accentText:#F4B677;
+  --red:#FF453A; --orange:#FF9F0A; --gray:#8E8E93;
+  --nav:rgba(10,10,10,.8); --bar:rgba(22,22,22,.86); --banner:rgba(40,40,40,.9); --alert:rgba(37,37,37,.94);
+}}
+/* Dynamic Type: on iOS Safari, -apple-system-body makes rem follow the user's text size. Other browsers use 17px. */
+html{font-size:17px;font:-apple-system-body;font-family:var(--font)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);color:var(--label);-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(1000px 640px at 20% 10%,rgba(47,125,109,.14),transparent 60%),#E5E5EA}
+@media (prefers-color-scheme:dark){body{background:radial-gradient(1000px 640px at 20% 10%,rgba(95,184,165,.12),transparent 60%),#0B0B0C}}
+button,input{font:inherit;color:inherit}
+button{border:0;background:none;padding:0;cursor:pointer;text-align:inherit}
+/* Type scale (iOS default "Large" size) */
+.largeTitle{font-size:2rem;line-height:1.206;font-weight:700;letter-spacing:.011em}
+.title1{font-size:1.647rem;line-height:1.214;font-weight:700;letter-spacing:.013em}
+.title2{font-size:1.294rem;line-height:1.273;font-weight:700;letter-spacing:-.005em}
+.title3{font-size:1.176rem;line-height:1.25;font-weight:600;letter-spacing:-.022em}
+.headline{font-size:1rem;line-height:1.294;font-weight:600;letter-spacing:-.024em}
+.body{font-size:1rem;line-height:1.294;letter-spacing:-.024em}
+.callout{font-size:.941rem;line-height:1.3125;letter-spacing:-.019em}
+.subhead{font-size:.882rem;line-height:1.333;letter-spacing:-.014em}
+.footnote{font-size:.765rem;line-height:1.385;letter-spacing:-.005em}
+.caption{font-size:.706rem;line-height:1.333}
+.l2{color:var(--label2)} .l3{color:var(--label3)} .tint{color:var(--tint)}
+h1,h2,h3,p{margin:0}
+/* ===== Device frame (desktop only) ===== */
+.stage{display:flex;flex-direction:column;align-items:center;gap:12px}
+.stage-label{font-size:12.5px;color:var(--label2);display:flex;gap:8px;align-items:center}
+.stage-label b{color:var(--label)}
+.device{width:390px;height:844px;border-radius:56px;background:#0A0A0A;padding:11px;box-sizing:content-box;box-shadow:0 0 0 2px #3A3A3C,0 40px 90px rgba(0,0,0,.3);transform-origin:center;position:relative;flex:none}
+.screen-wrap{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--bg);isolation:isolate}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:122px;height:36px;background:#000;border-radius:20px;z-index:300}
+.statusbar{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:4px 32px 0 40px;font-weight:600;font-size:17px;z-index:290;pointer-events:none;color:var(--label)}
+.statusbar.light{color:#fff}
+.statusbar .icons{display:flex;gap:6px;align-items:center}
+.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:139px;height:5px;border-radius:3px;background:var(--label);z-index:290;pointer-events:none}
+#host{position:absolute;inset:0;overflow:hidden}
+/* ===== Screens & transitions (iOS push / modal) ===== */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);overflow:hidden}
+.push-in{animation:pushIn .5s var(--push) both}
+.push-out{animation:pushOut .5s var(--push) both;pointer-events:none}
+.pop-in{animation:popIn .5s var(--push) both}
+.pop-out{animation:popOut .5s var(--push) both;pointer-events:none;z-index:2}
+.modal-in{animation:modalIn .55s var(--push) both;z-index:3}
+.modal-out{animation:modalOut .45s var(--push) both;pointer-events:none;z-index:3}
+.fade-in{animation:fadeIn .35s ease both}
+.stay{animation:stay .5s both;pointer-events:none}
+@keyframes pushIn{from{transform:translateX(100%);box-shadow:-10px 0 30px rgba(0,0,0,.08)}to{transform:none}}
+@keyframes pushOut{to{transform:translateX(-30%);filter:brightness(.92)}}
+@keyframes popIn{from{transform:translateX(-30%);filter:brightness(.92)}to{transform:none}}
+@keyframes popOut{to{transform:translateX(100%)}}
+@keyframes modalIn{from{transform:translateY(100%)}to{transform:none}}
+@keyframes modalOut{to{transform:translateY(100%)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes stay{to{opacity:1}}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior:contain}
+.scroll::-webkit-scrollbar{display:none}
+/* ===== Navigation bar with large title ===== */
+.nav{position:absolute;top:0;left:0;right:0;z-index:20;padding-top:var(--sat);transition:background .2s,box-shadow .2s}
+.nav-row{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;position:relative}
+.nav-title{position:absolute;left:90px;right:90px;text-align:center;font-weight:600;font-size:1rem;letter-spacing:-.024em;opacity:0;transition:opacity .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.nav.scrolled,.nav.solid{background:var(--nav);-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);box-shadow:0 .5px 0 var(--sep)}
+.nav.scrolled .nav-title,.nav.solid .nav-title{opacity:1}
+.nav-btn{min-width:44px;height:44px;display:flex;align-items:center;gap:3px;padding:0 8px;color:var(--tint);font-size:1rem;letter-spacing:-.024em;border-radius:10px}
+.nav-btn:active{opacity:.35}
+.nav-btn.bold{font-weight:600}
+.nav-btn[disabled]{color:var(--label3);pointer-events:none}
+.nav-btn svg{flex:none}
+.progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:transparent}
+.progress span{display:block;height:100%;background:var(--tint);border-radius:0 2px 2px 0;transition:width .45s var(--push)}
+.content{padding:calc(var(--sat) + 44px) 0 calc(var(--sab) + 24px)}
+.lt-wrap{padding:2px var(--m) 8px}
+.sec{margin:0 var(--m)}
+/* ===== Buttons (HIG: filled / tinted / bordered / plain) ===== */
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:50px;padding:14px 20px;border-radius:var(--r-btn);font-size:1rem;font-weight:600;letter-spacing:-.024em;transition:opacity .15s,transform .15s;user-select:none}
+.btn:active{opacity:.7}
+.btn-filled{background:var(--tint);color:var(--onTint)}
+.btn-tinted{background:var(--tintFill);color:var(--tint)}
+.btn-bordered{background:var(--fill3);color:var(--tint)}
+.btn-plain{color:var(--tint);min-height:44px;padding:10px;font-weight:400}
+.btn-small{min-height:34px;width:auto;padding:7px 14px;font-size:.882rem;border-radius:999px}
+.btn[disabled]{opacity:1;background:var(--fill3);color:var(--label3);pointer-events:none}
+.btn-plain[disabled]{background:none}
+.btn .spinner{width:20px;height:20px}
+.bottom-bar{padding:12px var(--m) calc(var(--sab) + 8px);background:linear-gradient(to bottom,transparent,var(--bg) 22%);position:relative;z-index:5;display:flex;flex-direction:column;gap:2px}
+/* ===== Inset grouped lists ===== */
+.group{margin:0 var(--m) 0}
+.group + .group{margin-top:0}
+.ghead{padding:22px calc(var(--m) + 16px) 7px;font-size:.765rem;line-height:1.385;color:var(--label2);text-transform:uppercase;letter-spacing:-.005em}
+.gfoot{padding:7px calc(var(--m) + 16px) 0;font-size:.765rem;line-height:1.385;color:var(--label2)}
+.list{background:var(--card);border-radius:var(--r-list);overflow:hidden}
+.row{position:relative;display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:11px 16px;font-size:1rem;letter-spacing:-.024em;text-align:left;background:var(--card);transition:background .12s}
+.row::after{content:"";position:absolute;left:16px;right:0;bottom:0;height:1px;transform:scaleY(.5);transform-origin:0 100%;background:var(--sep)}
+.row.icon-row::after{left:60px}
+.row:last-child::after{display:none}
+button.row:active,.row.tap:active{background:var(--fill)}
+.row .grow{flex:1;min-width:0}
+.row .sub{font-size:.882rem;color:var(--label2);margin-top:2px;line-height:1.333}
+.row .val{color:var(--label2);text-align:right}
+.row .chev{color:var(--label3);flex:none;margin-right:-4px}
+.row .check{color:var(--tint);flex:none;opacity:0;transform:scale(.6);transition:opacity .15s,transform .2s}
+.row.sel .check{opacity:1;transform:none}
+.row.destructive{color:var(--red)}
+.ico{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;flex:none;color:var(--onTint);background:var(--tint)}
+.ico.gray{background:var(--gray)} .ico.apricot{background:var(--accent)} .ico.soft{background:var(--tintFill);color:var(--tint)}
+.ico svg{width:19px;height:19px}
+/* ===== Segmented control ===== */
+.seg{position:relative;display:flex;background:var(--fill3);border-radius:9px;padding:2px;height:32px}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;z-index:1;font-size:.765rem;font-weight:500;border-radius:7px;transition:background .2s;min-width:60px;letter-spacing:-.005em}
+.seg button.on{font-weight:600;background:var(--cardElev);box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04)}
+@media (prefers-color-scheme:dark){.seg button.on{background:#636366}}
+.seg-wrap{margin:0 var(--m)}
+/* ===== Toggle ===== */
+.toggle{width:51px;height:31px;border-radius:16px;background:var(--fill);position:relative;flex:none;transition:background .25s}
+.toggle::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06);transition:transform .25s var(--push)}
+.toggle.on{background:var(--tint)}
+.toggle.on::after{transform:translateX(20px)}
+/* ===== Numeric fields ===== */
+.qhead{padding:8px var(--m) 4px}
+.qhead p{margin-top:8px}
+.numrow{display:flex;gap:10px;margin:0 var(--m)}
+.numfield{flex:1;display:flex;align-items:baseline;gap:6px;background:var(--card);border-radius:var(--r-list);padding:14px 16px;min-height:72px;align-items:center;box-shadow:0 0 0 1.5px transparent inset;transition:box-shadow .15s}
+.numfield:focus-within{box-shadow:0 0 0 2px var(--tint) inset}
+.numfield.bad{box-shadow:0 0 0 2px var(--red) inset}
+.numfield input{flex:1;min-width:0;width:100%;border:0;outline:0;background:transparent;font-family:var(--rounded);font-size:2.35rem;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:var(--label);padding:0;caret-color:var(--tint)}
+.numfield input::placeholder{color:var(--label3)}
+.numfield .suffix{font-size:1.176rem;font-weight:600;color:var(--label2);flex:none}
+.fmsg{margin:8px calc(var(--m) + 16px) 0;font-size:.765rem;line-height:1.385;min-height:18px;color:var(--label2)}
+.fmsg.err{color:var(--red)}
+.fmsg.warn{color:var(--orange)}
+.inline-input{border:0;outline:0;background:transparent;text-align:right;font-size:1rem;width:64px;color:var(--label);padding:0;font-variant-numeric:tabular-nums;caret-color:var(--tint)}
+.inline-input::placeholder{color:var(--label3)}
+.inline-input.bad{color:var(--red)}
+.pfield{display:flex;align-items:center;gap:4px;color:var(--label2);background:var(--fill3);border-radius:8px;padding:6px 8px;min-height:34px}
+.pfield:focus-within{box-shadow:0 0 0 2px var(--tint) inset}
+.pfield.bad{box-shadow:0 0 0 2px var(--red) inset}
+.pfield .inline-input{width:46px}
+.pfield.wide .inline-input{width:58px}
+.dk{font-size:.882rem;color:var(--tint);padding:8px 4px;min-height:44px;flex:none}
+/* ===== Wheel date picker (iOS style, month + year) ===== */
+.wheel{position:relative;height:216px;display:flex;gap:0;background:var(--card);border-radius:var(--r-list);margin:0 var(--m);overflow:hidden;touch-action:pan-y}
+.wheel .band{position:absolute;left:8px;right:8px;top:91px;height:34px;border-radius:8px;background:var(--fill3);pointer-events:none}
+.wcol{position:relative;flex:1;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;outline:none;perspective:600px;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 28%,#000 72%,transparent)}
+.wcol::-webkit-scrollbar{display:none}
+.wcol .pad{height:91px}
+.witem{height:34px;line-height:34px;font-size:1.3rem;letter-spacing:-.02em;scroll-snap-align:center;color:var(--label);transform-origin:center;cursor:pointer;font-variant-numeric:tabular-nums;padding:0 18px;user-select:none}
+.wcol.m .witem{text-align:right}
+.wcol.y .witem{text-align:left}
+.wcol:focus-visible{background:var(--fill3)}
+.native-month{width:calc(100% - 32px);margin:0 var(--m);font-size:1.176rem;padding:14px 16px;border-radius:var(--r-list);border:0;background:var(--card);color:var(--label)}
+/* ===== Sheets (grabber + detents), alerts, banners ===== */
+.sheet-ov{position:absolute;inset:0;z-index:150;background:rgba(0,0,0,0);transition:background .35s}
+.sheet-ov.show{background:rgba(0,0,0,.25)}
+@media (prefers-color-scheme:dark){.sheet-ov.show{background:rgba(0,0,0,.5)}}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:calc(100% - var(--sat) - 10px);background:var(--sheetBg);border-radius:var(--r-sheet) var(--r-sheet) 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .45s var(--push);box-shadow:0 0 30px rgba(0,0,0,.12);overflow:hidden}
+.sheet.drag{transition:none}
+.sheet .grabber{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:36px;height:5px;border-radius:3px;background:var(--label3);z-index:3}
+.sheet .grab-zone{position:absolute;top:0;left:0;right:0;height:22px;z-index:2;touch-action:none;cursor:grab}
+.sheet-nav{display:flex;align-items:center;justify-content:space-between;height:56px;padding:10px 8px 0;position:relative;flex:none;touch-action:none}
+.sheet-nav .t{position:absolute;left:80px;right:80px;text-align:center;font-weight:600;font-size:1rem;letter-spacing:-.024em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sheet .scroll{padding-bottom:calc(var(--sab) + 16px)}
+.sheet .list,.sheet .row,.sheet .numfield,.sheet .wheel{background:var(--cardElev)}
+.close-x{width:30px;height:30px;border-radius:50%;background:var(--fill3);color:var(--label2);display:grid;place-items:center;margin:0 8px}
+.close-x:active{opacity:.5}
+.alert-ov{position:absolute;inset:0;z-index:200;display:grid;place-items:center;background:rgba(0,0,0,0);transition:background .2s}
+.alert-ov.show{background:rgba(0,0,0,.2)}
+.alert{width:270px;border-radius:14px;background:var(--alert);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);text-align:center;overflow:hidden;transform:scale(1.15);opacity:0;transition:transform .3s var(--push),opacity .2s}
+.alert-ov.show .alert{transform:none;opacity:1}
+.alert .at{padding:19px 16px 0;font-weight:600;font-size:1rem;letter-spacing:-.024em}
+.alert .am{padding:4px 16px 20px;font-size:.765rem;line-height:1.385}
+.alert .ab{display:flex;border-top:.5px solid var(--sep)}
+.alert .ab button{flex:1;min-height:44px;color:var(--tint);font-size:1rem;letter-spacing:-.024em;text-align:center}
+.alert .ab button + button{border-left:.5px solid var(--sep)}
+.alert .ab button.pref{font-weight:600}
+.alert .ab button.destructive{color:var(--red)}
+.alert .ab button:active{background:var(--fill)}
+.banner{position:absolute;left:8px;right:8px;top:calc(var(--sat) - 6px);z-index:250;display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:22px;background:var(--banner);-webkit-backdrop-filter:blur(30px) saturate(1.8);backdrop-filter:blur(30px) saturate(1.8);box-shadow:0 8px 30px rgba(0,0,0,.14);transform:translateY(-140%);transition:transform .5s var(--push);pointer-events:auto}
+.banner.show{transform:none}
+.banner .ico{width:36px;height:36px;border-radius:9px}
+.banner .bt{font-weight:600;font-size:.882rem;letter-spacing:-.014em}
+.banner .bs{font-size:.882rem;color:var(--label2);letter-spacing:-.014em}
+.spinner{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--fill);border-top-color:var(--label2);animation:spin .8s linear infinite;flex:none}
+.btn-filled .spinner{border-color:rgba(255,255,255,.35);border-top-color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* ===== Welcome ===== */
+.app-icon{width:76px;height:76px;border-radius:17px;background:linear-gradient(160deg,#3C9483,#22604F);display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.08) inset}
+.feat{display:flex;gap:16px;align-items:flex-start;padding:12px 0}
+.feat .fi{width:44px;flex:none;color:var(--tint);display:flex;justify-content:center;padding-top:2px}
+.feat .fi svg{width:34px;height:34px}
+/* ===== Loader ===== */
+.pbar{height:4px;border-radius:2px;background:var(--fill3);overflow:hidden;margin:18px var(--m) 0}
+.pbar span{display:block;height:100%;width:0;background:var(--tint);border-radius:2px}
+.row .stat{width:22px;height:22px;flex:none;display:grid;place-items:center;color:var(--label3)}
+.row.done .stat{color:var(--tint)}
+/* ===== Result ===== */
+.hero{background:var(--card);border-radius:var(--r-list);margin:0 var(--m);padding:18px 16px 16px}
+.hero .num{font-family:var(--rounded);font-weight:700;font-size:4.2rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--tint);margin-top:6px}
+.hero .num small{font-size:1.4rem;font-weight:600;color:var(--label2);margin-left:4px;letter-spacing:0}
+.rbar{position:relative;height:8px;border-radius:4px;background:var(--fill3);margin:18px 0 8px}
+.rbar .band{position:absolute;top:0;bottom:0;border-radius:4px;background:var(--tint);opacity:.35}
+.rbar .mk{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--tint);box-shadow:0 0 0 3px var(--card)}
+.rlabels{display:flex;justify-content:space-between;font-size:.765rem;color:var(--label2);font-variant-numeric:tabular-nums}
+#confetti{position:absolute;inset:0;pointer-events:none;z-index:120}
+.story{width:198px;height:352px;border-radius:22px;margin:4px auto 0;position:relative;overflow:hidden;color:#fff;padding:18px 16px;display:flex;flex-direction:column;background:linear-gradient(165deg,#3C9483,#163F37);box-shadow:0 12px 30px rgba(0,0,0,.2)}
+.story .sn{font-family:var(--rounded);font-weight:700;font-size:3.6rem;line-height:1;margin-top:auto;letter-spacing:-.02em}
+.story .sn span{font-size:1.1rem;opacity:.8;margin-left:3px}
+.story .sbar{height:6px;border-radius:3px;background:rgba(255,255,255,.2);margin:12px 0 0;position:relative}
+.story .sbar i{position:absolute;top:0;bottom:0;left:28%;right:28%;border-radius:3px;background:#F7C08A}
+/* ===== Paywall (StoreKit-style subscription sheet) ===== */
+.paywall{background:#0E1513}
+.bubbles{position:absolute;left:0;right:0;top:0;height:46%;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px;overflow:hidden;opacity:.85;-webkit-mask-image:linear-gradient(to bottom,transparent 84px,#000 120px,#000 60%,transparent);mask-image:linear-gradient(to bottom,transparent 84px,#000 120px,#000 60%,transparent)}
+.bcol{display:flex;flex-direction:column;gap:8px;animation:scrollUp 48s linear infinite}
+.bcol.b2{animation-duration:60s}
+@keyframes scrollUp{to{transform:translateY(-50%)}}
+.bub{max-width:95%;padding:8px 12px;border-radius:18px;font-size:.8rem;line-height:1.3}
+.bub.me{align-self:flex-end;background:#2F7D6D;color:#fff;border-bottom-right-radius:5px}
+.bub.them{align-self:flex-start;background:#2C2C2E;color:#EBEBF5;border-bottom-left-radius:5px}
+.bub .who{display:block;font-size:.65rem;opacity:.6;margin-top:3px}
+.pw-top{position:absolute;top:calc(var(--sat) + 4px);left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 12px 0 16px;z-index:6}
+.pill-tag{font-size:.706rem;font-weight:600;color:#EBEBF5;background:rgba(118,118,128,.4);padding:5px 10px;border-radius:999px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.pw-close{width:44px;height:44px;display:grid;place-items:center}
+.pw-close span{width:30px;height:30px;border-radius:50%;background:rgba(118,118,128,.45);display:grid;place-items:center;color:#EBEBF5;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.pw-close:active span{opacity:.5}
+.pw-sheet{position:absolute;left:0;right:0;bottom:0;height:80%;background:var(--sheetBg);border-radius:var(--r-sheet) var(--r-sheet) 0 0;display:flex;flex-direction:column;z-index:5;animation:modalIn .6s .1s var(--push) both}
+.pw-sheet .scroll{padding:22px 0 8px}
+.pw-icon{flex:none;width:52px;height:52px;border-radius:12px;margin:0 auto 12px;background:linear-gradient(160deg,#3C9483,#22604F);display:grid;place-items:center}
+.plan-opt{position:relative;display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:12px 16px;background:var(--card);border-radius:var(--r-list);box-shadow:0 0 0 1px var(--sep) inset;text-align:left;transition:box-shadow .15s}
+.plan-opt + .plan-opt{margin-top:10px}
+.plan-opt.sel{box-shadow:0 0 0 2px var(--tint) inset}
+.plan-opt .radio{width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 1.5px var(--label3) inset;flex:none;display:grid;place-items:center;color:var(--onTint)}
+.plan-opt.sel .radio{background:var(--tint);box-shadow:none}
+.plan-opt .radio svg{opacity:0}
+.plan-opt.sel .radio svg{opacity:1}
+.plan-opt .price{font-weight:600;font-size:1.06rem;letter-spacing:-.02em;text-align:right;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;font-size:.706rem;font-weight:600;color:var(--accentText);background:rgba(242,166,90,.2);padding:2px 7px;border-radius:5px;margin-left:6px;vertical-align:1px}
+.pw-foot{padding:10px var(--m) calc(var(--sab) + 2px);background:var(--sheetBg);box-shadow:0 -.5px 0 var(--sep)}
+.links{display:flex;justify-content:center;flex-wrap:wrap;font-size:.765rem}
+.links button{color:var(--tint);padding:8px 6px;min-height:34px}
+/* ===== Home ===== */
+.tabc{position:absolute;inset:0}
+.tabbar{position:absolute;left:0;right:0;bottom:0;z-index:30;height:calc(49px + var(--sab));padding-bottom:var(--sab);display:flex;background:var(--bar);-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);box-shadow:0 -.5px 0 var(--sep)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:6px;gap:2px;font-size:.6rem;font-weight:500;color:var(--gray);letter-spacing:.01em}
+.tab.on{color:var(--tint)}
+.tab svg{width:26px;height:26px}
+.tab .f{display:none}.tab.on .f{display:block}.tab.on .o{display:none}
+.streak-card{display:flex;align-items:center;gap:14px;padding:14px 16px}
+.wdots{display:flex;gap:6px;margin-left:auto}
+.wd{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.6rem;font-weight:600;color:var(--label2)}
+.wd i{width:20px;height:20px;border-radius:50%;background:var(--fill3);display:grid;place-items:center;font-style:normal;color:#fff}
+.wd i.done{background:var(--accent)}
+.wd i.today{box-shadow:0 0 0 1.5px var(--label2)}
+.hcheck{width:44px;height:44px;margin:-8px -10px -8px 0;display:grid;place-items:center;color:var(--label3);flex:none}
+.row.done .hcheck{color:var(--tint)}
+.row.done .htitle{color:var(--label2)}
+.disc{transition:transform .25s var(--push);color:var(--label3)}
+.row.open .disc{transform:rotate(90deg)}
+.more{display:none;padding:0 16px 12px 60px;font-size:.882rem;color:var(--label2);background:var(--card);position:relative}
+.more.open{display:block}
+.more ul{margin:0;padding-left:16px;line-height:1.6}
+.chart text{font-size:10px;fill:var(--label2);font-family:var(--font)}
+#restart{position:fixed;left:16px;bottom:14px;z-index:400;font:500 12px/1 var(--font);color:var(--label2);background:var(--card);padding:8px 11px;border-radius:999px;cursor:pointer;text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* Continuous (squircle) corners where the browser supports corner-shape */
+@supports (corner-shape:squircle){
+  .list,.numfield,.wheel,.hero,.plan-opt,.btn:not(.btn-small),.alert,.ico,.app-icon,.pw-icon,.banner{corner-shape:superellipse(1.6)}
+}
+/* ===== Mobile: full screen ===== */
+@media (max-width:500px){
+  body{display:block;background:var(--bg)}
+  .stage{display:block;width:100%;height:100%}
+  .stage-label{display:none}
+  .device{width:100vw;height:100vh;height:100dvh;border-radius:0;padding:0;box-shadow:none;transform:none!important;margin:0!important}
+  .screen-wrap{border-radius:0}
+  .island,.statusbar,.home-ind{display:none}
+  :root{--sat:env(safe-area-inset-top,20px);--sab:env(safe-area-inset-bottom,12px)}
+  #restart{left:50%;right:auto;transform:translateX(-50%);bottom:auto;top:calc(env(safe-area-inset-top) + 4px);padding:4px 8px;font-size:10.5px;opacity:.55}
+}
+/* ===== Reduce Motion ===== */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  .bcol{animation:none!important}
+  .push-in,.pop-in,.modal-in{animation:fadeIn .2s both!important}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="stage-label"><b>KinHeight</b><span>clickable prototype · placeholder name, copy &amp; prices</span></div>
+  <div class="device" id="device">
+    <div class="screen-wrap" id="wrap">
+      <div class="island"></div>
+      <div class="statusbar" id="sb"><span>9:41</span><span class="icons">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.6c2.2 0 4.2.9 5.7 2.3l1.1-1.1A9.6 9.6 0 0 0 8 1 9.6 9.6 0 0 0 1.2 3.8l1.1 1.1A8 8 0 0 1 8 2.6Zm0 3.2c1.3 0 2.5.5 3.4 1.3l1.1-1.1A6.4 6.4 0 0 0 8 4.2c-1.7 0-3.3.7-4.5 1.8l1.1 1.1c.9-.8 2.1-1.3 3.4-1.3Zm0 3.2c-.5 0-1 .2-1.3.5L8 11l1.3-1.5C9 9.2 8.5 9 8 9Z"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x=".5" y=".5" width="23" height="12" rx="3.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2Z" fill="currentColor" opacity=".5"/></svg>
+      </span></div>
+      <div id="host"></div>
+      <canvas id="confetti"></canvas>
+      <div class="home-ind" id="hi"></div>
+    </div>
+  </div>
+</div>
+<a id="restart" href="#" title="Clear all state and start over">↺ Restart prototype</a>
+<script>
+"use strict";
+/* Khamis–Roche 1994 coefficients (erratum-corrected; embedded from khamis_roche.json).
+   Row: [sex m/f, age, intercept, stature_coef (in), weight_coef (lb), midparent_coef (in)] */
+const KR = [["m",4.0,-10.2567,1.23812,-0.087235,0.50286],["m",4.5,-10.719,1.15964,-0.074454,0.52887],["m",5.0,-11.0213,1.10674,-0.064778,0.53919],["m",5.5,-11.1556,1.0748,-0.05776,0.53691],["m",6.0,-11.1138,1.05923,-0.052947,0.52513],["m",6.5,-11.0221,1.05542,-0.049892,0.50692],["m",7.0,-10.9984,1.05877,-0.048144,0.48538],["m",7.5,-11.0214,1.06467,-0.047256,0.46361],["m",8.0,-11.0696,1.06853,-0.046778,0.44469],["m",8.5,-11.122,1.06572,-0.046261,0.43171],["m",9.0,-11.1571,1.05166,-0.045254,0.42776],["m",9.5,-11.1405,1.02174,-0.043311,0.43593],["m",10.0,-11.038,0.97135,-0.039981,0.45932],["m",10.5,-10.8286,0.89589,-0.034814,0.50101],["m",11.0,-10.4917,0.81239,-0.02905,0.54781],["m",11.5,-10.0065,0.74134,-0.024167,0.58409],["m",12.0,-9.3522,0.68325,-0.020076,0.60927],["m",12.5,-8.6055,0.63869,-0.016681,0.62279],["m",13.0,-7.8632,0.60818,-0.013895,0.62407],["m",13.5,-7.1348,0.59228,-0.011624,0.61253],["m",14.0,-6.4299,0.59151,-0.009776,0.58762],["m",14.5,-5.7578,0.60643,-0.008261,0.54875],["m",15.0,-5.1282,0.63757,-0.006988,0.49536],["m",15.5,-4.5092,0.68548,-0.005863,0.42687],["m",16.0,-3.9292,0.75069,-0.004795,0.34271],["m",16.5,-3.4873,0.83375,-0.003695,0.24231],["m",17.0,-3.283,0.9352,-0.00247,0.1251],["m",17.5,-3.4156,1.05558,-0.001027,-0.0095],["f",4.0,-8.1325,1.24768,-0.19435,0.44774],["f",4.5,-6.47656,1.22177,-0.18519,0.41381],["f",5.0,-5.13582,1.19932,-0.1753,0.38467],["f",5.5,-4.13791,1.1788,-0.16484,0.36039],["f",6.0,-3.51039,1.15866,-0.154,0.34105],["f",6.5,-3.14322,1.13737,-0.14294,0.32672],["f",7.0,-2.87645,1.11342,-0.13184,0.31748],["f",7.5,-2.66291,1.08525,-0.12086,0.3134],["f",8.0,-2.45559,1.05135,-0.11019,0.31457],["f",8.5,-2.20728,1.01018,-0.09999,0.32105],["f",9.0,-1.87098,0.9602,-0.09044,0.33291],["f",9.5,-1.0633,0.89989,-0.08171,0.35025],["f",10.0,0.33468,0.82771,-0.07397,0.37312],["f",10.5,1.97366,0.74213,-0.06739,0.40161],["f",11.0,3.50436,0.67173,-0.06136,0.42042],["f",11.5,4.57747,0.6415,-0.05518,0.41686],["f",12.0,4.84365,0.64452,-0.04894,0.3949],["f",12.5,4.27869,0.67386,-0.04272,0.3585],["f",13.0,3.21417,0.7226,-0.03661,0.31163],["f",13.5,1.83456,0.78383,-0.03067,0.25826],["f",14.0,0.32425,0.85062,-0.025,0.20235],["f",14.5,-1.13224,0.91605,-0.01967,0.14787],["f",15.0,-2.35055,0.97319,-0.01477,0.0988],["f",15.5,-3.10326,1.01514,-0.01037,0.05909],["f",16.0,-3.17885,1.03496,-0.00655,0.03272],["f",16.5,-2.41657,1.02573,-0.0034,0.02364],["f",17.0,-0.65579,0.98054,-0.001,0.03584],["f",17.5,2.26429,0.89246,0.00057,0.07327]];
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const haptic = (ms = 6) => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
+const reduceMotion = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const NOW = new Date();
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const LB = 0.45359237;
+const cmToFtIn = cm => { const t = Math.round(cm / 2.54); return [Math.floor(t / 12), t % 12]; };
+const fmtFt = cm => { const [f, i] = cmToFtIn(cm); return `${f}′ ${i}″`; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const parseNum = s => { s = String(s || '').trim().replace(',', '.'); if (!s) return null; const n = Number(s); return isFinite(n) ? n : NaN; };
+
+/* SF Symbols-style glyphs (inline SVG approximations) */
+const sv = (d, w = 24, extra = '') => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
+const sf = (d, w = 24) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${d}</svg>`;
+const I = {
+  back: `<svg width="13" height="21" viewBox="0 0 13 21" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 2 2.5 10.5 10.5 19"/></svg>`,
+  chev: `<svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 1.5 6.5 7l-5 5.5"/></svg>`,
+  x: sv('<path d="M7 7l10 10M17 7 7 17"/>', 15, 'stroke-width="2.8"'),
+  check: sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 20, 'stroke-width="2.6"'),
+  checkSm: sv('<path d="M6 12.5l4 4L18 8"/>', 14, 'stroke-width="3.2"'),
+  lock: sf('<path d="M7 10V7.5a5 5 0 0 1 10 0V10h.5A2.5 2.5 0 0 1 20 12.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 19.5v-7A2.5 2.5 0 0 1 6.5 10H7Zm2 0h6V7.5a3 3 0 0 0-6 0V10Z"/>', 16),
+  share: sv('<path d="M12 3v12M8 7l4-4 4 4"/><path d="M8 10H6.5A1.5 1.5 0 0 0 5 11.5v8A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-8a1.5 1.5 0 0 0-1.5-1.5H16"/>', 22),
+  info: sv('<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/>', 20),
+  plus: sv('<path d="M12 5v14M5 12h14"/>', 22, 'stroke-width="2.4"'),
+  ruler: sv('<rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7v3M11 7v4M15 7v3M19 7v4"/>'),
+  leaf: sv('<path d="M5 20c0-9 5-14 15-15-1 10-6 15-15 15Z"/><path d="M5 20 13 12"/>', 40, 'stroke-width="2.2"'),
+  function: sv('<path d="M14 4.5c-2.5-.8-4 .4-4.5 3L7.5 19c-.5 2.6-2 3.3-4 2.5"/><path d="M6.5 10h7"/><path d="M15 13l5 6M20 13l-5 6"/>'),
+  lockShield: sv('<path d="M12 3 5 6v5.5c0 4.2 2.9 8 7 9.5 4.1-1.5 7-5.3 7-9.5V6l-7-3Z"/><rect x="9" y="11" width="6" height="5" rx="1"/><path d="M10 11V9.5a2 2 0 0 1 4 0V11"/>'),
+  chartUp: sv('<path d="M3 20h18"/><path d="M4 16l5-5 4 3 7-7"/><path d="M15 7h5v5"/>'),
+  sunO: sv('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>', 26, 'stroke-width="1.9"'),
+  sunF: `<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.6" fill="currentColor"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>`,
+  chartO: sv('<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 15l3-3 3 2 4-5"/>', 26, 'stroke-width="1.9"'),
+  chartF: `<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="4.5" fill="currentColor"/><path d="M7 15l3-3 3 2 4-5" style="stroke:var(--card)" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  calO: sv('<rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17M8 2.5v4M16 2.5v4"/>', 26, 'stroke-width="1.9"'),
+  calF: `<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5h11a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-11a3 3 0 0 1-3-3v-10a3 3 0 0 1 3-3Z" fill="currentColor"/><path d="M3.5 9.5h17" style="stroke:var(--card)" stroke-width="1.8"/><path d="M8 2.5v4M16 2.5v4" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>`,
+  peopleO: sv('<circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c.6-3.4 3.2-5.5 6.5-5.5s5.9 2.1 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M17.5 14.6c2.2.3 3.6 1.9 4 4.4"/>', 26, 'stroke-width="1.9"'),
+  peopleF: sf('<circle cx="9" cy="8" r="3.8"/><path d="M2 20.5c.5-3.9 3.3-6.4 7-6.4s6.5 2.5 7 6.4H2Z"/><circle cx="17.2" cy="9" r="2.9"/><path d="M17.5 13.9c2.6.2 4.4 2.2 4.6 5.6H17.6c-.2-2.2-1-4-2.3-5.2.7-.3 1.4-.4 2.2-.4Z"/>', 26),
+  flame: sf('<path d="M12 2.5c.6 3.2 4.6 5.2 6 9.1 1.6 4.6-1.6 9.9-6 9.9s-7.5-3.6-6.5-8c.4-1.8 1.5-3 2.4-3.8.1 1.5.7 2.8 1.8 3.4-.6-3.8.9-7.8 2.3-10.6Z"/>', 20),
+  moon: sf('<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>', 19),
+  figure: sv('<circle cx="12" cy="4.5" r="1.8"/><path d="M5 9l7 1.5L19 9M12 10.5V15l-3 6M12 15l3 6"/>', 19, 'stroke-width="2.2"'),
+  cup: sv('<path d="M7 3h10l-1.3 16.2A2 2 0 0 1 13.7 21h-3.4a2 2 0 0 1-2-1.8L7 3Z"/><path d="M7.5 9h9"/>', 19, 'stroke-width="2.2"'),
+  drop: sf('<path d="M12 2.8s6.5 7 6.5 11.7a6.5 6.5 0 0 1-13 0C5.5 9.8 12 2.8 12 2.8Z"/>', 19),
+  sunSm: sf('<circle cx="12" cy="12" r="4.5"/><path d="M11 1.5h2v3.5h-2zM11 19h2v3.5h-2zM1.5 11h3.5v2H1.5zM19 11h3.5v2H19z"/>', 19),
+  doc: sv('<path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>', 19, 'stroke-width="2.1"'),
+  bolt: sf('<path d="M13.5 2 5 13.5h6L10 22l9-12h-6.2L13.5 2Z"/>', 19),
+  list: sv('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/>', 19, 'stroke-width="2.1"'),
+  person: sf('<circle cx="12" cy="7.5" r="4.2"/><path d="M4 21c.6-4.6 3.8-7.4 8-7.4s7.4 2.8 8 7.4H4Z"/>', 19),
+  people: sf('<circle cx="9" cy="8" r="3.6"/><path d="M2.5 20.5c.5-3.9 3.1-6.2 6.5-6.2s6 2.3 6.5 6.2h-13Z"/><circle cx="17" cy="9" r="2.7"/><path d="M17.3 13.9c2.5.2 4.2 2.2 4.4 5.6h-4.6c-.2-2.2-1-4-2.3-5.1.8-.4 1.6-.5 2.5-.5Z"/>', 19),
+  bell: sf('<path d="M12 2.5a6 6 0 0 0-6 6v4.2L4.2 16.5h15.6L18 12.7V8.5a6 6 0 0 0-6-6Z"/><path d="M9.5 18.5a2.5 2.5 0 0 0 5 0h-5Z"/>', 19),
+  gear: sv('<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M4.4 5.6l2.1 2.1M17.5 16.3l2.1 2.1M2.5 12h3M18.5 12h3M4.4 18.4l2.1-2.1M17.5 7.7l2.1-2.1"/>', 19, 'stroke-width="2.2"'),
+  arrowR: sv('<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4.5V11h-6.5"/>', 19, 'stroke-width="2.2"'),
+  trash: sv('<path d="M4 6.5h16M9.5 6.5V4h5v2.5M6.5 6.5l1 13.5h9l1-13.5"/>', 19, 'stroke-width="2.1"'),
+  heart: sf('<path d="M12 20.5s-8-4.9-8-11A4.5 4.5 0 0 1 12 6.6a4.5 4.5 0 0 1 8 2.9c0 6.1-8 11-8 11Z"/>', 19),
+  circle: sv('<circle cx="12" cy="12" r="9.5"/>', 26, 'stroke-width="1.6"'),
+  circleCheck: `<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="currentColor"/><path d="M7.3 12.4l3.2 3.2 6.2-6.6" style="stroke:var(--card)" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  stepDone: `<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="currentColor"/><path d="M7.3 12.4l3.2 3.2 6.2-6.6" style="stroke:var(--card)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+};
+
+/* ---------- state ---------- */
+const DEFAULTS = () => ({
+  role: null, sex: null, dobY: null, dobM: null, dobTouched: false,
+  heightCm: null, heightCm0: null, weightKg: null, weightSkipped: false,
+  momCm: null, dadCm: null, unknownParent: null,
+  signs: [], sleep: null, goal: null, unit: 'cm', wunit: 'kg', step: 0, editing: false,
+  plan: 'annual', trial: false, paid: false, paywallFrom: null, bedtime: null,
+  habits: {}, streak: 3, streakBumped: false, tab: 'today',
+  measurements: [], reminders: { bed: true, morning: true, checkin: true }, openDay: 0
+});
+let S = DEFAULTS();
+const teen = () => S.role === 'teen';
+const t = (teenTxt, parentTxt) => teen() ? teenTxt : parentTxt;
+const ageYears = (y = S.dobY, m = S.dobM, at = NOW) => y == null ? NaN : (at - new Date(y, m, 15)) / (365.2425 * 864e5);
+const ageLabel = a => { const y = Math.floor(a), m = Math.floor((a - y) * 12); return `${y} year${y === 1 ? '' : 's'}${m ? `, ${m} month${m === 1 ? '' : 's'}` : ''}`; };
+function lerpPts(p, x) { for (let i = 1; i < p.length; i++) if (x <= p[i][0]) { const [x0, y0] = p[i-1], [x1, y1] = p[i]; return y0 + (y1 - y0) * (x - x0) / (x1 - x0); } return p[p.length - 1][1]; }
+// Rough typical height by age, only used for a gentle "double-check" hint (never prefilled, never in the math).
+const typicalHeight = (a, female) => lerpPts(female ? [[2,86],[4,102],[8,127],[12,151],[14,160],[16,162],[21,163]] : [[2,87],[4,103],[8,128],[12,149],[14,164],[16,174],[21,177]], clamp(a, 2, 21));
+const PARENT_AVG = { mom: 161.3, dad: 175.3 }; // US adult averages (NHANES 2015–2018), used only when one parent is unknown
+
+/* ---------- prediction ---------- */
+function parentsUsed() {
+  return { mom: S.unknownParent === 'mom' ? PARENT_AVG.mom : S.momCm, dad: S.unknownParent === 'dad' ? PARENT_AVG.dad : S.dadCm };
+}
+function predict(heightCm = S.heightCm, age = ageYears()) {
+  const male = S.sex !== 'female', p = parentsUsed();
+  const widen = S.unknownParent ? 3.5 : 0; // prototype assumption: one parent estimated, so widen the range
+  const mph = male ? (p.mom + p.dad + 13) / 2 : (p.mom + p.dad - 13) / 2;
+  const out = { age, mph, mphErr: 8.5 + widen, kr: null, widen };
+  if (age >= 4 && age <= 17.75 && S.weightKg && !S.weightSkipped) {
+    const ar = clamp(Math.round(age * 2) / 2, 4, 17.5);
+    const row = KR.find(r => r[0] === (male ? 'm' : 'f') && Math.abs(r[1] - ar) < 1e-6);
+    if (row) {
+      const hIn = heightCm / 2.54, wLb = S.weightKg / LB, mpIn = (p.mom + p.dad) / 2 / 2.54;
+      const predIn = row[2] + row[3] * hIn + row[4] * wLb + row[5] * mpIn, krRaw = predIn * 2.54;
+      Object.assign(out, { kr: Math.max(krRaw, heightCm), krRaw, row, ar, hIn, wLb, mpIn, predIn, err: (male ? 5.3 : 4.3) + widen });
+    }
+  }
+  if (out.kr) { out.method = 'Khamis–Roche'; out.value = out.kr; out.low = out.kr - out.err; out.high = out.kr + out.err; }
+  else { out.method = 'Mid-parental'; out.value = Math.max(mph, heightCm); out.low = Math.max(mph - out.mphErr, heightCm); out.high = Math.max(mph + out.mphErr, heightCm + 1); }
+  return out;
+}
+const fmtH = cm => S.unit === 'cm' ? `${Math.round(cm)} cm` : fmtFt(cm);
+const fmtR = (lo, hi) => S.unit === 'cm' ? `${Math.round(lo)}–${Math.round(hi)} cm` : `${fmtFt(lo)} – ${fmtFt(hi)}`;
+const fmtW = () => S.weightSkipped || S.weightKg == null ? 'Skipped' : S.wunit === 'kg' ? `${Math.round(S.weightKg)} kg` : `${Math.round(S.weightKg / LB)} lb`;
+
+/* ---------- navigation ---------- */
+const host = $('#host');
+let current = null;
+function go(name, mode = 'push') {
+  const def = SCREENS[name]();
+  const el = document.createElement('section');
+  const cls = { push: 'push-in', pop: 'pop-in', modal: 'modal-in', dismiss: '', fade: 'fade-in' }[mode];
+  el.className = 'screen ' + (def.cls || '') + ' ' + cls;
+  el.innerHTML = def.html;
+  const old = current;
+  if (mode === 'pop' || mode === 'dismiss') host.insertBefore(el, old); else host.appendChild(el);
+  if (old) { old.classList.add({ push: 'push-out', pop: 'pop-out', modal: 'stay', dismiss: 'modal-out', fade: 'stay' }[mode]); setTimeout(() => old.remove(), 520); }
+  current = el;
+  $('#sb').classList.toggle('light', !!def.dark);
+  wireNav(el);
+  def.mount && def.mount(el);
+}
+function navBar({ title = '', left = '', right = '', progress = null, solid = false } = {}) {
+  return `<div class="nav ${solid ? 'solid' : ''}"><div class="nav-row">${left || '<span></span>'}<div class="nav-title">${title}</div>${right || '<span style="width:44px"></span>'}</div>${progress != null ? `<div class="progress" role="progressbar" aria-label="Step ${progress[0]} of ${progress[1]}" aria-valuenow="${progress[0]}" aria-valuemin="1" aria-valuemax="${progress[1]}"><span style="width:${(progress[0] - 1) / progress[1] * 100}%" data-to="${progress[0] / progress[1] * 100}%"></span></div>` : ''}</div>`;
+}
+const backBtn = (label = 'Back', act = 'back') => `<button class="nav-btn" data-act="${act}" aria-label="${label}">${I.back}<span>${label}</span></button>`;
+function wireNav(el) {
+  const sc = $('.scroll', el), nav = $('.nav', el); if (!sc || !nav) return;
+  const th = $('.largeTitle', sc) ? 40 : 4;
+  sc.addEventListener('scroll', () => nav.classList.toggle('scrolled', sc.scrollTop > th), { passive: true });
+  const p = $('.progress span', nav); if (p) requestAnimationFrame(() => requestAnimationFrame(() => p.style.width = p.dataset.to));
+}
+
+/* ---------- banners & alerts (replace toasts) ---------- */
+let bannerT;
+function banner(title, sub = '', icon = I.check, iconCls = '') {
+  $$('.banner', $('#wrap')).forEach(b => b.remove());
+  const b = document.createElement('div'); b.className = 'banner'; b.setAttribute('role', 'status');
+  b.innerHTML = `<span class="ico ${iconCls}">${icon}</span><div style="flex:1;min-width:0"><div class="bt">${title}</div>${sub ? `<div class="bs">${sub}</div>` : ''}</div>`;
+  $('#wrap').appendChild(b); requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('show')));
+  b.addEventListener('click', () => b.classList.remove('show'));
+  clearTimeout(bannerT); bannerT = setTimeout(() => { b.classList.remove('show'); setTimeout(() => b.remove(), 500); }, 2800);
+}
+function alertBox(title, msg, buttons = [{ t: 'OK', pref: true }]) {
+  const ov = document.createElement('div'); ov.className = 'alert-ov';
+  ov.innerHTML = `<div class="alert" role="alertdialog" aria-label="${esc(title)}"><div class="at">${title}</div><div class="am">${msg}</div><div class="ab" style="${buttons.length > 2 ? 'flex-direction:column' : ''}">${buttons.map((b, i) => `<button data-i="${i}" class="${b.pref ? 'pref' : ''} ${b.destructive ? 'destructive' : ''}" style="${buttons.length > 2 && i ? 'border-left:0;border-top:.5px solid var(--sep)' : ''}">${b.t}</button>`).join('')}</div></div>`;
+  $('#wrap').appendChild(ov); requestAnimationFrame(() => requestAnimationFrame(() => ov.classList.add('show')));
+  ov.addEventListener('click', e => { const bt = e.target.closest('button[data-i]'); if (!bt) return; haptic(); ov.classList.remove('show'); setTimeout(() => ov.remove(), 200); const f = buttons[+bt.dataset.i].fn; f && f(); });
+}
+
+/* ---------- sheets with grabber + medium/large detents ---------- */
+function openSheet({ title = '', left = '', right = '', body = '', detent = 'large', onMount } = {}) {
+  const ov = document.createElement('div'); ov.className = 'sheet-ov';
+  ov.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="grabber"></div><div class="grab-zone"></div>
+    <div class="sheet-nav">${left || '<span style="width:44px"></span>'}<div class="t">${title}</div>${right || `<button class="close-x" data-close aria-label="Close">${I.x}</button>`}</div>
+    <div class="scroll">${body}</div></div>`;
+  $('#wrap').appendChild(ov);
+  const sh = $('.sheet', ov), wrapH = $('#wrap').clientHeight;
+  const H = sh.offsetHeight, mediumY = Math.max(0, H - wrapH * 0.56);
+  let y = detent === 'medium' ? mediumY : 0;
+  const place = v => { sh.style.transform = `translateY(${v}px)`; };
+  requestAnimationFrame(() => requestAnimationFrame(() => { ov.classList.add('show'); place(y); }));
+  const close = () => { ov.classList.remove('show'); sh.style.transform = 'translateY(100%)'; setTimeout(() => ov.remove(), 450); };
+  ov.addEventListener('click', e => { if (e.target === ov || e.target.closest('[data-close]')) { haptic(); close(); } });
+  let sy = 0, sY = 0, lastY = 0, lastT = 0, vel = 0, drag = false;
+  const down = e => { if (e.target.closest('button,input')) return; drag = true; sy = e.clientY; sY = y; lastY = e.clientY; lastT = performance.now(); sh.classList.add('drag'); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} };
+  const move = e => { if (!drag) return; let v = sY + (e.clientY - sy); if (v < 0) v = v / 4; place(v); const now = performance.now(); vel = (e.clientY - lastY) / Math.max(1, now - lastT); lastY = e.clientY; lastT = now; };
+  const up = e => { if (!drag) return; drag = false; sh.classList.remove('drag'); const v = sY + (e.clientY - sy);
+    if (vel > 0.9 || v > mediumY + 90) return close();
+    y = (vel < -0.5 || v < mediumY / 2) ? 0 : mediumY; place(y); haptic(4); };
+  [$('.grab-zone', ov), $('.sheet-nav', ov)].forEach(z => { z.addEventListener('pointerdown', down); z.addEventListener('pointermove', move); z.addEventListener('pointerup', up); z.addEventListener('pointercancel', up); });
+  const sc = $('.scroll', ov); sc.addEventListener('scroll', () => { if (y > 0 && sc.scrollTop > 2) { y = 0; place(0); } }, { passive: true });
+  const api = { close, el: ov, expand: () => { y = 0; place(0); } };
+  onMount && onMount(ov, api);
+  return api;
+}
+
+/* ---------- iOS-style wheel picker column ---------- */
+function makeWheel(col, labels, idx, onChange) {
+  const H = 34;
+  col.innerHTML = '<div class="pad"></div>' + labels.map((l, i) => `<div class="witem" data-i="${i}">${l}</div>`).join('') + '<div class="pad"></div>';
+  const items = $$('.witem', col); let cur = idx, t, ready = false, raf = 0;
+  const paint = () => { raf = 0; const c = col.scrollTop; items.forEach((it, i) => { const a = clamp((i * H - c) / H, -4, 4), d = Math.abs(a);
+    it.style.transform = `rotateX(${(-a * 18).toFixed(1)}deg)`; it.style.opacity = d < .5 ? 1 : Math.max(.2, 1 - d * .22).toFixed(2); it.style.color = d < .5 ? 'var(--label)' : 'var(--label2)'; }); };
+  col.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(paint);
+    const i = clamp(Math.round(col.scrollTop / H), 0, labels.length - 1);
+    if (i !== cur) { cur = i; if (ready) { haptic(2); onChange(cur, true); } }
+    col.setAttribute('aria-valuetext', labels[cur]); }, { passive: true });
+  col.addEventListener('click', e => { const it = e.target.closest('.witem'); if (!it) return; const i = +it.dataset.i; col.scrollTo({ top: i * H, behavior: reduceMotion() ? 'auto' : 'smooth' }); cur = i; onChange(i, true); });
+  col.addEventListener('keydown', e => { if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return; e.preventDefault(); const n = clamp(cur + (e.key === 'ArrowDown' ? 1 : -1), 0, labels.length - 1); col.scrollTop = n * H; });
+  col.scrollTop = idx * H; paint(); col.setAttribute('aria-valuetext', labels[idx]);
+  setTimeout(() => { ready = true; }, 250);
+  return { get: () => cur };
+}
+/* ---------- onboarding ---------- */
+const STEPS = ['role','sex','dob','height','weight','parents','signs','sleep','goal','method'];
+const qhead = (title, helper) => `<div class="qhead"><h1 class="title1">${title}</h1>${helper ? `<p class="body l2">${helper}</p>` : ''}</div>`;
+function onbShell(inner, { cont = true, contLabel = 'Continue', valid = false, extra = '' } = {}) {
+  return navBar({ left: S.editing ? backBtn('Result', 'cancelEdit') : backBtn(), progress: [S.step + 1, STEPS.length] }) +
+    `<div class="scroll"><div class="content" style="padding-bottom:24px">${inner}</div></div>` +
+    (cont ? `<div class="bottom-bar"><button class="btn btn-filled" id="contBtn" data-act="next" ${valid ? '' : 'disabled'}>${contLabel}</button>${extra}</div>` : '');
+}
+function choiceList(key, items) {
+  return `<div class="group" style="margin-top:22px"><div class="list" role="radiogroup">${items.map(it => `<button class="row ${it.icon ? 'icon-row' : ''} ${S[key] === it.v ? 'sel' : ''}" role="radio" aria-checked="${S[key] === it.v}" data-act="pick" data-key="${key}" data-v="${it.v}">${it.icon ? `<span class="ico">${it.icon}</span>` : ''}<span class="grow">${it.t}${it.s ? `<div class="sub">${it.s}</div>` : ''}</span><span class="check">${I.check}</span></button>`).join('')}</div></div>`;
+}
+const segCtl = (act, opts, curV, label) => `<div class="seg-wrap"><div class="seg" role="radiogroup" aria-label="${label}">${opts.map(([v, l]) => `<button role="radio" aria-checked="${curV === v}" class="${curV === v ? 'on' : ''}" data-act="${act}" data-v="${v}">${l}</button>`).join('')}</div></div>`;
+function numBlock(p, unit, ph, label) {
+  const f = (id, sfx, place, auto) => `<label class="numfield" for="${id}"><input id="${id}" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="${place}" aria-label="${label} in ${sfx === 'ft' ? 'feet' : sfx === 'in' ? 'inches' : sfx}" ${auto ? 'data-auto="1"' : ''}><span class="suffix">${sfx}</span></label>`;
+  return `<div class="numrow">${unit === 'ft' ? f(p + 'ft', 'ft', ph[0], true) + f(p + 'in', 'in', ph[1]) : f(p + '1', unit, ph)}</div>`;
+}
+const fieldSig = (el, p) => $$(`#${p}ft,#${p}in,#${p}1`, el).map(i => i.value).join('|');
+function readMeasure(el, p, unit) {
+  const pre = el._pre && el._pre[p]; if (pre && pre.sig === fieldSig(el, p)) return { value: pre.val }; // untouched prefill keeps full precision across unit switches
+  if (unit === 'ft') {
+    const fi = $('#' + p + 'ft', el), ii = $('#' + p + 'in', el); if (!fi) return { empty: true };
+    const f = parseNum(fi.value), i = parseNum(ii.value);
+    if (f == null && i == null) return { empty: true };
+    if (f == null || isNaN(f) || (i != null && isNaN(i))) return { value: NaN };
+    if (i != null && (i < 0 || i >= 12)) return { value: NaN, msg: 'Inches must be between 0 and 11.' };
+    return { value: (f * 12 + (i || 0)) * 2.54 };
+  }
+  const inp = $('#' + p + '1', el); if (!inp) return { empty: true };
+  const v = parseNum(inp.value); if (v == null) return { empty: true }; if (isNaN(v)) return { value: NaN };
+  return { value: unit === 'lb' ? v * LB : v };
+}
+function prefill(el, p, unit, val) {
+  if (val == null) return;
+  if (unit === 'ft') { const [f, i] = cmToFtIn(val); $('#' + p + 'ft', el).value = f; $('#' + p + 'in', el).value = i; }
+  else $('#' + p + '1', el).value = unit === 'lb' ? Math.round(val / LB) : unit === 'kg' ? Math.round(val * 10) / 10 : Math.round(val * 10) / 10;
+  (el._pre = el._pre || {})[p] = { sig: fieldSig(el, p), val };
+}
+const RANGE = { height: [60, 220], parent: [130, 230], weight: [10, 200] };
+function rangeMsg(kind, unit, who = '') {
+  const [a, b] = RANGE[kind];
+  if (kind === 'weight') return unit === 'lb' ? `Enter a weight between ${Math.ceil(a / LB)} and ${Math.floor(b / LB)} lb.` : `Enter a weight between ${a} and ${b} kg.`;
+  return `Enter ${who ? who + "'s" : 'a'} height between ${unit === 'ft' ? fmtFt(a) + ' and ' + fmtFt(b) : a + ' and ' + b + ' cm'}.`;
+}
+function setMsg(el, id, msg, cls) { const m = $('#' + id, el); if (m) { m.textContent = msg; m.className = 'fmsg ' + (cls || ''); } }
+/* Shared form wiring: numeric filtering, auto-tab ft→in, Return advances, errors on blur/Return or when clearly out of range */
+function bindForm(el, validate, submit) {
+  const ins = $$('input[inputmode="decimal"]', el);
+  const run = force => {
+    const r = validate(); const show = r.cls !== 'err' || force || r.hard;
+    setMsg(el, r.msgId || 'fmsg', show ? r.msg || '' : '', show ? r.cls : '');
+    ins.forEach(i => { const box = i.closest('.numfield,.pfield'); box && box.classList.toggle('bad', !!(show && r.cls === 'err' && (!r.bad || r.bad.includes(i.id)))); });
+    const b = $('#contBtn', el); if (b) b.disabled = !r.ok; return r.ok;
+  };
+  ins.forEach((inp, k) => {
+    inp.addEventListener('input', () => { const c = inp.value.replace(/[^0-9.,]/g, ''); if (c !== inp.value) inp.value = c; if (inp.dataset.auto && inp.value.length >= 1 && ins[k + 1]) ins[k + 1].focus(); run(false); });
+    inp.addEventListener('blur', () => setTimeout(() => { if (!ins.includes(document.activeElement) && inp.value) run(true); }, 0));
+    inp.addEventListener('keydown', e => { if (e.key !== 'Enter') return; e.preventDefault(); const nxt = ins[k + 1]; if (nxt && !nxt.value) return nxt.focus(); if (run(true)) { haptic(); submit(); } });
+  });
+  run(false);
+  setTimeout(() => { const first = ins.find(i => !i.value) || ins[0]; first && document.activeElement !== first && el.isConnected && first.focus({ preventScroll: true }); }, 520);
+  return run;
+}
+function heightCheck(el) {
+  const unit = S.unit === 'cm' ? 'cm' : 'ft', r = readMeasure(el, 'h', unit);
+  if (r.empty) { S.heightCm = null; return { ok: false, msg: '', cls: '' }; }
+  const [a, b] = RANGE.height;
+  if (isNaN(r.value) || r.value < a || r.value > b) { S.heightCm = null; return { ok: false, msg: r.msg || rangeMsg('height', unit), cls: 'err', hard: r.value > b * 1.2 || !!r.msg }; }
+  S.heightCm = r.value; S.heightCm0 = null;
+  const ty = typicalHeight(ageYears(), S.sex === 'female');
+  if (isFinite(ty) && Math.abs(r.value - ty) / ty > 0.22) return { ok: true, msg: `That's unusual for ${t('your', 'their')} age. Please double-check (it's fine if it's right).`, cls: 'warn' };
+  return { ok: true, msg: unit === 'cm' ? `= ${fmtFt(r.value)}` : `= ${Math.round(r.value)} cm`, cls: '' };
+}
+function weightCheck(el) {
+  const r = readMeasure(el, 'w', S.wunit);
+  if (r.empty) { S.weightKg = null; return { ok: false, msg: '', cls: '' }; }
+  const [a, b] = RANGE.weight;
+  if (isNaN(r.value) || r.value < a || r.value > b) { S.weightKg = null; return { ok: false, msg: rangeMsg('weight', S.wunit), cls: 'err', hard: r.value > b * 1.3 }; }
+  S.weightKg = r.value; S.weightSkipped = false;
+  return { ok: true, msg: S.wunit === 'kg' ? `= ${Math.round(r.value / LB)} lb` : `= ${Math.round(r.value)} kg`, cls: '' };
+}
+function parentsCheck(el) {
+  const unit = S.unit === 'cm' ? 'cm' : 'ft', [a, b] = RANGE.parent; const bad = []; let msg = '', ok = true, hard = false, any = false;
+  for (const [k, who] of [['mom', 'Mother'], ['dad', 'Father']]) {
+    if (S.unknownParent === k) continue;
+    const r = readMeasure(el, 'p' + k, unit);
+    if (r.empty) { S[k + 'Cm'] = null; ok = false; continue; }
+    any = true;
+    if (isNaN(r.value) || r.value < a || r.value > b) { S[k + 'Cm'] = null; ok = false; bad.push(...(unit === 'ft' ? ['p' + k + 'ft', 'p' + k + 'in'] : ['p' + k + '1'])); if (!msg) msg = r.msg || rangeMsg('parent', unit, who.toLowerCase()); hard = hard || r.value > b * 1.2; }
+    else S[k + 'Cm'] = r.value;
+  }
+  return { ok, msg: bad.length ? msg : '', cls: bad.length ? 'err' : '', bad, hard, any };
+}
+function parentRow(k, who, unit) {
+  if (S.unknownParent === k) return `<div class="row"><span class="grow l2">Unknown · we'll use an average (${fmtH(PARENT_AVG[k])})</span><button class="dk" data-act="dk" data-v="${k}">Undo</button></div>`;
+  const fld = (id, sfx, ph, auto, wide) => `<label class="pfield ${wide ? 'wide' : ''}" for="${id}"><input class="inline-input" id="${id}" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="${ph}" aria-label="${who}'s height in ${sfx === 'ft' ? 'feet' : sfx === 'in' ? 'inches' : 'centimeters'}" ${auto ? 'data-auto="1"' : ''}><span>${sfx}</span></label>`;
+  return `<div class="row" style="gap:8px">${unit === 'ft' ? fld('p' + k + 'ft', 'ft', '5', true) + fld('p' + k + 'in', 'in', '6') : fld('p' + k + '1', 'cm', k === 'mom' ? 'e.g. 163' : 'e.g. 177', false, true)}<span class="grow"></span><button class="dk" data-act="dk" data-v="${k}">Don't know</button></div>`;
+}
+const ONB = {
+  role: () => ({ html: onbShell(qhead("Who's checking today?", "We'll tailor the questions and the plan.") +
+    choiceList('role', [{ v: 'teen', icon: I.person, t: "I'm a teen", s: 'Checking how tall I might grow' }, { v: 'parent', icon: I.people, t: "I'm a parent", s: 'Checking for my child' }]) +
+    `<p class="gfoot">Choose one to continue.</p>`, { cont: false }) }),
+  sex: () => ({ html: onbShell(qhead(t('Are you a boy or a girl?', 'Is your child a boy or a girl?'), 'Growth formulas use sex at birth.') +
+    choiceList('sex', [{ v: 'male', t: 'Boy' }, { v: 'female', t: 'Girl' }]), { cont: false }) }),
+  dob: () => {
+    const val = S.dobTouched && S.dobY != null ? `${MONTHS[S.dobM]} ${S.dobY}` : 'Select';
+    const minY = NOW.getFullYear() - 21, maxY = NOW.getFullYear() - 2;
+    const picker = S.dobNative
+      ? `<input type="month" class="native-month" id="dobNative" min="${minY}-01" max="${maxY}-${String(NOW.getMonth() + 1).padStart(2, '0')}" value="${S.dobY != null ? `${S.dobY}-${String(S.dobM + 1).padStart(2, '0')}` : ''}" aria-label="Birth month and year">`
+      : `<div class="wheel" role="group" aria-label="Birth month and year"><div class="band"></div><div class="wcol m" id="wM" tabindex="0" role="spinbutton" aria-label="Month"></div><div class="wcol y" id="wY" tabindex="0" role="spinbutton" aria-label="Year"></div></div>`;
+    return { html: onbShell(qhead(t('When were you born?', 'When were they born?'), 'Month and year are enough.') +
+      `<div class="group" style="margin-top:22px"><div class="list"><div class="row"><span class="grow">Birth date</span><span id="dobVal" style="color:${S.dobTouched ? 'var(--tint)' : 'var(--label3)'};background:var(--fill3);padding:6px 11px;border-radius:8px">${val}</span></div></div></div>
+      <div style="height:10px"></div>${picker}<div class="fmsg" id="fmsg" aria-live="polite"></div>
+      <div style="text-align:center"><button class="btn btn-plain" style="width:auto;margin:0 auto;font-size:.882rem" data-act="dobMode">${S.dobNative ? 'Use wheel picker' : 'Enter date with keyboard instead'}</button></div>`, { valid: dobValid() }),
+      mount: el => mountDob(el) };
+  },
+  height: () => ({ html: onbShell(qhead(t('How tall are you right now?', 'How tall are they right now?'), 'Measure without shoes, back against a wall.') +
+    `<div style="height:20px"></div>${segCtl('unit', [['cm', 'cm'], ['ft', 'ft / in']], S.unit, 'Height unit')}<div style="height:12px"></div>
+    ${numBlock('h', S.unit === 'cm' ? 'cm' : 'ft', S.unit === 'cm' ? 'e.g. 152' : ['5', '0'], 'Height')}<div class="fmsg" id="fmsg" aria-live="polite"></div>
+    <p class="gfoot">Morning measurements are the most accurate.</p>`),
+    mount: el => { prefill(el, 'h', S.unit === 'cm' ? 'cm' : 'ft', S.heightCm); bindForm(el, () => heightCheck(el), nextStep); } }),
+  weight: () => ({ html: onbShell(qhead(t('What do you weigh?', 'What do they weigh?'), 'Optional. Used only by the Khamis–Roche formula and stays on this phone.') +
+    `<div style="height:20px"></div>${segCtl('wunit', [['kg', 'kg'], ['lb', 'lb']], S.wunit, 'Weight unit')}<div style="height:12px"></div>
+    ${numBlock('w', S.wunit, S.wunit === 'kg' ? 'e.g. 45' : 'e.g. 100', 'Weight')}<div class="fmsg" id="fmsg" aria-live="polite"></div>`,
+    { extra: `<button class="btn btn-plain" data-act="skipWeight">Skip</button><p class="footnote l2" style="text-align:center;padding:0 8px">Without weight we can only use parents' heights: the range widens from about ±5 cm to ±8.5 cm.</p>` }),
+    mount: el => { prefill(el, 'w', S.wunit, S.weightSkipped ? null : S.weightKg); bindForm(el, () => weightCheck(el), nextStep); } }),
+  parents: () => { const unit = S.unit === 'cm' ? 'cm' : 'ft';
+    return { html: onbShell(qhead(t('How tall are your parents?', 'How tall are their parents?'), 'Biological parents. A best guess is fine; measured is better.') +
+      `<div style="height:20px"></div>${segCtl('unit', [['cm', 'cm'], ['ft', 'ft / in']], S.unit, 'Height unit')}
+      <div class="ghead">Mother</div><div class="group"><div class="list">${parentRow('mom', 'Mother', unit)}</div></div>
+      <div class="ghead">Father</div><div class="group"><div class="list">${parentRow('dad', 'Father', unit)}</div></div>
+      <div class="fmsg" id="fmsg" aria-live="polite"></div>
+      <p class="gfoot">${S.unknownParent ? `Accuracy is reduced: with one parent unknown we use the US adult average (${fmtH(PARENT_AVG[S.unknownParent])}) for that parent and widen the likely range by about 3.5 cm on each side.` : `Don't know one parent's height? Tap "Don't know". We can still estimate, with a wider range.`}</p>`),
+      mount: el => { if (S.unknownParent !== 'mom') prefill(el, 'pmom', unit, S.momCm); if (S.unknownParent !== 'dad') prefill(el, 'pdad', unit, S.dadCm); bindForm(el, () => parentsCheck(el), nextStep); } }; },
+  signs: () => {
+    const both = [['spurt', 'Grew a lot in the last year'], ['odor', 'Body odor'], ['underarm', 'Underarm hair'], ['acne', 'Acne']];
+    const extra = S.sex === 'female' ? [['breast', 'Breast development'], ['period', 'First period']] : [['voice', 'Voice deepening'], ['facial', 'Facial hair'], ['shoulders', 'Broader shoulders']];
+    const row = ([k, l]) => `<button class="row ${S.signs.includes(k) ? 'sel' : ''}" role="checkbox" aria-checked="${S.signs.includes(k)}" data-act="sign" data-v="${k}"><span class="grow">${l}</span><span class="check">${I.check}</span></button>`;
+    return { html: onbShell(qhead('Which have you noticed?', 'Growth spurts matter. Select all that apply. This adds context; it doesn\'t change the formula.') +
+      `<div class="group" style="margin-top:22px"><div class="list">${[...both, ...extra].map(row).join('')}</div></div>
+      <div class="group" style="margin-top:20px"><div class="list">${[['none', 'None yet'], ['unsure', 'Not sure']].map(row).join('')}</div></div>`, { valid: S.signs.length > 0 }) };
+  },
+  sleep: () => ({ html: onbShell(qhead(t('How much do you usually sleep?', 'How much do they usually sleep?'), 'On a typical school night.') +
+    choiceList('sleep', [{ v: 'lt7', t: 'Less than 7 hours' }, { v: '7-8', t: '7–8 hours' }, { v: '8-9', t: '8–9 hours' }, { v: '9+', t: '9 hours or more' }]), { cont: false }) }),
+  goal: () => ({ html: onbShell(qhead('What matters most?', `We'll put this first in ${t('your', 'their')} plan.`) +
+    choiceList('goal', [{ v: 'know', t: t('Find out my adult height', 'Find out their adult height') }, { v: 'reach', t: t('Reach my full height', 'Help them reach their full height') }, { v: 'track', t: 'Track growth over time' }, { v: 'check', t: 'Check growth is on track' }]), { cont: false }) }),
+  method: () => ({ html: onbShell(qhead('Built on real pediatric research', 'Published methods, shown openly. No AI guesswork, no made-up accuracy scores.') +
+    `<div class="group" style="margin-top:22px"><div class="list">
+      <div class="row icon-row"><span class="ico">${I.function}</span><span class="grow">Khamis–Roche method<div class="sub">Pediatrics, 1994 · Fels Longitudinal Study</div></span></div>
+      <div class="row icon-row"><span class="ico">${I.people}</span><span class="grow">Mid-parental height<div class="sub">Tanner, 1970 · genetics only</div></span></div>
+      <div class="row icon-row"><span class="ico">${I.ruler}</span><span class="grow">Typical accuracy<div class="sub">Within about ±5 cm (boys) / ±4 cm (girls), 9 times out of 10</div></span></div>
+      <button class="row" data-act="methodSheet"><span class="grow tint">See the formulas</span><span class="chev">${I.chev}</span></button>
+    </div></div>
+    <p class="gfoot">An estimate, not a diagnosis. Not affiliated with or endorsed by any health agency.</p>`, { valid: true, contLabel: 'See My Result' }) })
+};
+function dobValid() { const a = ageYears(); return S.dobTouched && a >= 2 && a < 22; }
+function mountDob(el) {
+  const minY = NOW.getFullYear() - 21, maxY = NOW.getFullYear() - 2, years = []; for (let y = minY; y <= maxY; y++) years.push(y);
+  const update = () => {
+    const a = ageYears(), v = $('#dobVal', el);
+    if (S.dobTouched) { v.textContent = `${MONTHS[S.dobM]} ${S.dobY}`; v.style.color = 'var(--tint)'; }
+    let msg = '', cls = '';
+    if (S.dobTouched) { if (a < 2) { msg = 'KinHeight is for ages 2 to 21.'; cls = 'err'; }
+      else { msg = `Age ${ageLabel(a)}.` + (a < 4 ? ' Under 4, we use mid-parental height only.' : a > 17.5 ? " Most growth is done by now; we'll show what genetics suggest." : ''); } }
+    setMsg(el, 'fmsg', msg, cls); $('#contBtn', el).disabled = !dobValid();
+  };
+  if (S.dobNative) { const n = $('#dobNative', el); n.addEventListener('change', () => { const [y, m] = n.value.split('-').map(Number); if (y) { S.dobY = y; S.dobM = m - 1; S.dobTouched = true; update(); } }); update(); return; }
+  const y0 = S.dobY != null ? S.dobY : NOW.getFullYear() - 12, m0 = S.dobM != null ? S.dobM : NOW.getMonth();
+  const touch = () => { S.dobTouched = true; S.dobY = years[wy.get()]; S.dobM = wm.get(); update(); };
+  const wm = makeWheel($('#wM', el), MONTHS, m0, touch);
+  const wy = makeWheel($('#wY', el), years, clamp(y0 - minY, 0, years.length - 1), touch);
+  update();
+}
+/* ---------- screens ---------- */
+const leafIcon = `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20c0-9 5-14 15-15-1 10-6 15-15 15Z"/><path d="M5 20 13 12"/></svg>`;
+const feat = (icon, title, sub) => `<div class="feat"><span class="fi">${icon}</span><div><div class="headline">${title}</div><div class="subhead l2" style="margin-top:2px">${sub}</div></div></div>`;
+function runLoader(el) {
+  const rows = $$('.lrow', el), bar = $('.pbar span', el), T = 3000, t0 = performance.now();
+  const tick = now => { const p = Math.min(1, (now - t0) / T), k = Math.min(3, Math.floor(p * 4));
+    bar.style.width = (p * 100).toFixed(1) + '%';
+    rows.forEach((r, i) => { const done = i < k || p >= 1, on = i === k && p < 1; if (r.dataset.s === (done ? 'd' : on ? 'o' : 'w')) return;
+      r.dataset.s = done ? 'd' : on ? 'o' : 'w'; r.classList.toggle('done', done); $('.stat', r).innerHTML = done ? I.stepDone : on ? '<span class="spinner" style="width:18px;height:18px;border-width:2px"></span>' : ''; r.style.color = done || on ? 'var(--label)' : 'var(--label3)'; });
+    if (p < 1) requestAnimationFrame(tick); else { haptic(10); setTimeout(() => go('result', 'fade'), 300); } };
+  requestAnimationFrame(tick);
+}
+const SCREENS = {
+  welcome: () => ({ html: `<div class="scroll"><div style="padding:calc(var(--sat) + 52px) 32px 24px">
+      <div class="app-icon">${leafIcon}</div>
+      <h1 class="largeTitle" style="margin-top:22px">How tall will you <span class="tint">grow?</span></h1>
+      <p class="body l2" style="margin-top:10px">Find out free in about 40 seconds, then get a daily plan to help you reach your full height.</p>
+      <div style="margin-top:26px">
+        ${feat(I.chartUp, 'Free prediction', 'Predicted adult height and likely range. No paywall on the number.')}
+        ${feat(I.function, 'Real pediatric methods', 'Khamis–Roche and mid-parental height, with the formulas shown.')}
+        ${feat(I.lockShield, 'Private by design', 'No account needed. Your data stays on your phone.')}
+      </div></div></div>
+    <div class="bottom-bar"><button class="btn btn-filled" data-act="start">Get Started</button>
+      <p class="footnote l2" style="text-align:center;margin-top:8px">An estimate, not a medical diagnosis.<br>By continuing you agree to the <button class="tint" data-act="legal" data-v="Terms of Use">Terms</button> and <button class="tint" data-act="legal" data-v="Privacy Policy">Privacy Policy</button>.</p></div>` }),
+  onb: () => { const d = ONB[STEPS[S.step]](); return { html: d.html, mount: d.mount }; },
+  loader: () => ({ html: `<div class="scroll"><div class="content" style="padding-top:calc(var(--sat) + 60px)">
+      <div class="lt-wrap"><h1 class="largeTitle">Calculating…</h1><p class="body l2" style="margin-top:6px">Running the published formulas on ${t('your', 'their')} answers.</p></div>
+      <div class="pbar" role="progressbar" aria-label="Calculating"><span></span></div>
+      <div class="group" style="margin-top:22px"><div class="list">${['Checking age and growth data', 'Running Khamis–Roche', 'Comparing with mid-parental height', 'Building the likely range'].map(s => `<div class="row lrow" style="color:var(--label3)"><span class="stat"></span><span class="grow">${s}</span></div>`).join('')}</div></div>
+    </div></div>`, mount: el => runLoader(el) }),
+  result: () => resultScreen(),
+  paywall: () => paywallScreen(),
+  success: () => ({ html: `<div class="scroll"><div class="content" style="padding-top:calc(var(--sat) + 40px)">
+      <div style="text-align:center;color:var(--tint)"><svg width="72" height="72" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.4l3.3 3.3L17 9" style="stroke:var(--bg)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h1 class="title1" style="text-align:center;margin-top:14px">You're in!</h1>
+      <p class="body l2" style="text-align:center;margin:8px 32px 0">${t('Your', 'Their')} growth plan is ready. First, when should lights go out?</p>
+      <div class="ghead">Bedtime</div><div class="group"><div class="list" role="radiogroup">${['21:00', '21:30', '22:00', '22:30'].map(b => `<button class="row ${S.bedtime === b ? 'sel' : ''}" role="radio" aria-checked="${S.bedtime === b}" data-act="bed" data-v="${b}"><span class="grow">${b}</span><span class="check">${I.check}</span></button>`).join('')}</div></div>
+      <p class="gfoot">Teens need about 8–10 hours of sleep; ages 6–12 need 9–12 hours.</p>
+      <div class="group" style="margin-top:22px"><div class="list"><button class="row" data-act="remToggle" role="switch" aria-checked="${S.reminders.bed}"><span class="grow">Remind me 30 min before</span><span class="toggle ${S.reminders.bed ? 'on' : ''}"></span></button></div></div>
+    </div></div>
+    <div class="bottom-bar"><button class="btn btn-filled" data-act="startPlan" id="contBtn" ${S.bedtime ? '' : 'disabled'}>Start My Plan</button></div>` }),
+  home: () => homeScreen()
+};
+
+/* ---------- result ---------- */
+function pubertyLine() {
+  const s = S.signs.filter(x => x !== 'none' && x !== 'unsure'), a = ageYears();
+  const late = s.includes('period') || s.includes('facial') || (s.includes('voice') && s.length >= 3);
+  if (a > 17) return 'At this age most growth is usually complete. A pediatrician can tell whether growth plates are still open.';
+  if (late) return 'Several later puberty signs: much of the growth spurt may already be underway. Every growing year still counts.';
+  if (s.length) return 'Early puberty signs: the biggest growth spurt may be happening now or coming soon. Sleep and protein matter extra.';
+  if (S.signs.includes('none')) return 'No signs yet: most of the growth spurt is likely still ahead. A great time to build habits.';
+  return 'Puberty timing shapes when growth happens, not the number above.';
+}
+function resultScreen() {
+  const P = predict(), lo0 = Math.min(P.low, S.heightCm) - 4, hi0 = P.high + 6, pos = v => clamp((v - lo0) / (hi0 - lo0) * 100, 0, 100).toFixed(1);
+  const p = parentsUsed();
+  const inRow = (label, val, step) => `<button class="row" data-act="edit" data-v="${step}"><span class="grow">${label}</span><span class="val">${val}</span><span class="chev">${I.chev}</span></button>`;
+  const pro = [[I.chartUp, 'Growth curve & trend', 'Every check-in plotted, with updated predictions', 'curve'], [I.list, 'Personalized growth plan', 'Daily sleep, food and movement for ' + t('your', 'their') + ' age', 'plan'], [I.bolt, 'Growth-spurt timing', 'Spot the spurt as it starts', 'spurt'], [I.doc, 'Pediatrician-ready PDF', 'Chart, method and history in one file', 'pdf']];
+  return { html: navBar({ title: 'Your Result', right: `<button class="nav-btn" data-act="shareCard" aria-label="Share result">${I.share}</button>` }) +
+    `<div class="scroll" id="resScroll"><div class="content" style="padding-bottom:16px">
+      <div class="lt-wrap"><h1 class="largeTitle">Your Result</h1><p class="subhead l2" style="margin-top:2px">Your results are in! 🎉</p></div>
+      <div class="hero" role="group" aria-label="Predicted adult height ${Math.round(P.value)} centimeters, likely ${Math.round(P.low)} to ${Math.round(P.high)}">
+        <div class="subhead l2">${t('Your predicted adult height', 'Predicted adult height')}</div>
+        <div class="num"><span id="cnt">${S.unit === 'cm' ? Math.round(S.heightCm) : fmtFt(S.heightCm)}</span>${S.unit === 'cm' ? '<small>cm</small>' : ''}</div>
+        <div class="body l2" style="margin-top:6px">${S.unit === 'cm' ? fmtFt(P.value) : Math.round(P.value) + ' cm'} · likely ${fmtR(P.low, P.high)}</div>
+        <div class="rbar" aria-hidden="true"><div class="band" style="left:${pos(P.low)}%;right:${100 - pos(P.high)}%"></div><div class="mk" style="left:${pos(P.value)}%"></div></div>
+        <div class="rlabels"><span>Today ${fmtH(S.heightCm)}</span><span>Likely range</span></div>
+      </div>
+      <p class="gfoot">${pubertyLine()}</p>
+      <div class="ghead">Methods</div><div class="group"><div class="list">
+        ${P.kr ? `<button class="row" data-act="methodSheet"><span class="grow">Khamis–Roche<div class="sub">Height, weight, age and parents · ±${P.err.toFixed(1)} cm</div></span><span class="val">${fmtH(P.kr)}</span><span class="chev">${I.chev}</span></button>` : ''}
+        <button class="row" data-act="methodSheet"><span class="grow">Mid-parental height<div class="sub">Parents only · ±${P.mphErr.toFixed(1)} cm</div></span><span class="val">${fmtH(P.mph)}</span><span class="chev">${I.chev}</span></button>
+      </div></div>
+      <p class="gfoot">${P.kr ? `We lead with Khamis–Roche because it also uses ${t('your', 'their')} current height and weight.` : S.weightSkipped ? 'Weight was skipped, so only mid-parental height was used. Add weight for a tighter range.' : 'Outside ages 4–17.5, so only mid-parental height was used.'}${S.unknownParent ? ` One parent's height is estimated from the US average, so the range is wider.` : ''}</p>
+      <div class="ghead">${t('Your', 'Their')} Inputs</div><div class="group"><div class="list">
+        ${inRow('Age', ageLabel(ageYears()), 2)}${inRow('Height', fmtH(S.heightCm), 3)}${inRow('Weight', fmtW(), 4)}
+        ${inRow('Mother', S.unknownParent === 'mom' ? 'Unknown' : fmtH(p.mom), 5)}${inRow('Father', S.unknownParent === 'dad' ? 'Unknown' : fmtH(p.dad), 5)}
+      </div></div>
+      ${teen() ? `<div class="group" style="margin-top:22px"><div class="list"><button class="row icon-row" data-act="shareCard"><span class="ico">${I.share.replace('width="22" height="22"', 'width="18" height="18"')}</span><span class="grow">Show a Parent<div class="sub">They can unlock your growth plan with you</div></span><span class="chev">${I.chev}</span></button></div></div>` : ''}
+      <div class="ghead">Included with KinHeight Pro</div><div class="group"><div class="list">
+        ${pro.map(([ic, tt, sub, k]) => `<button class="row icon-row" data-act="paywall" data-from="${k}"><span class="ico soft">${ic}</span><span class="grow">${tt}<div class="sub">${sub}</div></span><span class="l3" style="flex:none">${I.lock}</span></button>`).join('')}
+      </div></div>
+      <p class="gfoot">An estimate, not a guarantee or diagnosis. Accuracy depends on measured inputs; the method was built on healthy US children. Talk to a pediatrician about any growth concern.</p>
+      <h2 class="title3" style="text-align:center;margin:26px 16px 0">${t("Now let's help you reach it!", "Now let's help them reach it!")}</h2>
+    </div></div>
+    <div class="bottom-bar"><button class="btn btn-filled" data-act="paywall" data-from="cta">Get My Growth Plan</button></div>`,
+    mount: el => { countUp($('#cnt', el), S.heightCm, P.value); setTimeout(confetti, 350); } };
+}
+function countUp(node, from, to) {
+  if (!node) return; const T = reduceMotion() ? 1 : 1100, t0 = performance.now() + 250;
+  const tick = now => { const p = clamp((now - t0) / T, 0, 1), e = 1 - Math.pow(1 - p, 4), v = from + (to - from) * e;
+    node.textContent = S.unit === 'cm' ? Math.round(v) : fmtFt(v); if (p < 1) requestAnimationFrame(tick); else haptic(12); };
+  requestAnimationFrame(tick);
+}
+function confetti() { // brief §4.4: one short burst for every result, skipped under Reduce Motion
+  if (reduceMotion()) return; const cv = $('#confetti'), wrap = $('#wrap'), dpr = Math.min(devicePixelRatio || 1, 2);
+  const W = wrap.clientWidth, H = wrap.clientHeight; cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cols = ['#2F7D6D', '#5FB8A5', '#F2A65A', '#F7C08A'];
+  const ps = Array.from({ length: 70 }, () => ({ x: W / 2 + (Math.random() - .5) * 80, y: H * .3, vx: (Math.random() - .5) * 10, vy: -Math.random() * 10 - 4, r: Math.random() * 5 + 4, c: cols[Math.random() * 4 | 0], a: Math.random() * 6, va: (Math.random() - .5) * .3 }));
+  const t0 = performance.now();
+  const tick = now => { const el = now - t0; ctx.clearRect(0, 0, W, H);
+    ps.forEach(p => { p.vy += .3; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.a += p.va; ctx.save(); ctx.globalAlpha = Math.max(0, 1 - el / 1300); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); ctx.restore(); });
+    if (el < 1300) requestAnimationFrame(tick); else ctx.clearRect(0, 0, W, H); };
+  requestAnimationFrame(tick);
+}
+function methodSheet() {
+  if (S.heightCm == null || S.momCm == null && S.unknownParent !== 'mom') return openSheet({ title: 'The Formulas', right: `<button class="nav-btn bold" data-close>Done</button>`, body: methodGeneric() });
+  const P = predict(), male = S.sex !== 'female', p = parentsUsed();
+  const mono = s => `<div class="row" style="font-family:var(--mono);font-size:.72rem;line-height:1.6;white-space:pre-wrap;display:block">${s}</div>`;
+  const kr = P.kr ? `<div class="ghead">Khamis–Roche (1994)</div><div class="group"><div class="list">
+      ${mono(`adult (in) = ${P.row[2]}\n  + ${P.row[3]} × height ${P.hIn.toFixed(1)} in\n  + ${P.row[4]} × weight ${P.wLb.toFixed(1)} lb\n  + ${P.row[5]} × midparent ${P.mpIn.toFixed(1)} in\n  = ${P.predIn.toFixed(1)} in = ${P.krRaw.toFixed(1)} cm`)}
+      <div class="row"><span class="grow">Result</span><span class="val">${fmtH(P.kr)} ± ${P.err.toFixed(1)} cm</span></div></div></div>
+    <p class="gfoot">Coefficients for ${male ? 'boys' : 'girls'}, age ${P.ar.toFixed(1)} (nearest half-year row). Midparent is the average of both parents. Inputs converted from metric; result × 2.54.${P.krRaw < S.heightCm ? " The formula came out below today's height, so today's height is shown." : ''}</p>`
+    : `<p class="gfoot" style="margin-top:12px">Khamis–Roche wasn't used (${S.weightSkipped ? 'no weight entered' : 'age outside 4–17.5'}).</p>`;
+  openSheet({ title: 'How We Calculated This', right: `<button class="nav-btn bold" data-close>Done</button>`, body: kr +
+    `<div class="ghead">Mid-parental height (Tanner)</div><div class="group"><div class="list">
+      ${mono(`${male ? 'boys: (mother + father + 13) / 2' : 'girls: (mother + father − 13) / 2'}\n  = (${Math.round(p.mom)} + ${Math.round(p.dad)} ${male ? '+' : '−'} 13) / 2 = ${P.mph.toFixed(1)} cm`)}
+      <div class="row"><span class="grow">Result</span><span class="val">${fmtH(P.mph)} ± ${P.mphErr.toFixed(1)} cm</span></div></div></div>
+    ${S.unknownParent ? `<p class="gfoot">${S.unknownParent === 'mom' ? "Mother's" : "Father's"} height is the US adult average (${fmtH(PARENT_AVG[S.unknownParent])}); ranges widened by 3.5 cm (prototype assumption).</p>` : ''}` + methodGeneric() });
+}
+function methodGeneric() {
+  return `<div class="ghead">Accuracy and limits</div><div class="group"><div class="list">
+      <div class="row"><span class="grow">Khamis–Roche, 90% of kids</span><span class="val">±5.3 cm boys · ±4.3 cm girls</span></div>
+      <div class="row"><span class="grow">Valid ages</span><span class="val">4.0–17.5 years</span></div>
+      <div class="row"><span class="grow">Puberty signs</span><span class="val">Context only</span></div></div></div>
+    <p class="gfoot">Height is mostly set by genetics. Sleep, nutrition and activity help a growing body reach its full potential, but no plan can promise extra centimeters. The study group was healthy white US children (Fels study), so accuracy may differ for others. Not for children with growth conditions. Talk to your pediatrician about any concerns.</p>`;
+}
+function shareCard() {
+  const P = predict();
+  openSheet({ title: 'Share Result', detent: 'large', body: `<div class="story" aria-label="Story card preview"><div class="footnote" style="font-weight:600;opacity:.9">KinHeight</div><div class="callout" style="font-weight:600;margin-top:10px;line-height:1.25">${t('My predicted adult height', 'Predicted adult height')}</div>
+      <div class="sn">${S.unit === 'cm' ? `${Math.round(P.value)}<span>cm</span>` : fmtFt(P.value)}</div><div class="footnote" style="font-weight:600;opacity:.9;margin-top:6px">likely ${fmtR(P.low, P.high)}</div><div class="sbar"><i></i></div>
+      <div class="caption" style="opacity:.75;margin-top:10px">${P.method} · an estimate, not a guarantee</div><div class="caption" style="margin-top:auto;opacity:.85;display:flex;justify-content:space-between"><span>How tall will you grow?</span><span>9:16</span></div></div>
+    <p class="footnote l2" style="text-align:center;margin-top:8px">Story card preview (9:16)</p>
+    <div class="group" style="margin-top:14px"><div class="list">
+      ${teen() ? `<button class="row icon-row" data-act="shareDo" data-v="Sent to a parent"><span class="ico">${I.people}</span><span class="grow">Send to a Parent</span></button>` : ''}
+      <button class="row icon-row" data-act="shareDo" data-v="Image saved to Photos"><span class="ico gray">${I.doc}</span><span class="grow">Save Image</span></button>
+      <button class="row icon-row" data-act="shareDo" data-v="Share sheet would open"><span class="ico gray">${I.share.replace('width="22" height="22"', 'width="18" height="18"')}</span><span class="grow">More…</span></button>
+    </div></div>` });
+}
+
+/* ---------- paywall: StoreKit-style subscription sheet (example prices, placeholder) ---------- */
+const PRICES = { annual: 39.99, weekly: 4.99 };
+const perWeek = () => (PRICES.annual / 52).toFixed(2);
+const savePct = () => Math.floor((1 - PRICES.annual / (PRICES.weekly * 52)) * 100);
+function paywallScreen() {
+  const qa = [['me', 'Is the prediction free?'], ['them', 'Yes, always!'], ['me', 'Which formula do you use?'], ['them', 'Khamis–Roche, plus mid-parental height.'], ['them', '“The bedtime reminders actually work.”', 'Sample quote'],
+    ['me', 'Can I cancel?'], ['them', 'Anytime, in Settings.'], ['them', '“Finally an app that just told me the number!”', 'Sample quote'], ['me', 'Girls and boys?'], ['them', 'Yes, separate formulas.']];
+  const qb = [['them', '“My son checks his streak every morning.”', 'Sample quote'], ['me', 'Is my data uploaded?'], ['them', 'No, it stays on your phone.'], ['me', 'Will it make me taller?'], ['them', 'No app can promise cm. We help you build the habits that support growth.'], ['me', 'What do I get each day?'], ['them', '3–5 quick moves: sleep, food, activity.']];
+  const col = arr => { const h = arr.map(([w, txt, who]) => `<div class="bub ${w}">${txt}${who ? `<span class="who">${who}</span>` : ''}</div>`).join(''); return h + h; };
+  const ctx = { curve: 'Unlocks the growth curve', plan: 'Unlocks the daily growth plan', spurt: 'Unlocks growth-spurt timing', pdf: 'Unlocks the pediatrician PDF' }[S.paywallFrom];
+  const fr = (ic, tt) => `<div class="row icon-row"><span class="ico soft">${ic}</span><span class="grow">${tt}</span></div>`;
+  return { cls: 'paywall', dark: true, html: `
+    <div class="bubbles" aria-hidden="true"><div class="bcol" style="padding-top:104px">${col(qa)}</div><div class="bcol b2" style="padding-top:140px">${col(qb)}</div></div>
+    <div class="pw-top"><span class="pill-tag">Sample messages · not real reviews</span><button class="pw-close" data-act="closePaywall" aria-label="Close">${'<span>' + I.x + '</span>'}</button></div>
+    <div class="pw-sheet" role="dialog" aria-label="Subscription options"><div class="scroll">
+      <div style="display:flex;align-items:center;gap:14px;padding:0 var(--m)"><div class="pw-icon" style="margin:0">${leafIcon.replace(/width="40" height="40"/, 'width="26" height="26"')}</div>
+        <div><h1 class="title2" style="font-weight:700">Your growth plan is ready</h1><p class="subhead" style="color:var(--tint);font-weight:600;margin-top:2px">Your prediction is free. Now make the most of ${t('your', 'their')} growth years!</p></div></div>
+      ${ctx ? `<p class="footnote l2" style="margin:8px var(--m) 0">${ctx}</p>` : ''}
+      <div style="height:16px"></div>
+      <div class="sec" role="radiogroup" aria-label="Plans">
+        <button class="plan-opt ${S.plan === 'annual' ? 'sel' : ''}" role="radio" aria-checked="${S.plan === 'annual'}" data-act="plan" data-v="annual"><span class="radio">${I.checkSm}</span><span class="grow" style="flex:1"><span class="headline">Annual</span><span class="badge">Best value · Save ${savePct()}%</span><div class="footnote l2" style="margin-top:2px">≈ $${perWeek()}/week · unlimited children</div></span><span class="price">$${PRICES.annual}<span class="footnote l2" style="font-weight:400">/year</span></span></button>
+        <button class="plan-opt ${S.plan === 'weekly' ? 'sel' : ''}" role="radio" aria-checked="${S.plan === 'weekly'}" data-act="plan" data-v="weekly"><span class="radio">${I.checkSm}</span><span class="grow" style="flex:1"><span class="headline">Weekly</span><div class="footnote l2" style="margin-top:2px">Up to 2 children · renews weekly</div></span><span class="price">$${PRICES.weekly}<span class="footnote l2" style="font-weight:400">/week</span></span></button>
+      </div>
+      <div class="group" style="margin-top:12px;${S.plan === 'annual' ? '' : 'display:none'}" id="trialRow"><div class="list"><button class="row" data-act="trial" role="switch" aria-checked="${S.trial}"><span class="grow">Try 7 days free first</span><span class="toggle ${S.trial ? 'on' : ''}"></span></button></div></div>
+      <p class="caption l2" style="text-align:center;margin-top:12px">Example prices · placeholder</p>
+      <div class="ghead">Included with Pro</div><div class="group"><div class="list">
+        ${fr(I.list, `Daily plan for ${t('your', 'their')} age: sleep, food, movement`)}${fr(I.flame, 'Habit checklist, streaks and bedtime reminders')}${fr(I.chartUp, 'Growth curve and updated predictions')}${fr(I.doc, 'Growth-spurt timing and pediatrician PDF')}
+      </div></div>
+      <p class="footnote l2" style="text-align:center;margin:6px 28px 0">Your prediction stays free. We'll never promise extra cm, just a real plan for ${t('your', 'their')} growth years.</p>
+      ${teen() ? `<div style="text-align:center"><button class="btn btn-plain" style="width:auto;margin:4px auto 0" data-act="askParent">Ask a Parent to Unlock</button></div>` : ''}
+    </div>
+    <div class="pw-foot">
+      <button class="btn btn-filled" data-act="buy" id="buyBtn">${buyLabel()}</button>
+      <p class="footnote l2" style="text-align:center;margin-top:8px" id="renew">${renewText()}</p>
+      <div class="links"><button data-act="restore">Restore Purchases</button><button data-act="legal" data-v="Terms of Use">Terms of Use</button><button data-act="legal" data-v="Privacy Policy">Privacy Policy</button></div>
+    </div></div>` };
+}
+const buyLabel = () => S.plan === 'annual' ? (S.trial ? 'Start 7-Day Free Trial' : `Start My Growth Plan · $${PRICES.annual}/year`) : `Start My Growth Plan · $${PRICES.weekly}/week`;
+const renewText = () => S.plan === 'weekly' ? `Billed $${PRICES.weekly} every week. Renews every week until you cancel. Cancel anytime in Settings.`
+  : S.trial ? `Free for 7 days, then $${PRICES.annual} per year. We'll remind you 2 days before. Cancel at least 24 hours before the trial ends to avoid being charged.`
+  : `Billed $${PRICES.annual} per year. Renews every year until you cancel. Cancel anytime in Settings.`;
+function purchaseSheet() {
+  const annual = S.plan === 'annual';
+  openSheet({ title: 'App Store', detent: 'medium', body: `
+    <div style="display:flex;gap:12px;align-items:center;margin:4px var(--m) 0"><div class="pw-icon" style="width:48px;height:48px;border-radius:11px;margin:0">${leafIcon.replace(/width="40" height="40"/, 'width="24" height="24"')}</div><div><div class="headline">KinHeight Pro · ${annual ? 'Annual' : 'Weekly'}</div><div class="footnote l2">${annual ? 'Unlimited children' : 'Up to 2 children'}</div></div></div>
+    <div class="group" style="margin-top:16px"><div class="list">
+      <div class="row"><span class="grow">Price</span><span class="val">${annual ? (S.trial ? `7 days free, then $${PRICES.annual}/year` : `$${PRICES.annual}/year`) : `$${PRICES.weekly}/week`}</span></div>
+      <div class="row"><span class="grow">Renews</span><span class="val">${annual ? 'Every year' : 'Every week'} until cancelled</span></div></div></div>
+    <p class="gfoot">Simulated App Store sheet for the prototype. No charge.</p>
+    <div style="margin:16px var(--m) 0"><button class="btn btn-filled" id="subBtn">Subscribe</button></div>`,
+    onMount: (ov, api) => { const b = $('#subBtn', ov); b.addEventListener('click', () => { haptic(); b.innerHTML = '<span class="spinner"></span>'; b.style.pointerEvents = 'none';
+      setTimeout(() => { b.innerHTML = `${I.check} Done`; haptic([10, 40, 20]); setTimeout(() => { api.close(); S.paid = true; go('success', 'fade'); }, 650); }, 1100); }); } });
+}
+/* ---------- home (tab bar) ---------- */
+const HABITS = () => [
+  { k: 'stretch', i: I.figure, t: 'Morning stretch & posture', s: '8-minute mobility routine' },
+  { k: 'sleep', i: I.moon, t: `Lights out by ${S.bedtime || '22:00'}`, s: ageYears() >= 13 ? 'Aim for 8–10 hours' : 'Aim for 9–12 hours' },
+  { k: 'meal', i: I.cup, t: 'Protein + calcium meal', s: 'Eggs, yogurt, milk, beans or tofu' },
+  { k: 'sun', i: I.sunSm, t: '15 minutes of daylight', s: 'Outdoors, for vitamin D and movement' },
+  { k: 'water', i: I.drop, t: 'Hydration', s: '6–8 glasses of water' }
+];
+const TABDEF = () => [['today', 'Today', I.sunO, I.sunF], ['growth', 'Growth', I.chartO, I.chartF], ['plan', 'Plan', I.calO, I.calF], ['family', t('Profile', 'Family'), I.peopleO, I.peopleF]];
+function homeScreen() {
+  return { html: `<div class="tabc" id="tabc"></div><nav class="tabbar" role="tablist">${TABDEF().map(([k, l, o, f]) => `<button class="tab ${S.tab === k ? 'on' : ''}" role="tab" aria-selected="${S.tab === k}" data-act="tab" data-v="${k}"><span class="o">${o}</span><span class="f">${f}</span><span>${l}</span></button>`).join('')}</nav>`,
+    mount: el => renderTab(el) };
+}
+function renderTab(el = current) {
+  const c = $('#tabc', el); if (!c) return;
+  $$('.tab', el).forEach(b => { b.classList.toggle('on', b.dataset.v === S.tab); b.setAttribute('aria-selected', b.dataset.v === S.tab); });
+  const keep = c.querySelector('.scroll') && c.dataset.tab === S.tab ? c.querySelector('.scroll').scrollTop : 0;
+  c.dataset.tab = S.tab; c.innerHTML = TABS[S.tab]();
+  const sc = $('.scroll', c); if (sc) { sc.style.paddingBottom = 'calc(49px + var(--sab) + 16px)'; sc.scrollTop = keep; }
+  wireNav(c); TABMOUNT[S.tab] && TABMOUNT[S.tab](c);
+}
+const doneCount = () => HABITS().filter(h => S.habits[h.k]).length;
+function allMeasurements() {
+  return [{ cm: S.heightCm0 || S.heightCm, age: ageYears(), label: 'Starting height', ts: 0 }, ...S.measurements].sort((a, b) => a.age - b.age || a.ts - b.ts);
+}
+const tabPage = (title, inner, right = '', kicker = '') => navBar({ title, right }) + `<div class="scroll"><div class="content" style="padding-bottom:0">
+  <div class="lt-wrap">${kicker ? `<p class="footnote l2" style="font-weight:600;text-transform:uppercase">${kicker}</p>` : ''}<h1 class="largeTitle">${title}</h1></div>${inner}<div style="height:24px"></div></div></div>`;
+function streakDots() {
+  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'], ti = (NOW.getDay() + 6) % 7, prior = S.streak - (S.streakBumped ? 1 : 0);
+  return days.map((d, i) => { const back = ti - i, done = (back > 0 && back <= prior) || (back === 0 && S.streakBumped);
+    return `<div class="wd"><i class="${done ? 'done' : ''} ${i === ti ? 'today' : ''}">${done ? I.checkSm.replace('width="14" height="14"', 'width="11" height="11"') : ''}</i>${d}</div>`; }).join('');
+}
+const TABS = {
+  today: () => { const n = doneCount();
+    return tabPage('Today', `
+      <div class="group"><div class="list"><div class="streak-card"><span class="ico apricot">${I.flame}</span><div><div class="headline"><span id="streakN">${S.streak}</span>-day streak</div><div class="footnote l2">3 habits a day keeps it going</div></div><div class="wdots" id="wdots">${streakDots()}</div></div></div></div>
+      <div class="ghead" style="display:flex;justify-content:space-between"><span>Daily habits</span><span id="doneN">${n} of 5 done</span></div>
+      <div class="group"><div class="list">${HABITS().map(h => `<button class="row icon-row ${S.habits[h.k] ? 'done' : ''}" data-act="habit" data-v="${h.k}" role="checkbox" aria-checked="${!!S.habits[h.k]}"><span class="ico">${h.i}</span><span class="grow"><div class="htitle">${h.t}</div><div class="sub">${h.s}</div></span><span class="hcheck">${S.habits[h.k] ? I.circleCheck : I.circle}</span></button>`).join('')}</div></div>
+      <p class="gfoot">One rest day a week is applied automatically, so a missed day won't break the streak.</p>
+      <div class="ghead">Why it matters</div><div class="group"><div class="list"><div class="row icon-row"><span class="ico soft">${I.moon}</span><span class="grow subhead">Growth hormone peaks during deep sleep. A steady bedtime is one of the best things ${t('you', 'they')} can do in the growth years.</span></div></div></div>`,
+      '', NOW.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })); },
+  growth: () => { const P = predict(), ms = allMeasurements(); let vel = '';
+    if (ms.length >= 2) { const a = ms[0], b = ms[ms.length - 1], dy = b.age - a.age; if (dy >= 0.24) vel = `<div class="row icon-row"><span class="ico soft">${I.bolt}</span><span class="grow">Growth speed<div class="sub">First to latest measurement</div></span><span class="val">${((b.cm - a.cm) / dy).toFixed(1)} cm/yr</span></div>`; }
+    return tabPage('Growth', `
+      <div class="group"><div class="list">
+        <button class="row" data-act="methodSheet"><span class="grow"><div class="subhead l2">Predicted adult height</div><div class="title2" style="color:var(--tint);margin-top:2px">${fmtH(P.value)}</div><div class="sub">Likely ${fmtR(P.low, P.high)} · ${P.method}</div></span><span class="chev">${I.chev}</span></button>
+        <div class="row" style="display:block;padding:12px 8px 8px 4px"><div id="chart"></div>
+          <div class="footnote l2" style="display:flex;gap:14px;padding:4px 12px 0;flex-wrap:wrap"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:5px"></i>Measurements</span><span><i style="display:inline-block;width:12px;height:2px;background:var(--tint);margin:0 5px 3px 0"></i>Projection</span><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--tintFill);margin-right:5px;vertical-align:-1px"></i>Likely range</span></div></div>
+        ${vel}
+      </div></div>
+      <div class="ghead">Measurements</div><div class="group"><div class="list">${ms.slice().reverse().map(m => `<div class="row"><span class="grow">${m.label}<div class="sub">Age ${m.age.toFixed(1)}</div></span><span class="val" style="color:var(--label)">${fmtH(m.cm)}</span></div>`).join('')}
+        <button class="row" data-act="logM"><span class="grow tint">Log Measurement…</span></button></div></div>
+      <p class="gfoot">Measure every 1–3 months, same time of day, no shoes. The curve shape is illustrative; the range comes from the method.</p>`,
+      `<button class="nav-btn" data-act="logM" aria-label="Log measurement">${I.plus}</button>`); },
+  plan: () => { const older = ageYears() >= 13;
+    const week = [['Set bedtime & first 3 habits', 'Pick a lights-out time, tick your first habits', ['Choose bedtime and reminder', 'Do the 8-minute stretch', 'Protein + calcium breakfast']],
+      ['Measure properly', 'Baseline measurement, done right', ['Morning, no shoes, back to the wall', 'Log it in Growth', 'Re-check in 1–3 months']],
+      ['Grocery list for the week', 'Protein, calcium and vitamin D, by aisle', ['Dairy or fortified alternatives', 'Eggs, beans, fish, tofu', 'Leafy greens and fruit']],
+      ['10-minute family activity', 'Jumping, skipping or ball games', ['Skipping rope 3 × 2 min', 'Ball game outside', 'Counts toward 60 active minutes']],
+      ['Posture + mobility', 'Core, back and shoulders', ['Wall angels × 10', 'Cat–cow × 10', 'Plank 3 × 20 s']],
+      ['Sleep check-in', 'How did the week go? Tweak bedtime', ['Review nights on target', 'Adjust wind-down time', 'Screens off 30 min before bed']],
+      ['First Growth Habits Score', 'Your week, plus a 7-day share card', ['Sleep, activity and nutrition score', "Pick next week's focus", 'Share your streak']]];
+    const focus = [[I.moon, 'Sleep', older ? '8–10 h' : '9–12 h'], [I.cup, 'Calcium', ageYears() >= 9 ? '1,300 mg' : '1,000 mg'], [I.figure, 'Active minutes', '60 min'], [I.sunSm, 'Vitamin D', '600 IU']];
+    return tabPage('Plan', `
+      <div class="ghead" style="padding-top:8px">This week's focus</div><div class="group"><div class="list">${focus.map(([ic, k, v]) => `<div class="row icon-row"><span class="ico soft">${ic}</span><span class="grow">${k}</span><span class="val">${v} a day</span></div>`).join('')}</div></div>
+      <div class="ghead">Week 1 · Foundations</div><div class="group"><div class="list">${week.map(([tt, ds, li], i) => `<button class="row icon-row ${S.openDay === i ? 'open' : ''}" data-act="day" data-v="${i}" aria-expanded="${S.openDay === i}"><span class="ico ${i === 0 ? '' : 'soft'}" style="font-weight:700;font-size:.882rem">${i + 1}</span><span class="grow">${tt}${i === 0 ? ' <span class="caption tint" style="font-weight:600">TODAY</span>' : ''}<div class="sub">${ds}</div></span><span class="disc">${I.chev}</span></button><div class="more ${S.openDay === i ? 'open' : ''}"><ul>${li.map(x => `<li>${x}</li>`).join('')}</ul></div>`).join('')}</div></div>
+      <p class="gfoot">Targets from WHO activity guidelines (ages 5–17), AASM/AAP sleep guidance and NIH nutrient recommendations. Not medical advice.</p>`, '', 'Week 1'); },
+  family: () => { const P = predict(), renew = new Date(NOW); if (S.plan === 'annual') renew.setFullYear(renew.getFullYear() + 1); else renew.setDate(renew.getDate() + 7);
+    return tabPage(t('Profile', 'Family'), `
+      <div class="group"><div class="list">
+        <div class="row" style="gap:14px"><span class="ico" style="width:54px;height:54px;border-radius:50%">${I.person.replace('width="19" height="19"', 'width="30" height="30"')}</span><span class="grow"><div class="headline">${t('You', 'Your child')}</div><div class="sub">${ageLabel(ageYears())} · ${fmtH(S.heightCm)} today</div><div class="sub">Predicted ${fmtH(P.value)} (${fmtR(P.low, P.high)})</div></span></div>
+        <button class="row" data-act="addChild"><span class="grow tint">${t('Invite a Parent…', 'Add Child…')}</span></button></div></div>
+      <div class="ghead">Subscription</div><div class="group"><div class="list">
+        <div class="row"><span class="grow">KinHeight Pro</span><span class="val">${S.plan === 'annual' ? 'Annual' : 'Weekly'}${S.trial && S.plan === 'annual' ? ' (trial)' : ''}</span></div>
+        <div class="row"><span class="grow">${S.trial && S.plan === 'annual' ? 'Trial ends' : 'Renews'}</span><span class="val">${(S.trial && S.plan === 'annual' ? new Date(NOW.getTime() + 7 * 864e5) : renew).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
+        <button class="row" data-act="alert" data-v="Manage Subscription|In the real app this opens the App Store subscription settings."><span class="grow tint">Manage Subscription</span></button>
+        <button class="row" data-act="restore"><span class="grow tint">Restore Purchases</span></button></div></div>
+      <div class="ghead">Reminders</div><div class="group"><div class="list">${[['bed', I.moon, 'Bedtime wind-down'], ['morning', I.sunSm, 'Morning plan'], ['checkin', I.ruler.replace('width="24" height="24"', 'width="19" height="19"'), 'Measurement check-in']].map(([k, ic, l]) => `<button class="row icon-row" data-act="rem" data-v="${k}" role="switch" aria-checked="${S.reminders[k]}"><span class="ico">${ic}</span><span class="grow">${l}</span><span class="toggle ${S.reminders[k] ? 'on' : ''}"></span></button>`).join('')}</div></div>
+      <div class="ghead">Settings</div><div class="group"><div class="list">
+        <button class="row icon-row" data-act="unitToggle"><span class="ico gray">${I.ruler.replace('width="24" height="24"', 'width="19" height="19"')}</span><span class="grow">Units</span><span class="val">${S.unit === 'cm' ? 'Metric' : 'US'}</span><span class="chev">${I.chev}</span></button>
+        <button class="row icon-row" data-act="methodSheet"><span class="ico gray">${I.function.replace('width="24" height="24"', 'width="19" height="19"')}</span><span class="grow">Methods & Sources</span><span class="chev">${I.chev}</span></button>
+        <button class="row icon-row" data-act="legal" data-v="Medical Disclaimer"><span class="ico gray">${I.heart}</span><span class="grow">Medical Disclaimer</span><span class="chev">${I.chev}</span></button></div></div>
+      <div class="group" style="margin-top:22px"><div class="list"><button class="row destructive" data-act="deleteAll" style="justify-content:center">Delete All Data</button></div></div>
+      <p class="gfoot" style="text-align:center">All data stays on this device · Prototype v0.2</p>`); }
+};
+const TABMOUNT = {
+  growth: c => {
+    const P = predict(), ms = allMeasurements(), male = S.sex !== 'female';
+    const W = 330, H = 220, L = 38, R = 12, T = 16, B = 24, cur = ms[ms.length - 1];
+    const a0 = Math.max(2, Math.floor(Math.min(...ms.map(m => m.age))) - 1), a1 = 19, endAge = Math.max(cur.age + .5, male ? 18 : 16.5);
+    const y0 = Math.floor((Math.min(...ms.map(m => m.cm)) - 8) / 10) * 10, y1 = Math.ceil((P.high + 6) / 10) * 10;
+    const X = a => L + (a - a0) / (a1 - a0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+    const proj = tg => { const pts = [], sp = endAge - cur.age; for (let i = 0; i <= 24; i++) { const u = i / 24; pts.push([X(cur.age + sp * u), Y(cur.cm + (tg - cur.cm) * (1 - Math.pow(1 - u, 2.2)))]); } if (endAge < a1) pts.push([X(a1), Y(tg)]); return pts; };
+    const line = pts => pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    const ph = proj(P.high), pl = proj(P.low), band = line(ph) + ' ' + pl.slice().reverse().map(p => 'L' + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ') + 'Z';
+    let g = ''; for (let v = y0; v <= y1; v += 10) g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--sep)" stroke-width=".5"/><text x="${L - 6}" y="${Y(v) + 3.5}" text-anchor="end">${S.unit === 'cm' ? v : fmtFt(v).replace(' ', '')}</text>`;
+    for (let a = Math.ceil(a0 / 2) * 2; a <= a1; a += 2) g += `<text x="${X(a)}" y="${H - 6}" text-anchor="middle">${a}</text>`;
+    $('#chart', c).innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Height by age: ${ms.length} measurement(s); projected adult height ${Math.round(P.value)} cm, likely ${Math.round(P.low)} to ${Math.round(P.high)}">${g}
+      <path d="${band}" style="fill:var(--tintFill)"/><path d="${line(proj(P.value))}" fill="none" style="stroke:var(--tint)" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round"/>
+      <text x="${W - R - 2}" y="${Y(P.high) - 6}" text-anchor="end" style="fill:var(--tint);font-weight:600;font-size:11px">${fmtH(P.value)}</text>
+      ${ms.length > 1 ? `<path d="${line(ms.map(m => [X(m.age), Y(m.cm)]))}" fill="none" style="stroke:var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+      ${ms.map(m => `<circle cx="${X(m.age).toFixed(1)}" cy="${Y(m.cm).toFixed(1)}" r="4.5" style="fill:var(--card);stroke:var(--accent)" stroke-width="2.5"/>`).join('')}</svg>`;
+  }
+};
+function logMeasurement() {
+  const opts = [['Today', 0], ['3 mo ago', .25], ['6 mo ago', .5], ['1 yr ago', 1]]; let off = 0;
+  const unit = S.unit === 'cm' ? 'cm' : 'ft';
+  openSheet({ title: 'Log Measurement', left: `<button class="nav-btn" data-close>Cancel</button>`, right: `<button class="nav-btn bold" id="contBtn" disabled>Add</button>`,
+    body: `<div class="ghead" style="padding-top:8px">Date</div><div class="seg-wrap"><div class="seg" id="lmWhen" role="radiogroup" aria-label="Measurement date">${opts.map(([l, o], i) => `<button role="radio" aria-checked="${i === 0}" class="${i === 0 ? 'on' : ''}" data-o="${o}">${l}</button>`).join('')}</div></div>
+      <div class="ghead">Height</div>${numBlock('lm', unit, unit === 'cm' ? 'e.g. 152' : ['5', '0'], 'Height')}<div class="fmsg" id="fmsg" aria-live="polite"></div>
+      <p class="gfoot">Morning, no shoes, heels and back against the wall.</p>`,
+    onMount: (ov, api) => {
+      const check = () => { const r = readMeasure(ov, 'lm', unit); if (r.empty) return { ok: false };
+        if (isNaN(r.value) || r.value < RANGE.height[0] || r.value > RANGE.height[1]) return { ok: false, msg: r.msg || rangeMsg('height', unit), cls: 'err', hard: r.value > 260 };
+        const prev = allMeasurements(); const last = prev[prev.length - 1];
+        if (off === 0 && last && r.value < last.cm - 2) return { ok: true, msg: 'That is lower than the last entry. Please double-check.', cls: 'warn' };
+        return { ok: true, msg: unit === 'cm' ? `= ${fmtFt(r.value)}` : `= ${Math.round(r.value)} cm`, cls: '' }; };
+      const save = () => { const r = readMeasure(ov, 'lm', unit); if (!(r.value >= RANGE.height[0] && r.value <= RANGE.height[1])) return; haptic(10);
+        const before = predict().value; if (!S.heightCm0) S.heightCm0 = S.heightCm;
+        S.measurements.push({ cm: r.value, age: ageYears() - off, label: off === 0 ? 'Today' : opts.find(o => o[1] === off)[0], ts: Date.now() });
+        if (off === 0) S.heightCm = r.value;
+        api.close(); renderTab(); const d = predict().value - before;
+        setTimeout(() => banner('Measurement added', off === 0 ? (Math.abs(d) < .5 ? 'Prediction unchanged' : `Prediction updated ${d > 0 ? '+' : '−'}${Math.abs(d).toFixed(1)} cm`) : 'Saved to your history', I.ruler.replace('width="24" height="24"', 'width="20" height="20"')), 350); };
+      const run = bindForm(ov, check, save);
+      $('#contBtn', ov).addEventListener('click', () => { if (run(true)) save(); });
+      $('#lmWhen', ov).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; haptic(); off = +b.dataset.o; $$('#lmWhen button', ov).forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-checked', x === b); }); run(false); });
+    } });
+}
+/* ---------- actions ---------- */
+function nextStep() {
+  if (S.editing) { S.editing = false; return go('loader', 'push'); }
+  if (S.step < STEPS.length - 1) { S.step++; go('onb', 'push'); } else go('loader', 'push');
+}
+function refresh() {
+  const def = SCREENS.onb(); current.innerHTML = def.html;
+  const p = $('.progress span', current); if (p) { p.style.transition = 'none'; p.style.width = p.dataset.to; }
+  wireNav(current); def.mount && def.mount(current);
+}
+function closeSheets() { $$('.sheet-ov', $('#wrap')).forEach(o => { o.classList.remove('show'); const s = $('.sheet', o); s.style.transform = 'translateY(100%)'; setTimeout(() => o.remove(), 450); }); }
+const ACTIONS = {
+  start: () => { S.step = 0; go('onb', 'push'); },
+  back: () => { if (S.step > 0) { S.step--; go('onb', 'pop'); } else go('welcome', 'pop'); },
+  cancelEdit: () => { S.editing = false; go('result', 'pop'); },
+  next: () => nextStep(),
+  pick: el => { const k = el.dataset.key, v = el.dataset.v;
+    if (k === 'sex' && S.sex && S.sex !== v) S.signs = [];
+    S[k] = v; $$(`.row[data-key="${k}"]`, current).forEach(b => { b.classList.toggle('sel', b === el); b.setAttribute('aria-checked', b === el); });
+    const scr = current; scr.style.pointerEvents = 'none';
+    setTimeout(() => { scr.style.pointerEvents = ''; if (current === scr) nextStep(); }, reduceMotion() ? 150 : 350); },
+  dobMode: () => { S.dobNative = !S.dobNative; refresh(); },
+  unit: el => { if (S.unit === el.dataset.v) return; S.unit = el.dataset.v; refresh(); },
+  wunit: el => { if (S.wunit === el.dataset.v) return; S.wunit = el.dataset.v; refresh(); },
+  skipWeight: () => { S.weightSkipped = true; S.weightKg = null; nextStep(); },
+  dk: el => { const k = el.dataset.v;
+    if (S.unknownParent === k) { S.unknownParent = null; return refresh(); }
+    if (S.unknownParent) return alertBox("We need one parent's height", 'The estimate relies on family height. Please enter at least one parent, even a best guess.');
+    S.unknownParent = k; S[k + 'Cm'] = null; refresh(); },
+  sign: el => { const v = el.dataset.v; let s = S.signs;
+    if (v === 'none' || v === 'unsure') s = s.includes(v) ? [] : [v];
+    else { s = s.filter(x => x !== 'none' && x !== 'unsure'); s = s.includes(v) ? s.filter(x => x !== v) : [...s, v]; }
+    S.signs = s; $$('.row[data-act="sign"]', current).forEach(b => { b.classList.toggle('sel', s.includes(b.dataset.v)); b.setAttribute('aria-checked', s.includes(b.dataset.v)); });
+    $('#contBtn', current).disabled = !s.length; },
+  methodSheet: () => methodSheet(),
+  shareCard: () => shareCard(),
+  shareDo: el => { closeSheets(); setTimeout(() => banner(el.dataset.v, 'Prototype: no file was created', I.share.replace('width="22" height="22"', 'width="20" height="20"')), 300); },
+  edit: el => { S.editing = true; S.step = +el.dataset.v; go('onb', 'push'); },
+  paywall: el => { S.paywallFrom = el.dataset.from; go('paywall', 'modal'); },
+  closePaywall: () => go(S.paid ? 'home' : 'result', 'dismiss'),
+  plan: el => { S.plan = el.dataset.v; $$('.plan-opt', current).forEach(b => { b.classList.toggle('sel', b === el); b.setAttribute('aria-checked', b === el); });
+    $('#trialRow', current).style.display = S.plan === 'annual' ? '' : 'none'; $('#buyBtn', current).textContent = buyLabel(); $('#renew', current).textContent = renewText(); },
+  trial: el => { S.trial = !S.trial; $('.toggle', el).classList.toggle('on', S.trial); el.setAttribute('aria-checked', S.trial); $('#buyBtn', current).textContent = buyLabel(); $('#renew', current).textContent = renewText(); },
+  buy: () => purchaseSheet(),
+  restore: () => alertBox('Restore Purchases', S.paid ? 'Your KinHeight Pro subscription is active.' : 'No previous purchases were found for this Apple ID. (Prototype)'),
+  legal: el => openSheet({ title: esc(el.dataset.v), right: `<button class="nav-btn bold" data-close>Done</button>`, detent: 'medium', body: `<div class="group"><div class="list"><div class="row" style="display:block"><p class="body">Placeholder ${esc(el.dataset.v)} for the prototype.</p><p class="subhead l2" style="margin-top:8px">KinHeight gives estimates, not medical diagnoses. Predictions use published formulas with known error ranges. Always talk to a pediatrician about growth concerns.</p></div></div></div>` }),
+  askParent: () => alertBox('Ask a Parent', 'In the app this sends a link so a parent can approve the purchase (Ask to Buy / Family Link). Prototype only.'),
+  bed: el => { S.bedtime = el.dataset.v; $$('.row[data-act="bed"]', current).forEach(b => { b.classList.toggle('sel', b === el); b.setAttribute('aria-checked', b === el); }); $('#contBtn', current).disabled = false; },
+  remToggle: el => { S.reminders.bed = !S.reminders.bed; $('.toggle', el).classList.toggle('on', S.reminders.bed); el.setAttribute('aria-checked', S.reminders.bed); },
+  startPlan: () => { const done = () => { S.tab = 'today'; go('home', 'fade'); };
+    if (!S.reminders.bed) return done();
+    alertBox('“KinHeight” Would Like to Send You Notifications', 'Bedtime wind-down and your morning plan, at most 2 a day. You can change this in Settings. (Simulated system prompt)',
+      [{ t: "Don't Allow", fn: () => { S.reminders.bed = false; S.reminders.morning = false; done(); } }, { t: 'Allow', pref: true, fn: () => { done(); setTimeout(() => banner('Bedtime reminder set', `Wind-down nudge 30 minutes before ${S.bedtime}`, I.moon), 600); } }]); },
+  tab: el => { if (S.tab === el.dataset.v) { const sc = $('#tabc .scroll', current); sc && sc.scrollTo({ top: 0, behavior: 'smooth' }); return; } S.tab = el.dataset.v; renderTab(); },
+  habit: el => { const k = el.dataset.v; S.habits[k] = !S.habits[k]; el.classList.toggle('done', S.habits[k]); el.setAttribute('aria-checked', S.habits[k]); $('.hcheck', el).innerHTML = S.habits[k] ? I.circleCheck : I.circle; haptic(S.habits[k] ? 10 : 4);
+    const n = doneCount(); $('#doneN', current).textContent = `${n} of 5 done`;
+    if (n >= 3 && !S.streakBumped) { S.streakBumped = true; S.streak++; $('#streakN', current).textContent = S.streak; $('#wdots', current).innerHTML = streakDots();
+      banner(`${S.streak}-day streak!`, 'Nice work. Keep it going tomorrow.', I.flame, 'apricot'); confetti(); }
+    else if (n === 5 && S.habits[k]) banner('All 5 habits done', 'A great day for growing.', I.check); },
+  logM: () => logMeasurement(),
+  day: el => { const i = +el.dataset.v; S.openDay = S.openDay === i ? -1 : i;
+    $$('.row[data-act="day"]', current).forEach((d, j) => { d.classList.toggle('open', S.openDay === j); d.setAttribute('aria-expanded', S.openDay === j); d.nextElementSibling.classList.toggle('open', S.openDay === j); }); },
+  rem: el => { const k = el.dataset.v; S.reminders[k] = !S.reminders[k]; $('.toggle', el).classList.toggle('on', S.reminders[k]); el.setAttribute('aria-checked', S.reminders[k]); },
+  unitToggle: () => { S.unit = S.unit === 'cm' ? 'ft' : 'cm'; S.wunit = S.unit === 'cm' ? 'kg' : 'lb'; renderTab(); },
+  addChild: () => alertBox(teen() ? 'Invite a Parent' : 'Add Child', teen() ? 'Shares an invite link so a parent can follow your plan. (Prototype)' : 'Opens the same short setup for another child. Annual includes unlimited children. (Prototype)'),
+  alert: el => { const [a, b] = el.dataset.v.split('|'); alertBox(a, b); },
+  deleteAll: () => alertBox('Delete All Data?', 'This removes every measurement and setting from this device. This can’t be undone.', [{ t: 'Cancel' }, { t: 'Delete', destructive: true, fn: restart }])
+};
+function dispatch(e) { if (e.__kh) return; e.__kh = true; const a = e.target.closest('[data-act]'); if (!a || a.disabled) return; haptic(); const fn = ACTIONS[a.dataset.act]; if (fn) fn(a, e); }
+host.addEventListener('click', dispatch);
+$('#wrap').addEventListener('click', dispatch);
+
+function restart() { S = DEFAULTS(); $$('.sheet-ov,.alert-ov,.banner', $('#wrap')).forEach(n => n.remove()); go('welcome', 'fade'); }
+$('#restart').addEventListener('click', e => { e.preventDefault(); restart(); });
+
+function fit() { const d = $('#device'); if (innerWidth <= 500) { d.style.transform = ''; d.style.margin = ''; return; }
+  const s = Math.min(1, (innerHeight - 70) / 866, (innerWidth - 40) / 412);
+  d.style.transform = s < 1 ? `scale(${s})` : ''; d.style.margin = s < 1 ? `${-(866 * (1 - s)) / 2}px ${-(412 * (1 - s)) / 2}px` : ''; }
+addEventListener('resize', fit); fit();
+window.__KH = { state: () => S, go, predict };
+go('welcome', 'fade');
+</script>
+</body>
+</html>

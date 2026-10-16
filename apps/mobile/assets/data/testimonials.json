@@ -1,0 +1,4 @@
+{
+  "_comment": "Only entries with approved=true AND consentDate are ever shown (brief §11.7). Teens need parental consent. No cm/inch gains, no medical outcomes. scripts/check-testimonials.js fails release builds on violations.",
+  "testimonials": []
+}
