@@ -49,6 +49,9 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 Scripts: `scripts/qa/serve.js` (static server with COOP/COEP) and `scripts/qa/flow.js` (Playwright walkthrough; set `PLAYWRIGHT_PATH=/opt/node-tools/node_modules/playwright` in the cloud sandbox). Run: `node scripts/qa/serve.js apps/mobile/dist 8099 &` then `node scripts/qa/flow.js light`.
 
 ## Open questions for the product owner (ask at the end)
-- Merge to `main` / open a PR?
-- The 3.5 cm widening for an unknown parent is still a prototype assumption (§13.4).
-- Domain `tallsoon.app` and support email are placeholders in `AppConfig`.
+- Domain `tallsoon.app` and support email stay placeholders in `AppConfig` for now (owner's call).
+
+## Resolved
+- `main` created from the build branch (owner's call).
+- Unknown-parent widening: replaced the prototype's fixed 3.5 cm with a figure derived from published data (see DECISIONS.md).
+- SVG growth chart instead of victory-native: approved.

@@ -8,7 +8,7 @@ import {
   lookupKhamisRoche,
   midParentalTargetCm,
   MPH_BOUND_CM,
-  UNKNOWN_PARENT_WIDEN_CM,
+  widenForEstimatedParent,
   type KhamisRocheCoefficients,
 } from '../methods';
 import { cmToFtIn, formatFtIn, formatHeightRange, ftInToCm, kgToLb, lbToKg, parseDecimal, sanitizeDecimal } from '../units';
@@ -141,6 +141,19 @@ describe('Khamis–Roche coefficients (bundled, erratum-corrected)', () => {
   });
 });
 
+describe('unknown-parent widening', () => {
+  it('derives adult height SDs from the CDC 2000 reference at 20 y', () => {
+    expect(engine.adultHeightSdCm.father).toBeCloseTo(7.14, 1);
+    expect(engine.adultHeightSdCm.mother).toBeCloseTo(6.47, 1);
+  });
+  it('combines the method error and the substituted parent in quadrature', () => {
+    // Mid-parental, father unknown: 2·√(4.25² + (7.14/2)²) ≈ 11.1 cm.
+    expect(widenForEstimatedParent(8.5, 2, 0.5, engine.adultHeightSdCm.father)).toBeCloseTo(11.1, 1);
+    expect(widenForEstimatedParent(8.5, 2, 0.5, engine.adultHeightSdCm.mother)).toBeCloseTo(10.69, 1);
+    expect(widenForEstimatedParent(5.3, 1.645, 0, 7)).toBeCloseTo(5.3, 9);
+  });
+});
+
 describe('mid-parental height', () => {
   it('uses ±13 cm by sex', () => {
     expect(midParentalTargetCm('male', 165, 180)).toBe(179);
@@ -190,8 +203,11 @@ describe('predict', () => {
     expect(s.estimatedParent).toBe('father');
     const kr = s.predictions.find((p) => p.method === 'khamisRoche')!;
     const mph = s.predictions.find((p) => p.method === 'midParental')!;
-    expect(kr.plusMinusCm).toBeCloseTo(KR_BOUND_90_CM.male + UNKNOWN_PARENT_WIDEN_CM, 9);
-    expect(mph.plusMinusCm).toBeCloseTo(MPH_BOUND_CM + UNKNOWN_PARENT_WIDEN_CM, 9);
+    // Widening is derived from the CDC 2000 SD of adult height, not a fixed guess.
+    expect(mph.plusMinusCm).toBeGreaterThan(MPH_BOUND_CM + 2);
+    expect(mph.plusMinusCm).toBeLessThan(MPH_BOUND_CM + 3);
+    expect(kr.plusMinusCm).toBeGreaterThan(KR_BOUND_90_CM.male);
+    expect(kr.plusMinusCm).toBeLessThan(KR_BOUND_90_CM.male + 1.5);
     expect(mph.inputsUsed.fatherCm).toBe('175.3');
     expect(kr.notes).toContain('parentEstimated');
   });

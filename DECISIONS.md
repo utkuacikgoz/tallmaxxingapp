@@ -2,6 +2,11 @@
 
 Choices made where the brief left room, or where the brief was deliberately departed from. Newest first.
 
+- **Unknown-parent range widening is derived, not assumed** (owner asked for a published figure, replacing the prototype's 3.5 cm). The substituted parent's error has SD = the parent's weight in the formula × the SD of adult height for that sex. That SD comes from the bundled CDC 2000 stature-for-age LMS at 20 years (Kuczmarski et al. 2002): 7.14 cm for men, 6.47 cm for women, computed at runtime. It combines in quadrature with the method's own error: `halfWidth = z·√((base/z)² + (w·SD)²)`.
+  - Mid-parental (z = 2 for Tanner's ±8.5 cm; w = ½): ±11.1 cm with the father unknown, ±10.7 cm with the mother unknown (was ±12.0).
+  - Khamis–Roche (z = 1.645 for the 90% bounds; w = ½ × that row's midparent coefficient): about +1 cm or less.
+  - The substituted mean is still NHANES 2015–2018 (161.3 / 175.3 cm, the brief's choice).
+  - Still for product review: whether to use local population averages outside the US.
 - **App name: TallSoon.** Set in `AppConfig.appName` and in `app.config.ts`.
 - **Growth chart is drawn in SVG (react-native-svg + d3-shape), not victory-native/Skia.** The app and the pediatrician PDF draw from one data builder (`buildGrowthChart` in the engine), so they can never disagree. It also renders on web for QA. Tapping a point shows its percentile and z-score. Confetti still uses Skia (react-native-fast-confetti).
 - **Native tabs** (`expo-router/native-tabs`): the system tab bar on each OS (SF Symbols on iOS, Material Symbols on Android).

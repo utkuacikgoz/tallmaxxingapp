@@ -166,6 +166,7 @@ export default function MethodSheet() {
             {t('method.estimatedNote', {
               parent: t(`result.lead.${estimated}`),
               height: formatHeight(populationAdultHeightCm[estimated], unit),
+              sd: engine.adultHeightSdCm[estimated].toFixed(1),
             })}
           </Text>
         ) : null}

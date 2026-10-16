@@ -118,7 +118,7 @@ const en = {
       unknownRow: 'Unknown · we’ll use an average ({{height}})',
       footer: 'Don’t know one parent’s height? Tap “Don’t know”. We can still estimate, with a wider range.',
       footerUnknown:
-        'Accuracy is reduced: with one parent unknown we use the US adult average ({{height}}) for that parent and widen the likely range by about 3.5 cm on each side.',
+        'Accuracy is reduced: with one parent unknown we use the US adult average ({{height}}) for that parent and widen the likely range by about 2–3 cm on each side, based on how much adult heights vary.',
       bothUnknownTitle: 'We need one parent’s height',
       bothUnknownBody: 'The estimate relies on family height. Please enter at least one parent, even a best guess.',
       a11yMother: 'Mother’s height in {{unit}}',
@@ -300,7 +300,7 @@ const en = {
     projHeader: 'Growth curve projection',
     projBody: 'Today’s height is at the {{ordinal}} percentile on the {{ref}} chart. Keeping that percentile to adulthood gives {{value}}. The band (z ± 0.5) is illustrative, not a statistical range. Children often move between percentiles, especially around puberty.',
     resultRow: 'Result',
-    estimatedNote: 'The {{parent}}’s height is unknown, so we used the US adult average ({{height}}, NHANES 2015–2018) and widened the range by 3.5 cm on each side.',
+    estimatedNote: 'The {{parent}}’s height is unknown, so we used the US adult average ({{height}}, NHANES 2015–2018). To allow for it, each range is widened by how much adult heights vary (SD {{sd}} cm, CDC 2000 reference at age 20), combined with the method’s own error.',
     flooredNote: 'The formula came out below today’s height, so we show today’s height instead. Children don’t get shorter.',
     verified: 'Coefficients cross-checked against {{n}} independent sources (erratum-corrected).',
     limitsHeader: 'Accuracy and limits',

@@ -1,6 +1,6 @@
 import { ageInMonths, ageInYears } from './age';
 import type { GrowthReference, LmsTableJson } from './lms';
-import { createReference, heightForAge } from './lms';
+import { createReference, heightForAge, valueFromLms } from './lms';
 import type { KhamisRocheCoefficients } from './methods';
 import { khamisRoche, KR_MAX_AGE, KR_MIN_AGE, lookupKhamisRoche, midParental, percentileProjection } from './methods';
 import type {
@@ -32,6 +32,8 @@ export interface Engine {
   referenceFor(preferred: ReferenceId, ageMonths: number): GrowthReference | null;
   khamisRocheRows: readonly KhamisRocheCoefficients[];
   populationAdultHeightCm: Record<ParentKey, number>;
+  /** SD of adult height by parent, from the CDC 2000 reference at 20 years. */
+  adultHeightSdCm: Record<ParentKey, number>;
 }
 
 /** CDC 2000 projects to 20 y (240 months), WHO 2007 to 19 y (228 months). */
@@ -43,6 +45,14 @@ export function createEngine(data: EngineData): Engine {
     cdc: createReference('cdc', 'CDC', data.cdc, CDC_ADULT_MONTHS),
     who: createReference('who', 'WHO', data.who, WHO_ADULT_MONTHS),
   };
+
+  // SD of adult height at 20 y from the CDC 2000 LMS: half the distance between z = −1 and z = +1.
+  const sdAt = (sex: 'male' | 'female') => {
+    const lms = references.cdc.lmsAt(sex, references.cdc.adultMonths);
+    if (!lms) throw new Error('CDC reference lacks adult ages');
+    return (valueFromLms(1, lms) - valueFromLms(-1, lms)) / 2;
+  };
+  const adultHeightSdCm: Record<ParentKey, number> = { mother: sdAt('female'), father: sdAt('male') };
 
   function referenceFor(preferred: ReferenceId, ageMonths: number): GrowthReference | null {
     const covers = (r: GrowthReference) => ageMonths >= r.minMonths && ageMonths <= r.maxMonths;
@@ -71,7 +81,7 @@ export function createEngine(data: EngineData): Engine {
         parentMethodsAllowed = false;
       }
     }
-    const parentEstimated = estimatedParent != null;
+    const estimatedParentSdCm = estimatedParent != null ? adultHeightSdCm[estimatedParent] : null;
 
     const predictions: Prediction[] = [];
     let fallback: FallbackReason = 'none';
@@ -92,7 +102,7 @@ export function createEngine(data: EngineData): Engine {
           weightKg: input.weightKg,
           motherCm: mother,
           fatherCm: father,
-          parentEstimated,
+          estimatedParentSdCm,
         });
       } else {
         fallback = 'coefficientsUnverified';
@@ -102,7 +112,7 @@ export function createEngine(data: EngineData): Engine {
     // B. Mid-parental height.
     const mph =
       parentMethodsAllowed && mother != null && father != null
-        ? midParental({ sex: input.sex, motherCm: mother, fatherCm: father, parentEstimated })
+        ? midParental({ sex: input.sex, motherCm: mother, fatherCm: father, estimatedParentSdCm })
         : null;
 
     // C. Percentile projection (not under 4: brief §13.4 "Under 4, we use mid-parental height only").
@@ -160,5 +170,6 @@ export function createEngine(data: EngineData): Engine {
     referenceFor,
     khamisRocheRows: data.khamisRoche.rows,
     populationAdultHeightCm: data.populationAdultHeightCm,
+    adultHeightSdCm,
   };
 }

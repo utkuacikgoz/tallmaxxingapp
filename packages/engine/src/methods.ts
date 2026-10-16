@@ -18,8 +18,21 @@ export const KR_BOUND_90_CM: Record<Sex, number> = { male: 5.3, female: 4.3 };
 export const KR_BOUND_50_CM: Record<Sex, number> = { male: 2.2, female: 1.7 };
 /** ≈ 2 SD target range for mid-parental height (Tanner 1970). */
 export const MPH_BOUND_CM = 8.5;
-/** Prototype assumption for one estimated parent, flagged for product review (brief §13.4). */
-export const UNKNOWN_PARENT_WIDEN_CM = 3.5;
+/** Tanner's ±8.5 cm target range is ≈ ±2 SD; Khamis–Roche bounds are 90% (±1.645 SD). */
+export const MPH_RANGE_Z = 2;
+export const KR_RANGE_Z = 1.645;
+
+/**
+ * Range half-width when one parent's height is replaced by the population mean (brief §13.4).
+ * The substituted parent adds error with SD = weight × SD of adult height for that sex, where
+ * `weight` is how much one parent moves the formula (½ for mid-parental, ½ × coefficient for
+ * Khamis–Roche). It combines with the method's own error in quadrature:
+ * halfWidth = z · √((base / z)² + (weight · parentSd)²).
+ * Parent SDs come from the CDC 2000 reference at 20 years (see `adultHeightSdCm` in predict.ts).
+ */
+export function widenForEstimatedParent(baseHalfWidthCm: number, z: number, weight: number, parentSdCm: number): number {
+  return z * Math.sqrt((baseHalfWidthCm / z) ** 2 + (weight * parentSdCm) ** 2);
+}
 /** Percentile projection band: z ± 0.5, illustrative only. */
 export const PROJECTION_Z_BAND = 0.5;
 
@@ -78,17 +91,22 @@ export function khamisRoche(opts: {
   weightKg: number;
   motherCm: number;
   fatherCm: number;
-  parentEstimated: boolean;
+  /** SD of adult height for the estimated parent's sex, or null when both parents are known. */
+  estimatedParentSdCm: number | null;
 }): Prediction {
   const worked = khamisRocheWorked(opts.row, opts.heightCm, opts.weightKg, opts.motherCm, opts.fatherCm);
-  const plusMinus = KR_BOUND_90_CM[opts.sex] + (opts.parentEstimated ? UNKNOWN_PARENT_WIDEN_CM : 0);
+  const base = KR_BOUND_90_CM[opts.sex];
+  const parentEstimated = opts.estimatedParentSdCm != null;
+  const plusMinus = parentEstimated
+    ? widenForEstimatedParent(base, KR_RANGE_Z, Math.abs(opts.row.midparent_coef) / 2, opts.estimatedParentSdCm as number)
+    : base;
   const notes: Prediction['notes'] = [];
   let estimate = worked.resultCm;
   if (estimate < opts.heightCm) {
     estimate = opts.heightCm;
     notes.push('flooredAtCurrentHeight');
   }
-  if (opts.parentEstimated) notes.push('parentEstimated');
+  if (parentEstimated) notes.push('parentEstimated');
   return {
     method: 'khamisRoche',
     estimateCm: estimate,
@@ -112,9 +130,10 @@ export function midParentalTargetCm(sex: Sex, motherCm: number, fatherCm: number
   return (fatherCm + motherCm + (sex === 'male' ? 13 : -13)) / 2;
 }
 
-export function midParental(opts: { sex: Sex; motherCm: number; fatherCm: number; parentEstimated: boolean }): Prediction {
+export function midParental(opts: { sex: Sex; motherCm: number; fatherCm: number; estimatedParentSdCm: number | null }): Prediction {
   const target = midParentalTargetCm(opts.sex, opts.motherCm, opts.fatherCm);
-  const plusMinus = MPH_BOUND_CM + (opts.parentEstimated ? UNKNOWN_PARENT_WIDEN_CM : 0);
+  const parentEstimated = opts.estimatedParentSdCm != null;
+  const plusMinus = parentEstimated ? widenForEstimatedParent(MPH_BOUND_CM, MPH_RANGE_Z, 0.5, opts.estimatedParentSdCm as number) : MPH_BOUND_CM;
   return {
     method: 'midParental',
     estimateCm: target,
@@ -123,7 +142,7 @@ export function midParental(opts: { sex: Sex; motherCm: number; fatherCm: number
     plusMinusCm: plusMinus,
     inputsUsed: { motherCm: opts.motherCm.toFixed(1), fatherCm: opts.fatherCm.toFixed(1) },
     citation: CITATIONS.midParental,
-    notes: opts.parentEstimated ? ['parentEstimated'] : [],
+    notes: parentEstimated ? ['parentEstimated'] : [],
   };
 }
 
