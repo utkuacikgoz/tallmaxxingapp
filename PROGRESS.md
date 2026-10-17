@@ -5,7 +5,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 
 ## How to resume (for a new session)
 
-1. Read this file, then `DECISIONS.md`.
+1. Read `AGENTS.md` (agent brief), this file, then `DECISIONS.md`.
 2. `pnpm install` at the repo root (pnpm 10, Node 22).
 3. Quick checks: `pnpm -r typecheck`, `pnpm --filter @tallsoon/engine test`, `pnpm --filter @tallsoon/content test`.
 4. Visual QA on web: `cd apps/mobile && CI=1 EXPO_OFFLINE=1 npx expo export --platform web`, serve `dist/`
