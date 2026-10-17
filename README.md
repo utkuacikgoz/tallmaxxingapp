@@ -6,7 +6,7 @@ TallSoon is a local-first height prediction and growth-habits app built with Exp
 
 - Node.js 22.22 or Node.js 24.3+ (Node 24 LTS is used in CI) and pnpm 10 (`packageManager` is pinned in the root `package.json`).
 - An iOS simulator with Xcode, or an Android emulator with Android Studio, for native development.
-- An Expo account and EAS project for cloud builds. EAS project identifiers and signing credentials have not been provisioned in this repository.
+- Access to the linked Expo project for cloud builds. Signing credentials still need provisioning.
 
 ## Install and run
 
@@ -39,7 +39,7 @@ The mobile package also defines `typecheck`, `test`, and `lint` scripts. Run `pn
 
 ## EAS build and submit
 
-Run EAS commands from `apps/mobile`. Link the app to the real Expo project first (`npx eas-cli@latest project:init`), then configure the actual `EAS_OWNER` and `EAS_PROJECT_ID` values used by `app.config.ts`. No project ID, signing credential, App Store Connect app ID, or Play service-account credential is included in this repo.
+Run EAS commands from `apps/mobile`. The app is linked to [`@utkuacikgoz/tallsoon`](https://expo.dev/accounts/utkuacikgoz/projects/tallsoon); `EAS_OWNER` and `EAS_PROJECT_ID` may explicitly override that linkage. Signing credentials, the App Store Connect app ID and Play service-account credentials still need provisioning. See [TestFlight setup](docs/TESTFLIGHT_SETUP.md) for verified account records and the remaining steps.
 
 Configure `EXPO_PUBLIC_RC_IOS_KEY` and `EXPO_PUBLIC_RC_ANDROID_KEY` as app-specific RevenueCat SDK keys in the matching EAS environments. The public SDK keys are embedded in the app; do not put RevenueCat secret API keys or store service-account JSON in these variables. When EAS evaluates a production build (`APP_VARIANT=production`, `EAS_BUILD=true`), `app.config.ts` requires the key matching `EAS_BUILD_PLATFORM` and stops the build if it is missing. Debug builds and web previews may omit keys and use the mock. Native release builds, including the preview profile, show store-unavailable messaging when keys are missing; they cannot simulate a purchase. Verified store products are still required before a production release.
 

@@ -4,7 +4,7 @@ Items below need access to the product owner's store, Expo, domain, or review ac
 
 ## EAS and native releases
 
-- [ ] Create/link the Expo project and configure its real `owner` and `projectId` for `apps/mobile/app.config.ts` (`EAS_OWNER`, `EAS_PROJECT_ID`).
+- [x] Created and verified `@utkuacikgoz/tallsoon`; configured its real owner and project ID as defaults in `apps/mobile/app.config.ts`. Environment overrides remain available. See `docs/TESTFLIGHT_SETUP.md`.
 - [ ] Configure real app-specific RevenueCat SDK keys for `EXPO_PUBLIC_RC_IOS_KEY` and `EXPO_PUBLIC_RC_ANDROID_KEY` in the EAS production environment. The production EAS build now fails during config evaluation if the key for its `EAS_BUILD_PLATFORM` is missing; only debug builds and web previews may simulate purchases. Native preview/release builds need platform-matching SDK keys to test billing; a missing key shows store-unavailable messaging.
 - [ ] Set up EAS iOS signing and App Store Connect access; confirm the actual bundle ID `app.tallsoon` is registered and select the correct app in EAS Submit.
 - [ ] Set up the Google Play app, signing, and EAS Submit service-account access; confirm package ID `app.tallsoon`. The production submit profile targets the Play **internal** track.

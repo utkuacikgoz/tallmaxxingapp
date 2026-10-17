@@ -93,7 +93,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ['expo-build-properties', { android: { targetSdkVersion: 36, compileSdkVersion: 37 }, ios: { deploymentTarget: '16.4' } }],
     ],
     experiments: { typedRoutes: false, reactCompiler: true },
-    extra: { eas: { projectId: process.env.EAS_PROJECT_ID } },
-    owner: process.env.EAS_OWNER,
+    extra: { eas: { projectId: process.env.EAS_PROJECT_ID ?? '830cb434-572b-47bf-a88f-6e909f4141ff' } },
+    owner: process.env.EAS_OWNER ?? 'utkuacikgoz',
   };
 };

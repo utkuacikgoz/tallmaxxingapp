@@ -139,6 +139,15 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Evidence, environment and release limits are recorded in `docs/NATIVE_QA.md`.
 - Corrected the native README checklist reference to the existing repository-root file.
 
+### TestFlight / RevenueCat account setup · 2026-10-18
+- Created and verified Expo project `@utkuacikgoz/tallsoon` with ID
+  `830cb434-572b-47bf-a88f-6e909f4141ff`. Dynamic app config now links that verified project by
+  default; environment variables remain available as explicit overrides.
+- Created RevenueCat project `TallSoon` (`40ce0c3d`). Catalog and Apple app integration are still
+  being configured; project creation alone does not establish working store billing.
+- Apple signing, subscription products, RevenueCat iOS credentials/key and TestFlight upload are
+  not complete. See `docs/TESTFLIGHT_SETUP.md` for identifiers and the remaining sequence.
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 
