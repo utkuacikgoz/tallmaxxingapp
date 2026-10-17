@@ -3,6 +3,8 @@ import { create } from 'zustand';
 
 import { useSettings } from '@/state/settings';
 import { createMockEntitlementService } from './mock';
+import { entitlementMode } from './mode';
+import { createUnavailableEntitlementService } from './unavailable';
 import { createRevenueCatService } from './revenuecat';
 import { FREE_STATUS, type EntitlementService, type EntitlementStatus } from './types';
 
@@ -14,7 +16,10 @@ function pickService(): EntitlementService {
     android: process.env.EXPO_PUBLIC_RC_ANDROID_KEY,
     default: undefined,
   });
-  return key ? createRevenueCatService(key) : createMockEntitlementService();
+  const mode = entitlementMode(Platform.OS === 'ios' || Platform.OS === 'android', __DEV__, key);
+  if (mode === 'revenuecat') return createRevenueCatService(key!.trim());
+  if (mode === 'mock') return createMockEntitlementService();
+  return createUnavailableEntitlementService(useSettings.getState().proHint);
 }
 
 export const entitlements: EntitlementService = pickService();

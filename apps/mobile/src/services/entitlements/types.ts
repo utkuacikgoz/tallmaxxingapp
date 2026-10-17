@@ -34,7 +34,7 @@ export interface EntitlementStatus {
 export type PurchaseResult = { status: 'purchased'; entitlement: EntitlementStatus } | { status: 'cancelled' } | { status: 'pending' };
 
 export interface EntitlementService {
-  readonly kind: 'revenuecat' | 'mock';
+  readonly kind: 'revenuecat' | 'mock' | 'unavailable';
   configure(): Promise<void>;
   getStatus(): Promise<EntitlementStatus>;
   getOffering(): Promise<Offering>;

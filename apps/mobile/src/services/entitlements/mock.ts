@@ -16,7 +16,7 @@ function load(): EntitlementStatus {
 }
 
 /**
- * Used in tests, on web and in builds without RevenueCat keys. Prices are the brief's example
+ * Used in tests, on web and in debug builds without RevenueCat keys. Prices are the brief's example
  * prices and the paywall labels them "Example prices · placeholder".
  */
 export function createMockEntitlementService(): EntitlementService {

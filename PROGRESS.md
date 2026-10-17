@@ -38,9 +38,9 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - [x] Mobile Jest tests (jest-expo): ChoiceList auto-advance lock, MeasureField unit switch precision, paywall price and CTA logic, savePercent
 - [x] Maestro flows authored in `.maestro/` (parent, teen 13+, under-13 hand-off, free result, paywall close, check-in, delete data); native execution pending
 - [x] `apps/web`: static site (Astro or Vite) with the calculator importing `@tallsoon/engine`, plus /method, /pricing, /privacy, /terms, /support
-- [ ] App icon and splash PNGs generated from `AppIcon` (1024 px), Android adaptive icon layers
-- [ ] `eas.json` (development / preview / production), EAS Submit config
-- [ ] Docs: README (build/run/test), REVIEW_NOTES.md (App Review), PLAY_DECLARATIONS.md, manual checklist (store products, RevenueCat keys, privacy URL, consented testimonials, pediatric content review)
+- [x] App icon and splash PNGs generated from `AppIcon` (1024 px), Android adaptive icon layers
+- [x] `eas.json` (development / preview / production), EAS Submit config
+- [x] Docs: README (build/run/test), REVIEW_NOTES.md (App Review), PLAY_DECLARATIONS.md, manual checklist (store products, RevenueCat keys, privacy URL, consented testimonials, pediatric content review)
 - [ ] Accessibility pass: large font sizes on every screen, VoiceOver labels, Reduce Motion
 - [ ] Milestone share cards (7/30/100-day streaks, first check-in), weekly-to-annual upgrade card after week 2
 - [ ] Debug-only demo data mode for store screenshots
@@ -75,6 +75,17 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Validation: Astro build/check, mobile typecheck and website Playwright smoke checks. No hosting
   deployment or live store links; support/legal details remain owner release tasks.
 - Node 24 LTS is used in CI (Astro requires Node 22.22+ / supported Node 24).
+
+### Wave 4 · assets and release foundations
+- Rendered all six brand assets from the existing vector leaf, including a full-bleed 1024 px icon,
+  splash and Android adaptive background/foreground/monochrome layers. Existing config paths apply.
+- Added EAS development/preview/production profiles, remote build numbering, Submit internal-track
+  setup, the SDK-compatible development client and environment examples. SDK 58 compile SDK is 37.
+- Added setup/release docs, App Review notes, Play declaration drafts and the owner checklist.
+- Missing RevenueCat keys block production EAS builds; native release runtime also refuses simulated
+  purchases. The free prediction remains usable and existing paid history remains read-only.
+- Validation: release config/profile/asset checks, 2 new entitlement safety tests, mobile typecheck;
+  native simulator builds and real store setup are tracked separately, not implied by these checks.
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.

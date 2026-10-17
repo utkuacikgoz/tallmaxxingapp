@@ -4,6 +4,10 @@
   with a floating top menu. A web-only Expo Router bottom-tab layout preserves usable preview/QA.
   Native iOS/Android continue to use the agreed system native tabs.
 
+- **Missing native release store keys fail closed.** Debug builds and web may simulate purchases.
+  A native release without a RevenueCat key keeps the free prediction and read-only paid history,
+  but cannot show example purchase prices or grant Pro. Production EAS also rejects the build early.
+
 Choices made where the brief left room, or where the brief was deliberately departed from. Newest first.
 
 - **Unknown-parent range widening is derived, not assumed** (owner asked for a published figure, replacing the prototype's 3.5 cm). The substituted parent's error has SD = the parent's weight in the formula × the SD of adult height for that sex. That SD comes from the bundled CDC 2000 stature-for-age LMS at 20 years (Kuczmarski et al. 2002): 7.14 cm for men, 6.47 cm for women, computed at runtime. It combines in quadrature with the method's own error: `halfWidth = z·√((base/z)² + (w·SD)²)`.

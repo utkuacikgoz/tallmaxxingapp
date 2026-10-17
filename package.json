@@ -7,7 +7,8 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "pnpm -r --if-present lint",
     "mobile": "pnpm --filter @tallsoon/mobile start",
-    "web": "pnpm --filter @tallsoon/web dev"
+    "web": "pnpm --filter @tallsoon/web dev",
+    "check:release": "node scripts/check-release-config.js"
   },
   "devDependencies": {
     "playwright": "1.62.1"
