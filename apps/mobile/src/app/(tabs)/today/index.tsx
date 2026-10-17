@@ -32,7 +32,7 @@ function StreakCard({ count, best, week, today }: { count: number; best: number;
   return (
     <View style={[styles.card, styles.streak, { backgroundColor: c.card }]}>
       <IconTile name="flame" tone="accent" size={40} />
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={{ flex: 1, minWidth: 140, gap: 2 }}>
         <Text variant="headline" style={{ fontSize: 20 }}>
           {count > 0 ? t('today.streak', { count }) : t('today.streakZero')}
         </Text>
@@ -307,13 +307,13 @@ export default function TodayScreen() {
 const styles = StyleSheet.create({
   kicker: { paddingHorizontal: space.margin * 2, marginBottom: 10, letterSpacing: 0.4 },
   card: { marginHorizontal: space.margin, borderRadius: radius.list, borderCurve: 'continuous', padding: 16 },
-  streak: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  dots: { flexDirection: 'row', gap: 5 },
+  streak: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 12 },
+  dots: { flexDirection: 'row', width: '100%', justifyContent: 'space-between', gap: 5 },
   dotCol: { alignItems: 'center', gap: 4 },
   dot: { width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
   habit: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: space.margin, paddingVertical: 11, minHeight: 60 },
   checkHit: { width: minTouch, height: minTouch, alignItems: 'flex-end', justifyContent: 'center' },
   tip: { padding: space.margin, gap: 6 },
   toggle: { flexDirection: 'row', borderRadius: 9, padding: 2 },
-  toggleSeg: { flex: 1, minHeight: 32, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
+  toggleSeg: { flex: 1, minHeight: minTouch, borderRadius: 7, alignItems: 'center', justifyContent: 'center' },
 });

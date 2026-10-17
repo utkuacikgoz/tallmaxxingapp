@@ -41,7 +41,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - [x] App icon and splash PNGs generated from `AppIcon` (1024 px), Android adaptive icon layers
 - [x] `eas.json` (development / preview / production), EAS Submit config
 - [x] Docs: README (build/run/test), REVIEW_NOTES.md (App Review), PLAY_DECLARATIONS.md, manual checklist (store products, RevenueCat keys, privacy URL, consented testimonials, pediatric content review)
-- [ ] Accessibility pass: large font sizes on every screen, VoiceOver labels, Reduce Motion
+- [ ] Accessibility pass (shared fixes complete; full native assistive-technology audit pending): large font sizes on every screen, VoiceOver labels, Reduce Motion
 - [ ] Milestone share cards (7/30/100-day streaks, first check-in), weekly-to-annual upgrade card after week 2
 - [ ] Debug-only demo data mode for store screenshots
 
@@ -96,6 +96,15 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   the existing Play plan ID and explicit replacement mode; missing IDs stop the purchase.
 - Added 8 mocked SDK regression cases. Actual sandbox purchases still require owner-provisioned
   store products and SDK keys; mocked tests do not establish real billing integration.
+
+### Wave 5 · accessibility fixes
+- Raised segmented controls, onboarding navigation and wheel items to the platform minimum target.
+  Large-text birth entry uses the approved typed fallback. Sheet titles/row values wrap; Today streak
+  text and week dots reflow; progress and close labels come from the catalog; controls expose states.
+- Reduce Motion skips the success entrance. Secondary labels, small interactive text, errors,
+  warnings and apricot glyphs use accessible contrast. Brand-filled buttons retain the agreed tint.
+- Contrast results and limits: `docs/ACCESSIBILITY.md`. Browser light/dark walkthroughs pass;
+  VoiceOver/TalkBack and every screen at largest native text size remain a separate verification gate.
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.

@@ -15,7 +15,8 @@ export interface TextProps extends RNTextProps {
   uppercase?: boolean;
 }
 
-function colorOf(c: Palette, color: TextColor): string {
+function colorOf(c: Palette, color: TextColor, isDark: boolean): string {
+  if (color === 'tint' && !isDark) return c.tintPressed;
   return color === 'white' ? '#FFFFFF' : c[color];
 }
 
@@ -31,14 +32,14 @@ export const Text = memo(function Text({
   style,
   ...rest
 }: TextProps) {
-  const { c } = useTheme();
+  const { c, isDark } = useTheme();
   const spec = typeScale[variant];
   return (
     <RNText
       {...rest}
       style={[
         spec,
-        { color: colorOf(c, color) },
+        { color: colorOf(c, color, isDark) },
         weight != null && { fontWeight: weight },
         align != null && { textAlign: align },
         rounded && { fontFamily: roundedFamily },

@@ -98,7 +98,7 @@ export function FieldMessage({ kind, text }: { kind: 'error' | 'warning' | 'hint
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  nav: { height: 44, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 },
+  nav: { minHeight: minTouch, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 },
   back: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: minTouch, paddingHorizontal: 8 },
   content: { paddingBottom: 32 },
   title: { paddingHorizontal: space.margin, marginTop: 18 },

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Alert, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, StyleSheet, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { ageYearsMonths, birthDateFromMonthYear, checkAge, KR_MAX_AGE, toIsoDate } from '@tallsoon/engine';
 
@@ -28,6 +28,8 @@ export default function BirthStep() {
   const t = useT();
   const { c } = useTheme();
   const step = useStep('birth');
+  const { fontScale } = useWindowDimensions();
+  const largeText = fontScale >= 1.5;
   const stored = useDraft((s) => s.birth);
   const role = useSettings((s) => s.role);
 
@@ -38,6 +40,7 @@ export default function BirthStep() {
   // The wheel counts as unanswered until it is moved or tapped (brief §13.4).
   const [touched, setTouched] = useState(stored != null);
   const [typedMode, setTypedMode] = useState(false);
+  const useTyped = typedMode || largeText;
   const [typed, setTyped] = useState(stored ? `${String(stored.month).padStart(2, '0')}${stored.year}` : '');
 
   const typedValue = useMemo<MonthYear | null>(() => {
@@ -48,7 +51,7 @@ export default function BirthStep() {
     return { month, year };
   }, [typed]);
 
-  const value: MonthYear | null = typedMode ? typedValue : touched ? wheel : null;
+  const value: MonthYear | null = useTyped ? typedValue : touched ? wheel : null;
   const today = toIsoDate(now);
   const age = value ? draftAgeYears({ birth: value }, today) : null;
   const ageStatus = age == null ? null : checkAge(age);
@@ -61,7 +64,7 @@ export default function BirthStep() {
   };
 
   let message: { kind: 'error' | 'warning' | 'hint'; text: string } | null = null;
-  if (typedMode && typed.length === 6 && !typedValue) message = { kind: 'error', text: t('onboarding.birth.typedInvalid') };
+  if (useTyped && typed.length === 6 && !typedValue) message = { kind: 'error', text: t('onboarding.birth.typedInvalid') };
   else if (ageStatus === 'tooYoung') message = { kind: 'error', text: t('onboarding.birth.tooYoung') };
   else if (ageStatus === 'tooOld') message = { kind: 'error', text: t('onboarding.birth.tooOld') };
   else if (ym && age != null) {
@@ -116,13 +119,14 @@ export default function BirthStep() {
       </Section>
 
       <View style={{ marginTop: 10 }}>
-        {typedMode ? (
+        {useTyped ? (
           <View style={[styles.typedCard, { backgroundColor: c.card }]}>
             <Text variant="footnote" color="label2">
               {t('onboarding.birth.typedLabel')}
             </Text>
             <TextInput
               testID="birth-typed"
+              maxFontSizeMultiplier={1.6}
               value={formatTyped(typed)}
               onChangeText={(raw) => setTyped(raw.replace(/\D/g, '').slice(0, 6))}
               keyboardType="number-pad"
@@ -151,7 +155,7 @@ export default function BirthStep() {
 
       <FieldMessage kind={message?.kind ?? 'hint'} text={message?.text} />
 
-      <Button
+      {!largeText ? <Button
         variant="plain"
         title={typedMode ? t('onboarding.birth.useWheel') : t('onboarding.birth.useKeyboard')}
         onPress={() => {
@@ -163,7 +167,7 @@ export default function BirthStep() {
           setTypedMode((m) => !m);
         }}
         style={{ marginTop: 8 }}
-      />
+      /> : null}
     </StepScreen>
   );
 }

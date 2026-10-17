@@ -42,7 +42,7 @@ function SegmentedControlInner<T extends string>({ options, value, onChange, sty
           if (next) onChange(next.value);
         }}
         appearance={isDark ? 'dark' : 'light'}
-        style={[{ height: 36 }, style]}
+        style={[style, { height: minTouch }]}
       />
     );
   }
@@ -79,7 +79,7 @@ function SegmentedControlInner<T extends string>({ options, value, onChange, sty
               styles.segment,
               android
                 ? [
-                    { minHeight: 40, borderRadius: 0 },
+                    { minHeight: minTouch, borderRadius: 0 },
                     i > 0 && { borderLeftWidth: 1, borderLeftColor: c.separator },
                     selected && { backgroundColor: c.tintFill },
                   ]
@@ -100,10 +100,10 @@ function SegmentedControlInner<T extends string>({ options, value, onChange, sty
 export const SegmentedControl = memo(SegmentedControlInner) as typeof SegmentedControlInner;
 
 const styles = StyleSheet.create({
-  track: { flexDirection: 'row', borderRadius: 9, padding: 2, overflow: 'hidden', minHeight: 36 },
+  track: { flexDirection: 'row', borderRadius: 9, padding: 2, overflow: 'hidden', minHeight: minTouch },
   segment: {
     flex: 1,
-    minHeight: Math.min(minTouch, 32),
+    minHeight: minTouch,
     borderRadius: 7,
     alignItems: 'center',
     justifyContent: 'center',

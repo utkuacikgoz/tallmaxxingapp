@@ -7,6 +7,7 @@
   --separator: rgba(60, 60, 67, .22);
   --fill: #e9e9ee;
   --tint: #2f7d6d;
+  --tint-text: #276959;
   --on-tint: #ffffff;
   --tint-fill: #e4f0ed;
   --accent: #b05f12;
@@ -27,6 +28,7 @@
     --separator: rgba(84, 84, 88, .75);
     --fill: #2c2c2e;
     --tint: #5fb8a5;
+    --tint-text: #5fb8a5;
     --on-tint: #03231c;
     --tint-fill: #183630;
     --accent: #f4b677;
@@ -38,7 +40,7 @@
 * { box-sizing: border-box; }
 html { background: var(--bg); color: var(--label); scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; background: var(--bg); color: var(--label); line-height: 1.55; }
-a { color: var(--tint); text-underline-offset: .2em; }
+a { color: var(--tint-text); text-underline-offset: .2em; }
 a:hover { text-decoration-thickness: 2px; }
 button, input, select { font: inherit; }
 button, select, input { color: var(--label); }
@@ -59,7 +61,7 @@ main { min-height: 60vh; }
 .hero { padding-block: clamp(3rem, 8vw, 7rem) 3rem; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); }
 .hero h1 { max-width: 13ch; margin: .3rem 0 1rem; font-size: clamp(2.7rem, 6vw, 5.6rem); line-height: .98; letter-spacing: -.065em; }
 .hero-copy { max-width: 34rem; color: var(--label-2); font-size: clamp(1.08rem, 1.6vw, 1.25rem); }
-.eyebrow { color: var(--tint); font-size: .82rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.eyebrow { color: var(--tint-text); font-size: .82rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .proof { margin: 1rem 0; color: var(--label-2); font-weight: 650; }
 .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .8rem 1.1rem; border: 0; border-radius: 12px; font-weight: 750; cursor: pointer; }
 .button-primary { width: 100%; margin-top: .3rem; background: var(--tint); color: var(--on-tint); }

@@ -37,9 +37,9 @@ export const Button = memo(function Button({
   accessibilityHint,
   testID,
 }: ButtonProps) {
-  const { c } = useTheme();
+  const { c, isDark } = useTheme();
   const inactive = disabled || loading;
-  const fg = destructive ? c.red : c.tint;
+  const fg = destructive ? c.red : isDark ? c.tint : c.tintPressed;
 
   const bg =
     variant === 'filled'

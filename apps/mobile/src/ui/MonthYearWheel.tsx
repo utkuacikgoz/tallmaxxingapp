@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react';
 import { AccessibilityActionEvent, StyleSheet, View } from 'react-native';
 
 import { haptics } from '@/services/haptics';
-import { radius, typeScale, useTheme } from '@/theme';
+import { minTouch, radius, typeScale, useTheme } from '@/theme';
 
 export interface MonthYear {
   month: number; // 1–12
@@ -20,8 +20,8 @@ export interface MonthYearWheelProps {
   yearA11y: string;
 }
 
-const ITEM_HEIGHT = 36;
-const VISIBLE = 6; // ≈ 216 pt tall (brief §13.4)
+const ITEM_HEIGHT = minTouch;
+const VISIBLE = 5; // Minimum tap targets take precedence over the approximate prototype height.
 
 /**
  * Inline two-column wheel: Month (right-aligned) | Year (left-aligned), 3D fade, a light haptic per

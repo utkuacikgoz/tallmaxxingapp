@@ -50,6 +50,7 @@ const en = {
   },
 
   onboarding: {
+    progressA11y: 'Step {{step}} of {{total}}',
     role: {
       title: 'Who’s checking today?',
       helper: 'We’ll tailor the questions and the plan.',

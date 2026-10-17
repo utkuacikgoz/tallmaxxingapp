@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle, withTiming, useReducedMotion } from 'react-
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { space, useTheme } from '@/theme';
+import { useT } from '@/i18n';
 
 /** Pinned bottom bar for the one primary action, above the home indicator (brief §13.1). */
 export function BottomBar({ children, hairline, style }: { children: ReactNode; hairline?: boolean; style?: StyleProp<ViewStyle> }) {
@@ -26,6 +27,7 @@ export function BottomBar({ children, hairline, style }: { children: ReactNode; 
 /** Thin 2 pt tint line showing step n of N (brief §13.1). */
 export function ProgressLine({ step, total }: { step: number; total: number }) {
   const { c } = useTheme();
+  const t = useT();
   const reduced = useReducedMotion();
   const pct = Math.max(0, Math.min(1, step / total));
   const style = useAnimatedStyle(() => ({ width: withTiming(`${pct * 100}%`, { duration: reduced ? 0 : 300 }) }), [pct, reduced]);
@@ -34,7 +36,7 @@ export function ProgressLine({ step, total }: { step: number; total: number }) {
       style={styles.track}
       accessibilityRole="progressbar"
       accessibilityValue={{ min: 0, max: total, now: step }}
-      accessibilityLabel={`Step ${step} of ${total}`}
+      accessibilityLabel={t('onboarding.progressA11y', { step, total })}
     >
       <Animated.View style={[styles.fill, { backgroundColor: c.tint }, style]} />
     </View>

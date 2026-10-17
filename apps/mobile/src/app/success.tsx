@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { ZoomIn } from 'react-native-reanimated';
+import Animated, { ZoomIn, useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ageInYears, toIsoDate } from '@tallsoon/engine';
@@ -33,6 +33,7 @@ function bedtimeOptions(age: number): string[] {
 export default function Success() {
   const t = useT();
   const { c } = useTheme();
+  const reducedMotion = useReducedMotion();
   const insets = useSafeAreaInsets();
   const child = useActiveChild();
   const [bedtime, setBedtime] = useState<string | null>(null);
@@ -64,7 +65,7 @@ export default function Success() {
   return (
     <View style={[styles.root, { backgroundColor: c.bg }]} testID="success">
       <ScrollView contentContainerStyle={{ paddingTop: insets.top + 40, paddingBottom: 24 }}>
-        <Animated.View entering={ZoomIn.springify().damping(14)} style={styles.check}>
+        <Animated.View entering={reducedMotion ? undefined : ZoomIn.springify().damping(14)} style={styles.check}>
           <Icon name="checkCircle" size={64} color={c.tint} />
         </Animated.View>
         <Text variant="title1" align="center" accessibilityRole="header" style={styles.title}>

@@ -114,9 +114,9 @@ export const IconTile = memo(function IconTile({
   tone?: TileTone;
   size?: number;
 }) {
-  const { c } = useTheme();
+  const { c, isDark } = useTheme();
   const bg = { tint: c.tint, soft: c.tintFill, gray: '#8E8E93', accent: c.accent, red: c.red }[tone];
-  const fg = tone === 'soft' ? c.tint : tone === 'tint' ? c.onTint : '#FFFFFF';
+  const fg = tone === 'soft' ? c.tint : tone === 'tint' ? c.onTint : tone === 'accent' ? (isDark ? c.onTint : c.accentText) : '#FFFFFF';
   return (
     <View
       style={{

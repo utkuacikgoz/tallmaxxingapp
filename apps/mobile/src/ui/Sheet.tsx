@@ -3,6 +3,7 @@ import { type ReactNode } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useT } from '@/i18n';
 import { minTouch, useTheme } from '@/theme';
 import { Icon } from './Icon';
 import { Text } from './Text';
@@ -17,6 +18,7 @@ export interface SheetAction {
 
 /** 3-part sheet nav bar: left action, centered title, right "Done"/"Add" or a gray close ✕ (brief §13.1). */
 export function SheetHeader({ title, left, right, close }: { title?: string; left?: SheetAction; right?: SheetAction; close?: boolean }) {
+  const t = useT();
   const { c } = useTheme();
   const action = (a: SheetAction | undefined, align: 'flex-start' | 'flex-end') =>
     a ? (
@@ -40,12 +42,12 @@ export function SheetHeader({ title, left, right, close }: { title?: string; lef
   return (
     <View style={styles.bar}>
       {action(left, 'flex-start')}
-      <Text variant="headline" align="center" numberOfLines={1} style={{ flex: 1 }} accessibilityRole="header">
+      <Text variant="headline" align="center" style={{ flex: 1 }} accessibilityRole="header">
         {title}
       </Text>
       {close ? (
         <View style={[styles.action, { alignItems: 'flex-end' }]}>
-          <Pressable onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close" hitSlop={8} style={styles.closeHit}>
+          <Pressable onPress={() => router.back()} accessibilityRole="button" accessibilityLabel={t('common.close')} hitSlop={8} style={styles.closeHit}>
             <View style={[styles.closeCircle, { backgroundColor: c.fill }]}>
               <Icon name="close" size={12} color={c.label2} weight="bold" />
             </View>

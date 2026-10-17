@@ -145,7 +145,7 @@ export const Row = memo(function Row({
         ) : null}
       </View>
       {value ? (
-        <Text variant="body" color="label2" tabular style={styles.value} numberOfLines={1}>
+        <Text variant="body" color="label2" tabular style={styles.value}>
           {value}
         </Text>
       ) : null}
@@ -155,6 +155,8 @@ export const Row = memo(function Row({
           value={!!switchValue}
           onValueChange={onSwitch}
           disabled={disabled}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: !!switchValue, disabled: !!disabled }}
           trackColor={{ true: c.tint, false: Platform.OS === 'ios' ? undefined : c.fill }}
           thumbColor={Platform.OS === 'android' ? (switchValue ? c.onTint : '#FFFFFF') : undefined}
           ios_backgroundColor={c.fill}
@@ -227,6 +229,6 @@ const styles = StyleSheet.create({
   },
   centered: { justifyContent: 'center' },
   texts: { flex: 1, gap: 2 },
-  value: { flexShrink: 0, maxWidth: '50%' },
+  value: { flexShrink: 1, maxWidth: '50%' },
   checkSlot: { width: 20, alignItems: 'center' },
 });
