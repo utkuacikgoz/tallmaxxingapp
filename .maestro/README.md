@@ -23,6 +23,6 @@ Before rerunning with a development client, make startup conditional on the visi
 and first-run screens, then dismiss the Dev Menu overlay and wait for `welcome-start`. Each clean
 launch must handle these states. Do not substitute a keyless native release build for the mock
 purchase flow: release builds intentionally refuse simulated purchases. A provisioned build must
-use the store configuration documented in `docs/MANUAL_CHECKLIST.md`. The
+use the store configuration documented in `MANUAL_CHECKLIST.md`. The
 measurement flow checks both the saved row for today's date and the “Measurement added” banner. The
 delete flow relaunches the app after deletion and checks that onboarding remains the initial screen.

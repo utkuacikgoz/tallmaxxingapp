@@ -137,6 +137,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   screen before onboarding. A bounded follow-up reached the app but stopped at the Dev Menu overlay;
   unverified startup edits were reverted. Full native flow and assistive-technology verification remain open.
 - Evidence, environment and release limits are recorded in `docs/NATIVE_QA.md`.
+- Corrected the native README checklist reference to the existing repository-root file.
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
