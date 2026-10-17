@@ -87,6 +87,16 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Validation: release config/profile/asset checks, 2 new entitlement safety tests, mobile typecheck;
   native simulator builds and real store setup are tracked separately, not implied by these checks.
 
+### Wave 4 follow-up · exact store offer selection
+- Trial disclosure now requires confirmed iOS eligibility or an available tagged Play offer, with
+  exactly one free seven-day phase followed by annual renewal. Purchases recheck the offer instead
+  of relying on the paywall's earlier snapshot. Ineligible/unknown trials cannot fall back to a charge.
+- Android opt-out purchases select the explicit base plan. Store billing periods, prepaid flags and
+  introductory phases must match the annual/weekly disclosure. Weekly-to-Annual replacements include
+  the existing Play plan ID and explicit replacement mode; missing IDs stop the purchase.
+- Added 8 mocked SDK regression cases. Actual sandbox purchases still require owner-provisioned
+  store products and SDK keys; mocked tests do not establish real billing integration.
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 

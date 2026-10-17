@@ -15,9 +15,11 @@ Items below need access to the product owner's store, Expo, domain, or review ac
 
 - [ ] Create the RevenueCat project and connect the real App Store Connect and Play apps.
 - [ ] Configure RevenueCat entitlements `pro` and `multi_child`, plus the `default` offering.
+- [ ] Put iOS subscription products in the intended single subscription group and verify upgrade/crossgrade behavior in the store sandbox.
 - [ ] Create iOS products `app.pro.weekly`, `app.family.annual`, and `app.family.annual.trial`.
 - [ ] Create Play subscriptions `pro_weekly` and `family_annual`; configure the 7-day trial as an offer on `family_annual` with the `optin-trial` tag.
 - [ ] Set the intended localized store prices (reference values in the brief: $4.99/week and $39.99/year); ensure the actual price shown is supplied by the store through RevenueCat.
+- [ ] Verify that Play offers have exactly one seven-day free phase followed by annual renewal, and that normal weekly/annual base plans have no introductory phases. Confirm Weekly-to-Annual replacement cancels the old plan and charges according to the native confirmation.
 - [ ] Verify paywall packages, trial opt-in behavior, purchase, restore, manage subscription, cancellation, and the two-day trial reminder using store sandbox/test tracks.
 - [ ] Provision an App Store sandbox tester and Play license tester. Keep account credentials in the respective consoles, never in this repository.
 
