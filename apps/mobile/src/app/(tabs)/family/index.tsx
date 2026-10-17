@@ -86,6 +86,9 @@ export default function FamilyScreen() {
   const s = useSettings();
   const [notifOk, setNotifOk] = useState(true);
   const teen = s.role === 'teen';
+  const demoEnabled = __DEV__ && entitlements.kind === 'mock';
+  const demoNickname = t('demo.nickname');
+  const hasDemoChild = kids.some((kid) => kid.id === '00000000-0000-4000-8000-000000000101');
 
   useEffect(() => {
     void notificationPermission().then((p) => setNotifOk(p !== 'denied'));
@@ -213,6 +216,40 @@ export default function FamilyScreen() {
     ]);
   };
 
+  const loadDemoData = () => {
+    if (!demoEnabled) return;
+    Alert.alert(t('demo.loadTitle'), t('demo.loadBody'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('demo.loadAction'),
+        onPress: () => {
+          void import('@/features/demo/data')
+            .then(({ seedDemoData }) => seedDemoData(demoNickname))
+            .catch(() => Alert.alert(t('errors.genericTitle'), t('demo.error')));
+        },
+      },
+    ]);
+  };
+
+  const removeDemo = () => {
+    if (!demoEnabled || !hasDemoChild) return;
+    Alert.alert(t('demo.removeTitle'), t('demo.removeBody'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('demo.removeAction'),
+        style: 'destructive',
+        onPress: () => {
+          void import('@/features/demo/data')
+            .then(({ removeDemoData }) => removeDemoData(demoNickname))
+            .then((removed) => {
+              if (!removed) Alert.alert(t('errors.genericTitle'), t('demo.error'));
+            })
+            .catch(() => Alert.alert(t('errors.genericTitle'), t('demo.error')));
+        },
+      },
+    ]);
+  };
+
   const planLabel = ent.plan === 'weekly' ? t('family.planWeekly') : t('family.planAnnual');
   const dateLine = ent.expiresAt
     ? ent.isTrial
@@ -335,6 +372,12 @@ export default function FamilyScreen() {
         <Section>
           <Row testID="delete-all" title={t('family.deleteAll')} destructive centered onPress={deleteAll} />
         </Section>
+        {demoEnabled ? (
+          <Section header={t('demo.header')} footer={t('demo.footer')}>
+            <Row testID="load-demo-data" title={t('demo.loadAction')} tint onPress={loadDemoData} />
+            {hasDemoChild ? <Row testID="remove-demo-data" title={t('demo.removeAction')} destructive onPress={removeDemo} /> : null}
+          </Section>
+        ) : null}
         <Text variant="footnote" color="label2" align="center" style={{ marginTop: 10 }}>
           {t('family.footer')}
         </Text>
@@ -348,4 +391,3 @@ const styles = StyleSheet.create({
   avatar: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   inlineControl: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: space.margin, paddingVertical: 8, minHeight: 52, gap: 12 },
 });
-

@@ -43,7 +43,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - [x] Docs: README (build/run/test), REVIEW_NOTES.md (App Review), PLAY_DECLARATIONS.md, manual checklist (store products, RevenueCat keys, privacy URL, consented testimonials, pediatric content review)
 - [ ] Accessibility pass (shared fixes complete; full native assistive-technology audit pending): large font sizes on every screen, VoiceOver labels, Reduce Motion
 - [x] Milestone share cards (7/30/100-day streaks, first check-in), weekly-to-annual upgrade card after week 2
-- [ ] Debug-only demo data mode for store screenshots
+- [x] Debug-only demo data mode for store screenshots
 
 ## Completed waves
 
@@ -112,6 +112,12 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Weekly users can compare Annual after 14 locally observed subscription days; the store paywall
   still supplies the actual price. Trial reminders use the selected trial package renewal price.
 - Added calendar-boundary and entitlement-gating tests and browser coverage of both card sizes.
+
+### Wave 5 · screenshot demo
+- Debug/mock builds can load and remove a separate synthetic child with measurement history and
+  completed habits. Reserved IDs and transactions protect existing children; real billing is untouched.
+- Documented native capture steps and current store screenshot-size verification in `docs/SCREENSHOTS.md`.
+  Store screenshots and submissions are not implied by the seed-data feature.
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.

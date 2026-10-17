@@ -675,6 +675,19 @@ const en = {
     unnamed_teen: 'You',
   },
 
+  demo: {
+    header: 'Store screenshot demo',
+    footer: 'Creates a separate synthetic child on this device. Existing children and subscription status stay unchanged.',
+    nickname: 'Demo Riley',
+    loadTitle: 'Load demo data?',
+    loadBody: 'A separate synthetic child with sample measurements and habits will be added and selected. Your existing children and data will stay unchanged.',
+    loadAction: 'Load Demo Data',
+    removeTitle: 'Remove demo child?',
+    removeBody: 'Only the synthetic demo child and its sample data will be removed. Other children and their data will stay unchanged.',
+    removeAction: 'Remove Demo Child',
+    error: 'The demo child could not be loaded or removed safely. No existing child data was changed.',
+  },
+
   addChild: {
     title: 'Add Child',
     nickname: 'Nickname (optional)',
@@ -724,6 +737,7 @@ const en = {
     genericBody: 'Please try again. Your data is safe on this device.',
     share: 'Couldn’t open sharing on this device.',
   },
+
   retention: {
     milestones: 'Worth celebrating',
     milestone: { '7': '7-day habit streak', '30': '30-day habit streak', '100': '100-day habit streak', checkin: 'First growth check-in' },
