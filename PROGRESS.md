@@ -6,7 +6,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 ## How to resume (for a new session)
 
 1. Read `AGENTS.md` (agent brief), this file, then `DECISIONS.md`.
-2. `pnpm install` at the repo root (pnpm 10, Node 22).
+2. `pnpm install` at the repo root (pnpm 10, Node 24 LTS; Node 22.22 minimum).
 3. Quick checks: `pnpm -r typecheck`, `pnpm --filter @tallsoon/engine test`, `pnpm --filter @tallsoon/content test`.
 4. Visual QA on web: `cd apps/mobile && CI=1 EXPO_OFFLINE=1 npx expo export --platform web`, serve `dist/`
    with COOP/COEP headers, then drive it with Playwright (see "QA harness" below).
@@ -37,7 +37,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - [x] Finish the scripted QA flow (note: the default units follow locale; the script must tap `cm`/`kg` before filling `height-field`/`weight-field`, or fill `height-field-ft`/`-in`) through paywall → success → tabs; compare each screenshot with `docs/prototype/shots/v2/` (light and dark) and fix the differences
 - [x] Mobile Jest tests (jest-expo): ChoiceList auto-advance lock, MeasureField unit switch precision, paywall price and CTA logic, savePercent
 - [x] Maestro flows authored in `.maestro/` (parent, teen 13+, under-13 hand-off, free result, paywall close, check-in, delete data); native execution pending
-- [ ] `apps/web`: static site (Astro or Vite) with the calculator importing `@tallsoon/engine`, plus /method, /pricing, /privacy, /terms, /support
+- [x] `apps/web`: static site (Astro or Vite) with the calculator importing `@tallsoon/engine`, plus /method, /pricing, /privacy, /terms, /support
 - [ ] App icon and splash PNGs generated from `AppIcon` (1024 px), Android adaptive icon layers
 - [ ] `eas.json` (development / preview / production), EAS Submit config
 - [ ] Docs: README (build/run/test), REVIEW_NOTES.md (App Review), PLAY_DECLARATIONS.md, manual checklist (store products, RevenueCat keys, privacy URL, consented testimonials, pediatric content review)
@@ -65,6 +65,16 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Added parameterized, calendar-relative Maestro flows. YAML and helper JavaScript parse; selectors
   were checked against source. Native Maestro execution is still pending (Maestro CLI not installed yet).
 - Validation: mobile Jest (13), mobile typecheck and lint (existing warnings).
+
+### Wave 3 · static companion website
+- Added all requested routes, a client-only calculator using the shared engine/reference packages,
+  method explanations and sources, explicit subscription disclosures, FAQ/WebApplication schema,
+  and safe shared-range landing pages. New copy stays in the mobile English catalog.
+- Added browser smoke checks for routes, method availability, invalid inputs, unknown parents,
+  unit round-trips, share links, light/dark mobile layouts and absence of external data requests.
+- Validation: Astro build/check, mobile typecheck and website Playwright smoke checks. No hosting
+  deployment or live store links; support/legal details remain owner release tasks.
+- Node 24 LTS is used in CI (Astro requires Node 22.22+ / supported Node 24).
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.

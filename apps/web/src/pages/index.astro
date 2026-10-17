@@ -1,0 +1,41 @@
+---
+import HeightCalculator from '../components/HeightCalculator.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { copy } from '../lib/copy';
+
+const webApplication = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: copy.brand,
+  applicationCategory: 'HealthApplication',
+  operatingSystem: 'Any device with a modern browser',
+  description: copy.heroBody,
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: copy.faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+---
+<SiteLayout title={copy.brand} description={copy.heroBody}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(webApplication)}></script>
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage)}></script>
+  </Fragment>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">{copy.heroEyebrow}</p>
+      <h1>{copy.heroTitle}</h1>
+      <p class="hero-copy">{copy.heroBody}</p>
+      <p class="proof">{copy.heroProof}</p>
+      <a class="button button-primary" href="/height-predictor">{copy.heroCta}</a>
+    </div>
+    <HeightCalculator compact />
+  </section>
+  <section class="home-grid">
+    <article class="info-card"><h2>{copy.sectionTitle}</h2><p>{copy.sectionBody}</p><a href="/method">{copy.whyLink}</a></article>
+    <article class="info-card"><h2>{copy.faqTitle}</h2>{copy.faq.map(({ q, a }) => <details><summary>{q}</summary><p>{a}</p></details>)}</article>
+  </section>
+</SiteLayout>

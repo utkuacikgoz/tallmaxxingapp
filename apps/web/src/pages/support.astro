@@ -1,0 +1,8 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { copy } from '../lib/copy';
+---
+<SiteLayout title={copy.supportTitle} description={copy.supportBody}>
+  <header class="page-intro"><p class="eyebrow">{copy.brand}</p><h1>{copy.supportTitle}</h1><p>{copy.supportBody}</p></header>
+  <div class="content-narrow"><p class="pending">{copy.supportEmailPending}</p><p><a href="/height-predictor">{copy.heroCta}</a></p></div>
+</SiteLayout>

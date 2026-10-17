@@ -1,0 +1,14 @@
+---
+import HeightCalculator from '../components/HeightCalculator.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { copy } from '../lib/copy';
+
+const webApplication = { '@context': 'https://schema.org', '@type': 'WebApplication', name: copy.brand, applicationCategory: 'HealthApplication', isAccessibleForFree: true };
+const faqPage = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: copy.faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
+---
+<SiteLayout title={copy.predictorTitle} description={copy.predictorIntro}>
+  <Fragment slot="head"><script type="application/ld+json" set:html={JSON.stringify(webApplication)}></script><script type="application/ld+json" set:html={JSON.stringify(faqPage)}></script></Fragment>
+  <header class="page-intro"><p class="eyebrow">{copy.heroEyebrow}</p><h1>{copy.predictorTitle}</h1><p>{copy.predictorIntro}</p></header>
+  <HeightCalculator />
+  <section class="faq"><h2>{copy.faqTitle}</h2>{copy.faq.map(({ q, a }) => <details><summary>{q}</summary><p>{a}</p></details>)}</section>
+</SiteLayout>

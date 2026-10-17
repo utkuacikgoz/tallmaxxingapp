@@ -1,0 +1,45 @@
+---
+import { copy } from '../lib/copy';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = copy.brand, description = copy.footerLine } = Astro.props;
+const pageTitle = title === copy.brand ? title : `${title} · ${copy.brand}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f2f2f7" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{copy.skipToContent}</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label={copy.brand}>{copy.brand}<span aria-hidden="true">.</span></a>
+      <nav aria-label={copy.menu}>
+        <a href="/height-predictor">{copy.navPredictor}</a>
+        <a href="/method">{copy.navMethod}</a>
+        <a href="/pricing">{copy.navPricing}</a>
+        <a href="/support">{copy.navSupport}</a>
+      </nav>
+      <a class="header-cta" href="/height-predictor">{copy.heroCta}</a>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer">
+      <div><a class="brand" href="/">{copy.brand}<span aria-hidden="true">.</span></a><p>{copy.footerLine}</p></div>
+      <nav aria-label={copy.menu}>
+        <a href="/privacy">{copy.privacyLink}</a>
+        <a href="/terms">{copy.termsLink}</a>
+        <a href="/support">{copy.supportLink}</a>
+      </nav>
+    </footer>
+  </body>
+</html>

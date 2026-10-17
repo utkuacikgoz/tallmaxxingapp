@@ -1,0 +1,14 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { copy } from '../lib/copy';
+---
+<SiteLayout title={copy.methodTitle} description={copy.methodIntro}>
+  <header class="page-intro"><p class="eyebrow">{copy.navMethod}</p><h1>{copy.methodTitle}</h1><p>{copy.methodIntro}</p></header>
+  <div class="content-narrow">
+    <section><h2>{copy.methodKrTitle}</h2><p>{copy.methodKrBody}</p><p>{copy.methodKrFormulaIntro}</p><pre>{copy.methodKrFormula}</pre></section>
+    <section><h2>{copy.methodMphTitle}</h2><p>{copy.methodMphBody}</p><pre>{copy.methodMphFormula}</pre></section>
+    <section><h2>{copy.methodProjectionTitle}</h2><p>{copy.methodProjectionBody}</p><p>{copy.methodProjectionFormulaIntro}</p><pre>{copy.methodProjectionFormula}</pre></section>
+    <section><h2>{copy.methodDataTitle}</h2><p>{copy.methodDataBody}</p></section>
+    <section><h2>{copy.sourcesTitle}</h2><ul><li>{copy.sourceKr} <a href="https://doi.org/10.1542/peds.94.4.504">{copy.sourceLinkKr}</a></li><li>{copy.sourceTanner} <a href="https://pubmed.ncbi.nlm.nih.gov/5491878/">{copy.sourceLinkTanner}</a></li><li>{copy.sourceCdc} <a href="https://www.cdc.gov/growthcharts/2000GrowthChart-US.pdf">{copy.sourceLinkCdc}</a></li><li>{copy.sourceWho} <a href="https://www.who.int/tools/growth-reference-data-for-5to19-years/indicators/height-for-age">{copy.sourceLinkWho}</a></li></ul></section>
+  </div>
+</SiteLayout>

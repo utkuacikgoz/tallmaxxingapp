@@ -1,0 +1,22 @@
+{
+  "name": "@tallsoon/web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "typecheck": "astro check",
+    "preview": "astro preview",
+    "test:e2e": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@tallsoon/engine": "workspace:*",
+    "@tallsoon/reference": "workspace:*",
+    "astro": "^7.4.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "typescript": "~6.0.3"
+  }
+}

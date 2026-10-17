@@ -1,0 +1,244 @@
+---
+import { copy } from '../lib/copy';
+
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const monthOptions = copy.monthNames.map((name, index) => ({ name, month: index + 1 }));
+const clientCopy = {
+  methodKr: copy.methodKr,
+  methodMph: copy.methodMph,
+  methodProjection: copy.methodProjection,
+  formError: copy.formError,
+  imperialError: copy.imperialError,
+  ageError: copy.ageError,
+  resultPercentile: copy.resultPercentile,
+  ordinalOne: copy.ordinalOne,
+  ordinalTwo: copy.ordinalTwo,
+  ordinalFew: copy.ordinalFew,
+  ordinalOther: copy.ordinalOther,
+  noPercentile: copy.noPercentile,
+  estimatedParent: copy.estimatedParent,
+  fallbackNoWeight: copy.fallbackNoWeight,
+  fallbackAge: copy.fallbackAge,
+  fallbackCoefficients: copy.fallbackCoefficients,
+  fallbackParent: copy.fallbackParent,
+};
+---
+<section class:list={["calculator", compact && "calculator-compact"]} aria-labelledby="calculator-title">
+  <div class="calculator-heading">
+    <p class="eyebrow">{copy.heroEyebrow}</p>
+    <h2 id="calculator-title">{copy.calculatorTitle}</h2>
+    <p>{copy.predictorIntro}</p>
+  </div>
+  <form id="height-calculator" data-copy={JSON.stringify(clientCopy)} novalidate>
+    <fieldset class="field-group">
+      <legend>{copy.sexLabel}</legend>
+      <div class="segmented" role="group" aria-label={copy.sexLabel}>
+        <label><input type="radio" name="sex" value="female" checked /><span>{copy.female}</span></label>
+        <label><input type="radio" name="sex" value="male" /><span>{copy.male}</span></label>
+      </div>
+    </fieldset>
+    <div class="field-row">
+      <label class="field">{copy.birthMonth}<select name="birthMonth" autocomplete="bday-month">
+        {monthOptions.map(({ name, month }) => <option value={month} selected={month === new Date().getMonth() + 1}>{name}</option>)}
+      </select></label>
+      <label class="field">{copy.birthYear}<select name="birthYear" autocomplete="bday-year"></select></label>
+    </div>
+    <div class="field-row unit-row">
+      <label class="field">{copy.heightUnit}<select name="heightUnit"><option value="cm">{copy.unitCmShort}</option><option value="ftin">{copy.unitFtInShort}</option></select></label>
+      <label class="field">{copy.weightUnit}<select name="weightUnit"><option value="kg">{copy.unitKgShort}</option><option value="lb">{copy.unitLbShort}</option></select></label>
+    </div>
+    <label class="field">{copy.currentHeight}<span class="height-inputs" data-height="child"><input name="heightCm" inputmode="decimal" type="number" min="60" max="220" step="0.1" required aria-label={copy.centimeters} /><span class="cm-suffix">{copy.cm}</span><input name="heightFt" inputmode="numeric" type="number" min="1" max="7" step="1" aria-label={copy.feet} /><span class="ft-suffix">{copy.feet}</span><input name="heightIn" inputmode="decimal" type="number" min="0" max="11" step="0.1" aria-label={copy.inches} /><span class="in-suffix">{copy.inches}</span></span></label>
+    <div class="field-row">
+      <label class="field">{copy.motherHeight}<span class="height-inputs" data-height="mother"><input name="motherCm" inputmode="decimal" type="number" min="130" max="230" step="0.1" aria-label={copy.centimeters} /><span class="cm-suffix">{copy.cm}</span><input name="motherFt" inputmode="numeric" type="number" min="1" max="7" step="1" aria-label={copy.feet} /><span class="ft-suffix">{copy.feet}</span><input name="motherIn" inputmode="decimal" type="number" min="0" max="11" step="0.1" aria-label={copy.inches} /><span class="in-suffix">{copy.inches}</span></span></label>
+      <label class="field">{copy.fatherHeight}<span class="height-inputs" data-height="father"><input name="fatherCm" inputmode="decimal" type="number" min="130" max="230" step="0.1" aria-label={copy.centimeters} /><span class="cm-suffix">{copy.cm}</span><input name="fatherFt" inputmode="numeric" type="number" min="1" max="7" step="1" aria-label={copy.feet} /><span class="ft-suffix">{copy.feet}</span><input name="fatherIn" inputmode="decimal" type="number" min="0" max="11" step="0.1" aria-label={copy.inches} /><span class="in-suffix">{copy.inches}</span></span></label>
+    </div>
+    <label class="field">{copy.weight}<span class="weight-input"><input name="weight" inputmode="decimal" type="number" min="10" max="200" step="0.1" /><span class="kg-suffix">{copy.kg}</span><span class="lb-suffix">{copy.lb}</span></span></label>
+    <label class="field">{copy.reference}<select name="reference"><option value="cdc">{copy.cdcReference}</option><option value="who">{copy.whoReference}</option></select></label>
+    <p class="form-error" id="form-error" role="alert" hidden></p>
+    <button class="button button-primary" type="submit">{copy.calculate}</button>
+  </form>
+  <div id="result" class="result-panel" aria-live="polite" aria-atomic="true" hidden>
+    <h3>{copy.resultHeading}</h3>
+    <p class="result-estimate" data-result-estimate></p>
+    <p><strong>{copy.resultRange}:</strong> <span data-result-range></span></p>
+    <p data-result-percentile></p>
+    <p class="muted" data-result-parent hidden></p>
+    <p class="muted" data-result-fallback hidden></p>
+    <h4>{copy.resultMethods}</h4>
+    <ul data-result-methods></ul>
+    <p class="disclaimer">{copy.resultDisclaimer}</p>
+  </div>
+</section>
+<script>
+  import { ageInYears, checkAge, checkRange, cmToFtIn, createEngine, formatHeight, formatHeightRange, kgToLb, lbToKg, toIsoDate } from '@tallsoon/engine';
+  import { cdcStature, khamisRoche, populationAdultHeightCm, who2007HeightForAge } from '@tallsoon/reference';
+  import type { KhamisRocheCoefficients } from '@tallsoon/engine';
+
+  const engine = createEngine({
+    cdc: cdcStature,
+    who: who2007HeightForAge,
+    khamisRoche: { rows: khamisRoche.rows as unknown as KhamisRocheCoefficients[] },
+    populationAdultHeightCm,
+  });
+  const form = document.querySelector<HTMLFormElement>('#height-calculator');
+  const error = document.querySelector<HTMLElement>('#form-error');
+  const result = document.querySelector<HTMLElement>('#result');
+  if (!form || !error || !result) throw new Error('Calculator markup is missing');
+  const copy = JSON.parse(form.dataset.copy ?? '{}') as Record<string, string>;
+  const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement;
+  const selected = (name: string) => form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value ?? '';
+  const numeric = (name: string): number | null => {
+    const value = Number(field(name).value);
+    return field(name).value === '' || !Number.isFinite(value) ? null : value;
+  };
+  const setValues = (names: string[], values: (number | null)[]) => names.forEach((name, i) => { field(name).value = values[i] == null ? '' : String(values[i]); });
+  const heightSnapshots = new WeakMap<HTMLElement, { cm: number; feet: number; inches: number }>();
+  let weightSnapshot: { kg: number; lb: number } | null = null;
+
+  const yearSelect = field('birthYear') as HTMLSelectElement;
+  const currentYear = new Date().getFullYear();
+  for (let year = currentYear - 2; year >= currentYear - 21; year -= 1) {
+    const option = document.createElement('option');
+    option.value = String(year);
+    option.textContent = String(year);
+    yearSelect.append(option);
+  }
+  yearSelect.value = String(currentYear - 12);
+
+  const toggleUnits = () => {
+    const ftin = field('heightUnit').value === 'ftin';
+    document.querySelectorAll<HTMLElement>('.height-inputs').forEach((group) => {
+      group.classList.toggle('is-ftin', ftin);
+      const prefix = group.dataset.height === 'child' ? 'height' : group.dataset.height ?? '';
+      const cmName = prefix === 'mother' ? 'motherCm' : prefix === 'father' ? 'fatherCm' : 'heightCm';
+      const feetName = prefix === 'mother' ? 'motherFt' : prefix === 'father' ? 'fatherFt' : 'heightFt';
+      const inchName = prefix === 'mother' ? 'motherIn' : prefix === 'father' ? 'fatherIn' : 'heightIn';
+      const cm = numeric(cmName);
+      if (ftin && cm != null) {
+        const { feet, inches } = cmToFtIn(cm, 0.1);
+        setValues([feetName, inchName], [feet, inches]);
+        heightSnapshots.set(group, { cm, feet, inches });
+      } else if (!ftin && (numeric(feetName) != null || numeric(inchName) != null)) {
+        const feet = numeric(feetName) ?? 0;
+        const inches = numeric(inchName) ?? 0;
+        const previous = heightSnapshots.get(group);
+        const unchanged = previous?.feet === feet && previous.inches === inches;
+        const convertedCm = unchanged ? previous.cm : (feet * 12 + inches) * 2.54;
+        setValues([cmName], [convertedCm]);
+      }
+    });
+  };
+  const toggleWeight = () => {
+    const pounds = field('weightUnit').value === 'lb';
+    document.querySelector('.weight-input')?.classList.toggle('is-lb', pounds);
+    const weight = numeric('weight');
+    if (weight != null && pounds) {
+      const lb = kgToLb(weight);
+      weightSnapshot = { kg: weight, lb };
+      setValues(['weight'], [lb]);
+    } else if (weight != null) {
+      const kg = weightSnapshot?.lb === weight ? weightSnapshot.kg : lbToKg(weight);
+      setValues(['weight'], [kg]);
+    }
+  };
+  field('heightUnit').addEventListener('change', toggleUnits);
+  field('weightUnit').addEventListener('change', toggleWeight);
+  toggleUnits();
+  toggleWeight();
+
+  const readHeight = (prefix: 'height' | 'mother' | 'father'): number | null => {
+    const cmName = prefix === 'height' ? 'heightCm' : `${prefix}Cm`;
+    if (field('heightUnit').value === 'cm') return numeric(cmName);
+    const feet = numeric(prefix === 'height' ? 'heightFt' : `${prefix}Ft`);
+    const inches = numeric(prefix === 'height' ? 'heightIn' : `${prefix}In`);
+    if (feet == null && inches == null) return null;
+    return ((feet ?? 0) * 12 + (inches ?? 0)) * 2.54;
+  };
+  const invalidImperialHeight = (prefix: 'height' | 'mother' | 'father'): boolean => {
+    if (field('heightUnit').value !== 'ftin') return false;
+    const feetName = prefix === 'height' ? 'heightFt' : `${prefix}Ft`;
+    const inchesName = prefix === 'height' ? 'heightIn' : `${prefix}In`;
+    const feet = numeric(feetName);
+    const inches = numeric(inchesName);
+    return (feet != null && !Number.isInteger(feet)) || (inches != null && (inches < 0 || inches > 11));
+  };
+  form.addEventListener('input', () => { result.hidden = true; });
+  form.addEventListener('change', () => { result.hidden = true; });
+  const methodName: Record<string, string> = {
+    khamisRoche: copy.methodKr,
+    midParental: copy.methodMph,
+    percentileProjection: copy.methodProjection,
+  };
+  const ordinalRules = new Intl.PluralRules('en', { type: 'ordinal' });
+  const ordinalSuffix = (value: number) => {
+    const category = ordinalRules.select(value);
+    if (category === 'one') return copy.ordinalOne;
+    if (category === 'two') return copy.ordinalTwo;
+    if (category === 'few') return copy.ordinalFew;
+    return copy.ordinalOther;
+  };
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    result.hidden = true;
+    error.hidden = true;
+    const hasInvalidImperialHeight = (['height', 'mother', 'father'] as const).some(invalidImperialHeight);
+    const heightCm = readHeight('height');
+    const motherHeightCm = readHeight('mother');
+    const fatherHeightCm = readHeight('father');
+    const weightValue = numeric('weight');
+    const weightKg = weightValue == null ? null : field('weightUnit').value === 'lb' ? lbToKg(weightValue) : weightValue;
+    const birthDate = `${field('birthYear').value}-${String(field('birthMonth').value).padStart(2, '0')}-15`;
+    const measuredOn = toIsoDate(new Date());
+    const age = ageInYears(birthDate, measuredOn);
+    const validHeight = heightCm != null && checkRange(heightCm, 'childHeightCm') === 'valid';
+    const validWeight = weightKg == null || checkRange(weightKg, 'weightKg') === 'valid';
+    const validParents = (motherHeightCm == null || checkRange(motherHeightCm, 'parentHeightCm') === 'valid') && (fatherHeightCm == null || checkRange(fatherHeightCm, 'parentHeightCm') === 'valid');
+    if (hasInvalidImperialHeight || !validHeight || !validWeight || !validParents || (motherHeightCm == null && fatherHeightCm == null)) {
+      error.textContent = hasInvalidImperialHeight ? copy.imperialError : copy.formError;
+      error.hidden = false;
+      return;
+    }
+    if (checkAge(age) !== 'valid') {
+      error.textContent = copy.ageError;
+      error.hidden = false;
+      return;
+    }
+    const summary = engine.predict({
+      sex: selected('sex') as 'female' | 'male', birthDate, measuredOn, heightCm,
+      weightKg, motherHeightCm, fatherHeightCm,
+    }, { reference: field('reference').value as 'cdc' | 'who', unknownParentMode: 'populationAverage' });
+    const unit = field('heightUnit').value as 'cm' | 'ftin';
+    const estimateEl = result.querySelector<HTMLElement>('[data-result-estimate]');
+    const rangeEl = result.querySelector<HTMLElement>('[data-result-range]');
+    const percentileEl = result.querySelector<HTMLElement>('[data-result-percentile]');
+    const parentEl = result.querySelector<HTMLElement>('[data-result-parent]');
+    const fallbackEl = result.querySelector<HTMLElement>('[data-result-fallback]');
+    const methodsEl = result.querySelector<HTMLUListElement>('[data-result-methods]');
+    if (!estimateEl || !rangeEl || !percentileEl || !parentEl || !fallbackEl || !methodsEl) return;
+    estimateEl.textContent = formatHeight(summary.estimateCm, unit);
+    rangeEl.textContent = formatHeightRange(summary.lowCm, summary.highCm, unit);
+    if (summary.today) {
+      const percentile = Math.round(summary.today.percentile);
+      percentileEl.textContent = copy.resultPercentile.replace('{{ordinal}}', `${percentile}${ordinalSuffix(percentile)}`).replace('{{reference}}', summary.today.reference.toUpperCase());
+    } else percentileEl.textContent = copy.noPercentile;
+    parentEl.hidden = summary.estimatedParent == null;
+    parentEl.textContent = copy.estimatedParent;
+    fallbackEl.hidden = summary.fallback === 'none';
+    fallbackEl.textContent = summary.fallback === 'noWeight'
+      ? copy.fallbackNoWeight
+      : summary.fallback === 'underFour' || summary.fallback === 'overKhamisRocheAge'
+        ? copy.fallbackAge
+        : summary.fallback === 'coefficientsUnverified'
+          ? copy.fallbackCoefficients
+          : copy.fallbackParent;
+    methodsEl.replaceChildren(...summary.predictions.map((prediction) => {
+      const item = document.createElement('li');
+      item.textContent = `${methodName[prediction.method]}: ${formatHeight(prediction.estimateCm, unit)} · ${formatHeightRange(prediction.lowCm, prediction.highCm, unit)}`;
+      return item;
+    }));
+    result.hidden = false;
+    result.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
+  });
+</script>

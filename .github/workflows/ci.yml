@@ -13,6 +13,8 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      ASTRO_TELEMETRY_DISABLED: 1
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -20,7 +22,7 @@ jobs:
           version: 10.28.0
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Typecheck (engine, reference, content, mobile)
@@ -39,8 +41,12 @@ jobs:
         env:
           CI: '1'
           EXPO_OFFLINE: '1'
+      - name: Static companion website
+        run: pnpm --filter @tallsoon/web build
       - name: Install QA browser
         run: pnpm exec playwright install --with-deps chromium
+      - name: Website calculator and route checks
+        run: pnpm --filter @tallsoon/web test:e2e
       - name: Light and dark onboarding walkthroughs
         run: |
           node scripts/qa/serve.js apps/mobile/dist-ci 8099 &

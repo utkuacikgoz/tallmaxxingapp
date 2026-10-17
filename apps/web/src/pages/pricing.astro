@@ -1,0 +1,11 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { copy } from '../lib/copy';
+---
+<SiteLayout title={copy.navPricing} description={copy.pricingBody}>
+  <header class="page-intro"><p class="eyebrow">{copy.navPricing}</p><h1>{copy.pricingTitle}</h1><p>{copy.pricingBody}</p></header>
+  <div class="content-narrow">
+    <div class="plans"><article class="plan-card"><h2>{copy.annual}</h2><p class="plan-price">{copy.annualPrice}</p><p>{copy.annualSub}</p></article><article class="plan-card"><h2>{copy.weekly}</h2><p class="plan-price">{copy.weeklyPrice}</p><p>{copy.weeklySub}</p></article></div>
+    <p>{copy.trial}</p><p class="pending">{copy.storePending}</p><p>{copy.annualTerms}</p><p>{copy.weeklyTerms}</p><p class="muted">{copy.pricingDisclaimer}</p>
+  </div>
+</SiteLayout>

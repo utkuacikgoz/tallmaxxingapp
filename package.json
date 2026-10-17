@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "playwright": "1.62.1"
+  },
+  "engines": {
+    "node": "^22.22.0 || >=24.3.0"
   }
 }

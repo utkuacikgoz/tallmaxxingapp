@@ -1,0 +1,30 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { copy } from '../lib/copy';
+---
+<SiteLayout title={copy.shareTitle} description={copy.shareBody}>
+  <section class="share-card" data-share-card>
+    <p class="eyebrow">{copy.brand}</p>
+    <h1>{copy.shareTitle}</h1>
+    <p class="muted">{copy.shareRange}</p>
+    <p class="share-range" data-share-range hidden></p>
+    <p class="share-error" data-share-error hidden>{copy.shareInvalid}</p>
+    <p class="muted">{copy.shareBody}</p>
+    <a class="button button-primary" href="/height-predictor">{copy.shareCta}</a>
+  </section>
+  <script>
+    import { formatHeightRange } from '@tallsoon/engine';
+    const range = document.querySelector<HTMLElement>('[data-share-range]');
+    const error = document.querySelector<HTMLElement>('[data-share-error]');
+    const match = new URLSearchParams(location.search).get('h')?.match(/^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$/);
+    const unit = new URLSearchParams(location.search).get('u');
+    if (range && error && match && unit && ['cm', 'ftin'].includes(unit)) {
+      const low = Number(match[1]);
+      const high = Number(match[2]);
+      if (Number.isFinite(low) && Number.isFinite(high) && low >= 60 && high <= 230 && low <= high) {
+        range.textContent = formatHeightRange(low, high, unit as 'cm' | 'ftin');
+        range.hidden = false;
+      } else error.hidden = false;
+    } else if (error) error.hidden = false;
+  </script>
+</SiteLayout>
