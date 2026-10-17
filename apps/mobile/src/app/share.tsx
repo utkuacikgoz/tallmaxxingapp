@@ -38,10 +38,14 @@ export default function ShareSheet() {
   const milestone = milestoneKeys.find((key) => key === params.milestone);
   const summary = model?.summary;
 
-  if (!child || !summary) return <View style={{ flex: 1, backgroundColor: c.sheetBg }} />;
+  if (!child || (!milestone && !summary)) return (
+    <View style={{ flex: 1, backgroundColor: c.sheetBg }}>
+      <SheetHeader title={t(milestone ? 'retention.shareTitle' : 'share.title')} close />
+    </View>
+  );
 
-  const range = formatHeightRange(summary.lowCm, summary.highCm, unit);
-  const method = summary.lead.method === 'khamisRoche' ? 'Khamis–Roche' : summary.lead.method === 'midParental' ? 'mid-parental height' : 'growth curve';
+  const range = summary ? formatHeightRange(summary.lowCm, summary.highCm, unit) : '';
+  const method = summary?.lead.method === 'khamisRoche' ? 'Khamis–Roche' : summary?.lead.method === 'midParental' ? 'mid-parental height' : 'growth curve';
 
   const capture = async (): Promise<string | null> => {
     if (!cardRef.current) return null;
@@ -104,7 +108,7 @@ export default function ShareSheet() {
         <View style={styles.preview}>
           <View style={styles.shadow}>
             {milestone ? <MilestoneCard ref={cardRef} milestone={milestone} nickname={child.nickname} square={square} />
-              : <ResultCard ref={cardRef} summary={summary} unit={unit} nickname={child.nickname} sex={child.sexAtBirth} />}
+              : summary ? <ResultCard ref={cardRef} summary={summary} unit={unit} nickname={child.nickname} sex={child.sexAtBirth} /> : null}
           </View>
         </View>
         {milestone ? (

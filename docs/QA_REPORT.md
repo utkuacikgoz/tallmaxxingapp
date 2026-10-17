@@ -21,3 +21,9 @@ curves, history, plan content varying by date, free-plan preview, and settings/e
 Numbers vary with the current date and actual input values. System typography, safe-area/status
 bars and system sheets require comparison on real iOS/Android builds; browser QA cannot verify
 native billing, permission prompts, screen readers, or large system text sizes.
+
+Final-wave verification: light/dark walkthroughs also cover Story and Square milestone cards,
+check square dimensions and verify the card excludes height measurements. Secondary text contrast
+and native verification limits are recorded in `docs/ACCESSIBILITY.md`. Workspace typechecks,
+49 engine tests, 58 content tests, 26 mobile tests, website browser smoke checks and release
+configuration checks pass. Mobile lint has zero errors and 27 existing warnings.

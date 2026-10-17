@@ -125,6 +125,11 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   both measurements remain in history and edits retain their insertion order.
 - Added reversed-input regressions for chart and prediction history. Engine tests: 49; mobile: 25.
 
+### Wave 5 follow-up · milestone sharing without measurements
+- Review caught that an earned habit milestone could open an empty sheet after all measurements
+  were removed. Milestone sharing now needs only the child, and missing-data sheets retain Close.
+- Added a real-screen regression: all 26 mobile tests and mobile typecheck pass.
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 
