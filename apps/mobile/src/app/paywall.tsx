@@ -102,14 +102,10 @@ export default function Paywall() {
   const [trial, setTrial] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    setFailed(false);
-    try {
-      setOffering(await entitlements.getOffering());
-    } catch {
-      setFailed(true);
-    }
-  }, []);
+  const load = useCallback(
+    () => entitlements.getOffering().then(setOffering, () => setFailed(true)),
+    [],
+  );
 
   useEffect(() => {
     void load();
@@ -242,7 +238,7 @@ export default function Paywall() {
                   <Text variant="subhead" color="label2" align="center">
                     {t('paywall.unavailableBody')}
                   </Text>
-                  <Button variant="tinted" title={t('paywall.retry')} onPress={() => void load()} fullWidth={false} />
+                  <Button variant="tinted" title={t('paywall.retry')} onPress={() => { setFailed(false); void load(); }} fullWidth={false} />
                 </>
               ) : (
                 <ActivityIndicator color={c.tint} />

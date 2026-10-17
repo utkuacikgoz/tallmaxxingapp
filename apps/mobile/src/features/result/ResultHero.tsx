@@ -14,10 +14,7 @@ function useCountUp(from: number, to: number, animate: boolean): number {
   const reduced = useReducedMotion();
   const [v, setV] = useState(animate && !reduced ? from : to);
   useEffect(() => {
-    if (!animate || reduced) {
-      setV(to);
-      return;
-    }
+    if (!animate || reduced) return;
     const start = Date.now();
     const duration = 1100;
     let raf = 0;
@@ -30,7 +27,7 @@ function useCountUp(from: number, to: number, animate: boolean): number {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [from, to, animate, reduced]);
-  return v;
+  return !animate || reduced ? to : v;
 }
 
 export const ResultHero = memo(function ResultHero({

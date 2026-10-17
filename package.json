@@ -8,5 +8,8 @@
     "lint": "pnpm -r --if-present lint",
     "mobile": "pnpm --filter @tallsoon/mobile start",
     "web": "pnpm --filter @tallsoon/web dev"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
   }
 }

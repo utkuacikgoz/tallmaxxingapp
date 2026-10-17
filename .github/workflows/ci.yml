@@ -37,3 +37,19 @@ jobs:
         env:
           CI: '1'
           EXPO_OFFLINE: '1'
+      - name: Install QA browser
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Light and dark onboarding walkthroughs
+        run: |
+          node scripts/qa/serve.js apps/mobile/dist-ci 8099 &
+          QA_SERVER_PID=$!
+          trap 'kill "$QA_SERVER_PID"' EXIT
+          node scripts/qa/flow.js light
+          node scripts/qa/flow.js dark
+      - name: QA screenshots and console output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-web-qa
+          path: artifacts/qa/
+          if-no-files-found: ignore

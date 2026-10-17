@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { addDays, addMonths, ageInYears, toIsoDate } from '@tallsoon/engine';
@@ -28,7 +29,7 @@ export function initNotifications() {
     void Notifications.setNotificationChannelAsync(CHANNEL, {
       name: tr('notifications.channelReminders'),
       description: tr('notifications.channelReminderDesc'),
-      importance: Notifications.AndroidImportance.DEFAULT,
+      importance: AndroidImportance.DEFAULT,
     });
   }
 }

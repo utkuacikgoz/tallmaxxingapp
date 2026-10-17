@@ -34,7 +34,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 
 ### Next up (in order)
 - [x] Fixed: result screen was blank on web. Skia confetti crashed because CanvasKit isn't loaded in browsers. `src/ui/Celebrate.web.tsx` skips confetti on web only; the loader's BackHandler is now Android-only. Verified: the result renders with the hero, methods and CTA
-- [ ] Finish the scripted QA flow (note: the default units follow locale; the script must tap `cm`/`kg` before filling `height-field`/`weight-field`, or fill `height-field-ft`/`-in`) through paywall → success → tabs; compare each screenshot with `docs/prototype/shots/v2/` (light and dark) and fix the differences
+- [x] Finish the scripted QA flow (note: the default units follow locale; the script must tap `cm`/`kg` before filling `height-field`/`weight-field`, or fill `height-field-ft`/`-in`) through paywall → success → tabs; compare each screenshot with `docs/prototype/shots/v2/` (light and dark) and fix the differences
 - [ ] Mobile Jest tests (jest-expo): ChoiceList auto-advance lock, MeasureField unit switch precision, paywall price and CTA logic, savePercent
 - [ ] Maestro flows in `.maestro/` (onboarding parent and teen, result, paywall close, check-in, delete data)
 - [ ] `apps/web`: static site (Astro or Vite) with the calculator importing `@tallsoon/engine`, plus /method, /pricing, /privacy, /terms, /support
@@ -45,7 +45,19 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - [ ] Milestone share cards (7/30/100-day streaks, first check-in), weekly-to-annual upgrade card after week 2
 - [ ] Debug-only demo data mode for store screenshots
 
+## Completed waves
+
+### Wave 1 · browser QA and layout fixes
+- Light and dark walkthroughs pass with no browser console errors. Prototype comparison and native
+  verification limits: `docs/QA_REPORT.md`.
+- Fixed compact parent field overflow and the browser tab bar covering headers; native tabs stay.
+- Added reproducible Playwright/Expo lint tooling and retained light/dark screenshots in CI artifacts.
+- Validation: workspace typecheck, engine (47) and content (58) tests, mobile web export and both QA flows.
+  Native simulator/device review remains required.
+
 ## QA harness
+Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
+
 Scripts: `scripts/qa/serve.js` (static server with COOP/COEP) and `scripts/qa/flow.js` (Playwright walkthrough; set `PLAYWRIGHT_PATH=/opt/node-tools/node_modules/playwright` in the cloud sandbox). Run: `node scripts/qa/serve.js apps/mobile/dist 8099 &` then `node scripts/qa/flow.js light`.
 
 ## Open questions for the product owner (ask at the end)

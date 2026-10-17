@@ -16,3 +16,5 @@ coverage/
 *.mobileprovision
 apps/web/.astro/
 dist-ci/
+
+artifacts/

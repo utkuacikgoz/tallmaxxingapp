@@ -271,6 +271,6 @@ const styles = StyleSheet.create({
   },
   input: { padding: 0, margin: 0, fontWeight: '700', fontVariant: ['tabular-nums'] },
   inputLarge: { flex: 1, paddingVertical: 10 },
-  inputCompact: { textAlign: 'right', paddingVertical: 8 },
+  inputCompact: { width: 64, flexShrink: 1, textAlign: 'right', paddingVertical: 8 },
   suffix: { marginLeft: 6 },
 });
