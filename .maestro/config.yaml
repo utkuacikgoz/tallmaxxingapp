@@ -1,0 +1,4 @@
+flows:
+  - flows/*.yaml
+env:
+  APP_ID: app.tallsoon.dev

@@ -1,0 +1,21 @@
+appId: ${APP_ID}
+---
+- runFlow: complete-parent-onboarding.yaml
+- assertVisible:
+    id: result-hero
+- assertVisible:
+    id: get-plan
+- assertNotVisible:
+    id: paywall
+- scrollUntilVisible:
+    element:
+      id: get-plan
+    direction: DOWN
+- tapOn:
+    id: get-plan
+- assertVisible:
+    id: paywall-close
+- tapOn:
+    id: paywall-close
+- assertVisible:
+    id: result-hero

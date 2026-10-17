@@ -90,16 +90,24 @@ export const MeasureField = memo(
     const aRef = useRef<React.ComponentRef<typeof TextInput>>(null);
     const bRef = useRef<React.ComponentRef<typeof TextInput>>(null);
     const lastUnit = useRef(unit);
+    const lastValue = useRef(value);
+    const emittedValue = useRef<number | null | undefined>(undefined);
 
     useImperativeHandle(ref, () => ({ focus: () => aRef.current?.focus() }), []);
 
-    // Re-derive text when the unit changes (or the value is reset from outside).
+    // Re-derive on unit changes and external value resets. Values emitted by typing already have
+    // matching local text, so don't round-trip those through a display conversion.
     useEffect(() => {
-      if (lastUnit.current !== unit) {
+      const unitChanged = lastUnit.current !== unit;
+      const valueChangedExternally = lastValue.current !== value && emittedValue.current !== value;
+      if (unitChanged || valueChangedExternally) {
         lastUnit.current = unit;
         if (unit === 'ftin') setFtIn(metricToFtIn(value));
         else setText(metricToText(value, unit));
       }
+      lastUnit.current = unit;
+      lastValue.current = value;
+      emittedValue.current = undefined;
     }, [unit, value]);
 
     useEffect(() => {
@@ -114,6 +122,7 @@ export const MeasureField = memo(
       setText(clean);
       const n = parseDecimal(clean);
       const metric = n == null ? null : unit === 'lb' ? lbToKg(n) : n;
+      emittedValue.current = metric;
       onChange(metric, { inchesInvalid: false, rawInUnit: n });
     };
 
@@ -121,10 +130,17 @@ export const MeasureField = memo(
       setFtIn({ ft, inch });
       const f = parseDecimal(ft);
       const i = inch === '' ? 0 : parseDecimal(inch);
-      if (f == null) return onChange(null, { inchesInvalid: false, rawInUnit: null });
+      if (f == null) {
+        emittedValue.current = null;
+        return onChange(null, { inchesInvalid: false, rawInUnit: null });
+      }
       const inchesInvalid = i == null || i < 0 || i > 11;
-      if (inchesInvalid) return onChange(null, { inchesInvalid: true, rawInUnit: null });
+      if (inchesInvalid) {
+        emittedValue.current = null;
+        return onChange(null, { inchesInvalid: true, rawInUnit: null });
+      }
       const cm = ftInToCm(f, i ?? 0);
+      emittedValue.current = cm;
       onChange(cm, { inchesInvalid: false, rawInUnit: cm });
     };
 

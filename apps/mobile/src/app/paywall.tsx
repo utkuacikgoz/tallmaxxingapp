@@ -119,10 +119,12 @@ export default function Paywall() {
 
   const annual = offering?.annual;
   const weekly = offering?.weekly;
-  const save = annual && weekly ? savePercent(annual.price, weekly.price) : null;
-  const perWeek = annual ? formatMoney(annual.price / 52, annual.currencyCode) : '';
   const trialAvailable = plan === 'annual' && !!offering?.annualTrial;
   const trialOn = trialAvailable && trial;
+  const billedAnnual = trialOn ? offering?.annualTrial : annual;
+  const save = billedAnnual && weekly && billedAnnual.currencyCode === weekly.currencyCode
+    ? savePercent(billedAnnual.price, weekly.price) : null;
+  const perWeek = billedAnnual ? formatMoney(billedAnnual.price / 52, billedAnnual.currencyCode) : '';
 
   const cta = !offering
     ? t('paywall.loading')
@@ -134,7 +136,7 @@ export default function Paywall() {
   const terms = !offering
     ? ''
     : trialOn
-      ? t('paywall.termsTrial', { price: annual?.priceString })
+      ? t('paywall.termsTrial', { price: billedAnnual?.priceString })
       : plan === 'annual'
         ? t('paywall.termsAnnual', { price: annual?.priceString })
         : t('paywall.termsWeekly', { price: weekly?.priceString });
@@ -180,7 +182,7 @@ export default function Paywall() {
 
   const askParent = () => {
     void Share.share({
-      message: t('paywall.askParentMessage', { price: `${annual?.priceString ?? ''}/year`, url: AppConfig.websiteUrl }),
+      message: t('paywall.askParentMessage', { price: plan === 'weekly' ? `${weekly?.priceString ?? ''}${t('paywall.perWeek')}` : `${billedAnnual?.priceString ?? ''}${t('paywall.perYear')}`, url: AppConfig.websiteUrl }),
     });
   };
 
@@ -252,7 +254,7 @@ export default function Paywall() {
                 title={t('paywall.annual')}
                 badge={save != null ? t('paywall.badge', { pct: save }) : null}
                 sub={t('paywall.annualSub', { perWeek })}
-                price={annual?.priceString ?? ''}
+                price={billedAnnual?.priceString ?? ''}
                 per={t('paywall.perYear')}
                 onPress={() => {
                   haptics.light();

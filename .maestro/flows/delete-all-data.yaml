@@ -1,0 +1,23 @@
+appId: ${APP_ID}
+---
+- runFlow: complete-parent-onboarding.yaml
+- tapOn:
+    id: maybe-later
+- tapOn:
+    text: Family
+- assertVisible:
+    id: family
+- scrollUntilVisible:
+    element:
+      id: delete-all
+    direction: DOWN
+- tapOn:
+    id: delete-all
+- assertVisible: Delete All Data?
+- tapOn:
+    text: Delete
+- assertVisible:
+    id: welcome-start
+- launchApp
+- assertVisible:
+    id: welcome-start

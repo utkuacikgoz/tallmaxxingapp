@@ -29,6 +29,8 @@ jobs:
         run: |
           pnpm --filter @tallsoon/engine test
           pnpm --filter @tallsoon/content test
+      - name: Mobile Jest regression tests
+        run: pnpm --filter @tallsoon/mobile test --runInBand --watchman=false
       - name: Testimonials consent gate
         run: node apps/mobile/scripts/check-testimonials.js
       - name: Web bundle smoke test (Metro resolves every route)

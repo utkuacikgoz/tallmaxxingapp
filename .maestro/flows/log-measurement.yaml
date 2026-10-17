@@ -1,0 +1,53 @@
+appId: ${APP_ID}
+---
+- runScript: birthdates.js
+- runFlow: complete-parent-onboarding.yaml
+- scrollUntilVisible:
+    element:
+      id: get-plan
+    direction: DOWN
+- tapOn:
+    id: get-plan
+- assertVisible:
+    id: paywall-terms
+- assertVisible:
+    id: paywall-cta
+- tapOn:
+    id: paywall-cta
+- assertVisible:
+    id: success
+- tapOn:
+    id: bedtime-21:00
+- tapOn:
+    id: start-plan
+- tapOn:
+    text: Don’t Allow
+    optional: true
+- tapOn:
+    text: "Don't allow"
+    optional: true
+- assertVisible:
+    id: today
+- tapOn:
+    text: Growth
+- assertVisible:
+    id: growth-add
+- tapOn:
+    id: growth-add
+- assertVisible:
+    id: log-sheet
+- tapOn:
+    id: log-height
+- inputText: "161"
+- hideKeyboard
+- tapOn:
+    id: log-add
+- assertVisible: Measurement added
+- assertVisible:
+    id: growth
+- scrollUntilVisible:
+    element:
+      id: measurement-${output.today}
+    direction: DOWN
+- assertVisible:
+    id: measurement-${output.today}

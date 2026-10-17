@@ -35,8 +35,8 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 ### Next up (in order)
 - [x] Fixed: result screen was blank on web. Skia confetti crashed because CanvasKit isn't loaded in browsers. `src/ui/Celebrate.web.tsx` skips confetti on web only; the loader's BackHandler is now Android-only. Verified: the result renders with the hero, methods and CTA
 - [x] Finish the scripted QA flow (note: the default units follow locale; the script must tap `cm`/`kg` before filling `height-field`/`weight-field`, or fill `height-field-ft`/`-in`) through paywall → success → tabs; compare each screenshot with `docs/prototype/shots/v2/` (light and dark) and fix the differences
-- [ ] Mobile Jest tests (jest-expo): ChoiceList auto-advance lock, MeasureField unit switch precision, paywall price and CTA logic, savePercent
-- [ ] Maestro flows in `.maestro/` (onboarding parent and teen, result, paywall close, check-in, delete data)
+- [x] Mobile Jest tests (jest-expo): ChoiceList auto-advance lock, MeasureField unit switch precision, paywall price and CTA logic, savePercent
+- [x] Maestro flows authored in `.maestro/` (parent, teen 13+, under-13 hand-off, free result, paywall close, check-in, delete data); native execution pending
 - [ ] `apps/web`: static site (Astro or Vite) with the calculator importing `@tallsoon/engine`, plus /method, /pricing, /privacy, /terms, /support
 - [ ] App icon and splash PNGs generated from `AppIcon` (1024 px), Android adaptive icon layers
 - [ ] `eas.json` (development / preview / production), EAS Submit config
@@ -54,6 +54,17 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Added reproducible Playwright/Expo lint tooling and retained light/dark screenshots in CI artifacts.
 - Validation: workspace typecheck, engine (47) and content (58) tests, mobile web export and both QA flows.
   Native simulator/device review remains required.
+
+### Wave 2 · mobile regression coverage and native flow definitions
+- Added 13 mobile Jest tests for real paywall price/CTA/terms rendering, trial eligibility and
+  conversion pricing, ChoiceList input/focus/motion behavior, metric precision and reset handling,
+  unknown-parent exclusivity and puberty options. Mobile tests now run in CI.
+- Fixed tap races and canceled delayed navigation on blur; kept the lock through navigation.
+  Fixed stale externally reset measurement fields and disclosed the selected trial package's price.
+  Savings are hidden when the two store products use different currencies.
+- Added parameterized, calendar-relative Maestro flows. YAML and helper JavaScript parse; selectors
+  were checked against source. Native Maestro execution is still pending (Maestro CLI not installed yet).
+- Validation: mobile Jest (13), mobile typecheck and lint (existing warnings).
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.

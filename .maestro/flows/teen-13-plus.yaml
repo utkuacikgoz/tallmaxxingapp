@@ -1,0 +1,84 @@
+appId: ${APP_ID}
+---
+- runScript: birthdates.js
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: welcome-start
+- tapOn:
+    id: welcome-start
+- tapOn:
+    id: role-teen
+- assertVisible:
+    id: sex-male
+- tapOn:
+    id: sex-male
+- assertVisible:
+    id: birth-continue
+- tapOn:
+    text: Enter date with keyboard instead
+- tapOn:
+    id: birth-typed
+- inputText: ${output.birthMonthYear.teen13Plus}
+- hideKeyboard
+- tapOn:
+    id: birth-continue
+- assertVisible:
+    id: height-unit
+- tapOn:
+    text: cm
+- assertVisible:
+    id: height-field
+- tapOn:
+    id: height-field
+- inputText: "170"
+- hideKeyboard
+- tapOn:
+    id: height-continue
+- assertVisible:
+    id: weight-skip
+- tapOn:
+    id: weight-skip
+- assertVisible:
+    id: parent-mother
+- tapOn:
+    id: parent-mother
+- inputText: "163"
+- tapOn:
+    id: parent-father
+- inputText: "178"
+- hideKeyboard
+- tapOn:
+    id: parents-continue
+- assertVisible:
+    id: puberty-none
+- tapOn:
+    id: puberty-none
+- tapOn:
+    id: puberty-continue
+- assertVisible:
+    id: sleep-8-9
+- tapOn:
+    id: sleep-8-9
+- assertVisible:
+    id: goal-fullHeight
+- tapOn:
+    id: goal-fullHeight
+- assertVisible:
+    id: see-result
+- tapOn:
+    id: see-result
+- extendedWaitUntil:
+    visible:
+      id: result-hero
+    timeout: 20000
+- assertVisible:
+    id: get-plan
+- assertNotVisible:
+    id: paywall
+- scrollUntilVisible:
+    element:
+      id: show-parent
+    direction: DOWN
+- assertVisible:
+    id: show-parent
