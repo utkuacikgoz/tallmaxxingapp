@@ -99,4 +99,20 @@ describe('prediction history', () => {
     expect(h).toHaveLength(2);
     expect(h[1]!.highCm - h[1]!.estimateCm).toBeCloseTo(5.3, 6); // KR ran with the carried weight
   });
+
+  it('orders same-day measurements by insertion sequence, regardless of input order', () => {
+    const child = { sex: 'male' as const, birthDate: '2013-05-15', motherHeightCm: 163, fatherHeightCm: 178 };
+    const options = { reference: 'cdc' as const, unknownParentMode: 'populationAverage' as const };
+    const points = [
+      { date: '2026-10-16', heightCm: 161, weightKg: null, sequence: 2 },
+      { date: '2026-10-16', heightCm: 160, weightKg: null, sequence: 1 },
+    ];
+    const newest = engine.predict({ ...child, measuredOn: '2026-10-16', heightCm: 161, weightKg: null }, options);
+
+    for (const input of [points, [...points].reverse()]) {
+      const history = predictionHistory(engine, child, input, options);
+      expect(history).toHaveLength(2);
+      expect(history[history.length - 1]?.estimateCm).toBe(newest.estimateCm);
+    }
+  });
 });

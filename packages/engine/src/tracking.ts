@@ -1,11 +1,13 @@
 import { ageInMonths, ageInYears, daysBetween, parseIsoDate } from './age';
 import type { Engine, PredictOptions } from './predict';
 import type { ReferenceId, Sex } from './types';
+import { compareMeasurementsAscending } from './measurement-order';
 
 export interface MeasurementPoint {
   date: string;
   heightCm: number;
   weightKg: number | null;
+  sequence?: number;
 }
 
 /** Minimum gap between two measurements before velocity is meaningful (≈ 3 months). */
@@ -36,7 +38,7 @@ export function growthVelocity(
   reference: ReferenceId,
 ): Velocity | null {
   if (points.length < 2) return null;
-  const sorted = [...points].sort((a, b) => parseIsoDate(a.date) - parseIsoDate(b.date));
+  const sorted = [...points].sort(compareMeasurementsAscending);
   const latest = sorted[sorted.length - 1] as MeasurementPoint;
   let earlier: MeasurementPoint | null = null;
   for (let i = sorted.length - 2; i >= 0; i -= 1) {
@@ -81,7 +83,7 @@ export function predictionHistory(
   points: readonly MeasurementPoint[],
   options: PredictOptions,
 ): HistoryPoint[] {
-  const sorted = [...points].sort((a, b) => parseIsoDate(a.date) - parseIsoDate(b.date));
+  const sorted = [...points].sort(compareMeasurementsAscending);
   let lastWeight: number | null = null;
   const out: HistoryPoint[] = [];
   for (const p of sorted) {

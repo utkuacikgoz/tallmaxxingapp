@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, inArray } from 'drizzle-orm';
+import { and, asc, desc, eq, getTableColumns, gte, inArray, sql } from 'drizzle-orm';
 import { randomUUID } from 'expo-crypto';
 
 import type { ExportFile } from '@tallsoon/engine';
@@ -31,21 +31,29 @@ export const childrenRepo = {
 
 export const measurementsRepo = {
   forChild(childId: string): Promise<Measurement[]> {
-    return db.select().from(measurements).where(eq(measurements.childId, childId)).orderBy(desc(measurements.date));
+    return db
+      .select({ ...getTableColumns(measurements), sequence: sql<number>`rowid` })
+      .from(measurements)
+      .where(eq(measurements.childId, childId))
+      .orderBy(desc(measurements.date), desc(sql<number>`rowid`));
   },
-  async add(input: Omit<Measurement, 'id'>): Promise<Measurement> {
+  async add(input: Omit<Measurement, 'id' | 'sequence'>): Promise<Measurement> {
     const row = { ...input, id: randomUUID() };
-    await db.insert(measurements).values(row);
-    return row;
+    const [inserted] = await db
+      .insert(measurements)
+      .values(row)
+      .returning({ ...getTableColumns(measurements), sequence: sql<number>`rowid` });
+    if (!inserted) throw new Error('Measurement insert did not return the saved row');
+    return inserted;
   },
-  async update(id: string, patch: Partial<Omit<Measurement, 'id' | 'childId'>>): Promise<void> {
+  async update(id: string, patch: Partial<Omit<Measurement, 'id' | 'childId' | 'sequence'>>): Promise<void> {
     await db.update(measurements).set(patch).where(eq(measurements.id, id));
   },
   async remove(id: string): Promise<void> {
     await db.delete(measurements).where(eq(measurements.id, id));
   },
   /** Free users keep a single measurement: replace it (brief §3.2). */
-  async replaceSingle(childId: string, input: Omit<Measurement, 'id' | 'childId'>): Promise<void> {
+  async replaceSingle(childId: string, input: Omit<Measurement, 'id' | 'childId' | 'sequence'>): Promise<void> {
     await db.transaction(async (tx) => {
       await tx.delete(measurements).where(eq(measurements.childId, childId));
       await tx.insert(measurements).values({ ...input, childId, id: randomUUID() });

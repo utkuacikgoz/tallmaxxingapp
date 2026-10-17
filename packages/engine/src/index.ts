@@ -1,6 +1,7 @@
 export * from './types';
 export * from './units';
 export * from './age';
+export * from './measurement-order';
 export * from './lms';
 export * from './methods';
 export * from './predict';

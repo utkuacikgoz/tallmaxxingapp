@@ -3,6 +3,7 @@ import type { GrowthReference } from './lms';
 import { heightForAge, valueFromLms, zFromLms } from './lms';
 import type { Engine } from './predict';
 import type { PredictionSummary, ReferenceId, Sex } from './types';
+import { compareMeasurementsAscending } from './measurement-order';
 
 /** Points are [ageYears, heightCm]. */
 export type XY = readonly [number, number];
@@ -52,10 +53,10 @@ export function buildGrowthChart(opts: {
   sex: Sex;
   birthDate: string;
   reference: ReferenceId;
-  measurements: ReadonlyArray<{ date: string; heightCm: number }>;
+  measurements: ReadonlyArray<{ date: string; heightCm: number; sequence?: number }>;
   summary: PredictionSummary | null;
 }): GrowthChartData | null {
-  const sorted = [...opts.measurements].sort((a, b) => (a.date < b.date ? -1 : 1));
+  const sorted = [...opts.measurements].sort(compareMeasurementsAscending);
   const last = sorted[sorted.length - 1];
   if (!last) return null;
   const ageAt = (date: string) => ageInMonths(opts.birthDate, date) / 12;
@@ -155,4 +156,3 @@ export function buildGrowthChart(opts: {
     yTicks,
   };
 }
-

@@ -1,4 +1,4 @@
-import { asc, desc, eq } from 'drizzle-orm';
+import { asc, desc, eq, getTableColumns, sql } from 'drizzle-orm';
 import { useLiveQuery } from 'drizzle-orm/expo-sqlite';
 import { useMemo } from 'react';
 
@@ -31,10 +31,10 @@ export function useActiveChild(): Child | null {
 export function useMeasurements(childId: string | null | undefined): Measurement[] {
   const { data } = useLiveQuery(
     db
-      .select()
+      .select({ ...getTableColumns(measurements), sequence: sql<number>`rowid` })
       .from(measurements)
       .where(eq(measurements.childId, childId ?? ''))
-      .orderBy(desc(measurements.date)),
+      .orderBy(desc(measurements.date), desc(sql<number>`rowid`)),
     [childId],
   );
   return data ?? [];
@@ -74,7 +74,7 @@ export function summarize(child: Child, ms: Measurement[], reference = useSettin
       summary = null;
     }
   }
-  const points = ms.map((m) => ({ date: m.date, heightCm: m.heightCm, weightKg: m.weightKg }));
+  const points = ms.map((m) => ({ date: m.date, heightCm: m.heightCm, weightKg: m.weightKg, sequence: m.sequence }));
   return {
     child,
     measurements: ms,

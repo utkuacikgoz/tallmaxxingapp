@@ -4,7 +4,7 @@ import * as StoreReview from 'expo-store-review';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Platform, StyleSheet, TextInput, View } from 'react-native';
 
-import { addMonths, DROP_WARNING_CM, toIsoDate, type HeightUnit, type WeightUnit } from '@tallsoon/engine';
+import { addMonths, compareMeasurementsAscending, DROP_WARNING_CM, toIsoDate, type HeightUnit, type WeightUnit } from '@tallsoon/engine';
 
 import { measurementsRepo } from '@/db/repo';
 import type { Measurement } from '@/db/schema';
@@ -96,7 +96,7 @@ export default function LogSheet() {
       const added = await measurementsRepo.add({ ...row, childId: child.id });
       next = [added, ...ms];
     }
-    next.sort((a, b) => (a.date < b.date ? 1 : -1));
+    next.sort((a, b) => compareMeasurementsAscending(b, a));
     const after = summarize(child, next).summary?.estimateCm ?? null;
     haptics.success();
     analytics.track('measurement_logged', { past: date !== today });

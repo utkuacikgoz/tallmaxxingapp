@@ -50,5 +50,6 @@ export const habitChecks = sqliteTable(
 
 export type Child = typeof children.$inferSelect;
 export type NewChild = typeof children.$inferInsert;
-export type Measurement = typeof measurements.$inferSelect;
+/** `sequence` is SQLite's implicit rowid, selected at runtime to order same-day entries. */
+export type Measurement = typeof measurements.$inferSelect & { sequence?: number };
 export type HabitCheck = typeof habitChecks.$inferSelect;

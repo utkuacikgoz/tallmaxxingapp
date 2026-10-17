@@ -35,4 +35,28 @@ describe('growth chart data', () => {
     expect(data.yMax).toBeGreaterThanOrEqual(summary.highCm);
     expect(data.yTicks[0]).toBe(data.yMin);
   });
+
+  it('uses the most recently inserted same-day measurement as the projection start', () => {
+    const latestSummary = engine.predict(
+      { sex: 'male', birthDate: '2013-05-15', measuredOn: '2026-10-16', heightCm: 161, weightKg: 42, motherHeightCm: 163, fatherHeightCm: 178 },
+      { reference: 'cdc', unknownParentMode: 'populationAverage' },
+    );
+    const points = [
+      { date: '2026-10-16', heightCm: 161, sequence: 2 },
+      { date: '2026-10-16', heightCm: 160, sequence: 1 },
+    ];
+    for (const measurements of [points, [...points].reverse()]) {
+      const sameDay = buildGrowthChart({
+        engine,
+        sex: 'male',
+        birthDate: '2013-05-15',
+        reference: 'cdc',
+        measurements,
+        summary: latestSummary,
+      })!;
+
+      expect(sameDay.measurements.map((measurement) => measurement.heightCm)).toEqual([160, 161]);
+      expect(sameDay.projection[0]?.[1]).toBe(161);
+    }
+  });
 });

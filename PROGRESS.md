@@ -17,7 +17,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 ### Done
 - [x] pnpm monorepo: `apps/mobile` (Expo SDK 58, RN 0.88, expo-router), `packages/engine`, `packages/reference`, `packages/content`
 - [x] Reference data: CDC 2000 stature-for-age LMS and WHO 2007 height-for-age LMS (each cross-checked against a second copy); Khamis–Roche coefficients from the handoff (`packages/reference/SOURCES.md`)
-- [x] Engine: units, age, LMS/percentiles, Khamis–Roche (rows with ≥ 2 sources only), mid-parental height, percentile projection, unknown-parent mode, velocity, prediction history, streaks with weekly rest day, Growth Habits Score, growth-chart data builder. **45 Jest tests**
+- [x] Engine: units, age, LMS/percentiles, Khamis–Roche (rows with ≥ 2 sources only), mid-parental height, percentile projection, unknown-parent mode, velocity, prediction history, streaks with weekly rest day, Growth Habits Score, growth-chart data builder. **49 Jest tests**
 - [x] Content: habits, routines, meals, grocery list, tips, Week 1 plan, focus targets, puberty and measuring guides, notification lines, seasonal packs. **58 Jest tests**
 - [x] Design system: tokens (§13.2), HIG/M3 type scale, Text, Icon (SF Symbols / Material Symbols), Button, inset List/Row, SegmentedControl, MeasureField (cm, ft/in, kg, lb), MonthYearWheel, Banner, Sheet header, ProgressLine, Celebrate (confetti)
 - [x] Data: Drizzle schema + migration, repositories, MMKV settings store, export/delete
@@ -118,6 +118,12 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   completed habits. Reserved IDs and transactions protect existing children; real billing is untouched.
 - Documented native capture steps and current store screenshot-size verification in `docs/SCREENSHOTS.md`.
   Store screenshots and submissions are not implied by the seed-data feature.
+
+### Wave 5 · same-day measurement ordering
+- Measurement reads and inserts expose SQLite insertion sequence without changing the schema.
+  A new check-in on the same date now becomes the current prediction and chart projection point;
+  both measurements remain in history and edits retain their insertion order.
+- Added reversed-input regressions for chart and prediction history. Engine tests: 49; mobile: 25.
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
