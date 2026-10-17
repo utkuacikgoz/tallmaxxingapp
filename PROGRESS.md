@@ -130,6 +130,14 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   were removed. Milestone sharing now needs only the child, and missing-data sheets retain Close.
 - Added a real-screen regression: all 26 mobile tests and mobile typecheck pass.
 
+### Wave 6 · native build and bounded smoke verification
+- Built and installed the iOS Debug app on a dedicated iPhone 17 / iOS 26.5 simulator, then
+  visually verified the native welcome screen through a dedicated Metro server.
+- Ran Maestro: all six initial flows stopped at the development-client reset/server-selection
+  screen before onboarding. A bounded follow-up reached the app but stopped at the Dev Menu overlay;
+  unverified startup edits were reverted. Full native flow and assistive-technology verification remain open.
+- Evidence, environment and release limits are recorded in `docs/NATIVE_QA.md`.
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 
