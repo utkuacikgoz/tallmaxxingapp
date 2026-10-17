@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { create } from 'zustand';
+import { toIsoDate } from '@tallsoon/engine';
 
 import { useSettings } from '@/state/settings';
 import { createMockEntitlementService } from './mock';
@@ -35,7 +36,12 @@ export const useEntitlementStore = create<EntitlementStore>((set) => ({
   status: { ...FREE_STATUS, isPro: useSettings.getState().proHint },
   ready: false,
   set: (status) => {
-    useSettings.getState().set({ proHint: status.isPro });
+    const settings = useSettings.getState();
+    settings.set({
+      proHint: status.isPro,
+      weeklyStartedOn: status.isPro && status.plan === 'weekly'
+        ? settings.weeklyStartedOn ?? toIsoDate(new Date()) : null,
+    });
     set({ status, ready: true });
   },
 }));

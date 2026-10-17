@@ -34,7 +34,7 @@ export async function refreshReminders() {
   if (status.isTrial && status.expiresAt) {
     try {
       const offering = await entitlements.getOffering();
-      await syncTrialReminder(status.expiresAt, offering.annual.priceString);
+      await syncTrialReminder(status.expiresAt, (offering.annualTrial ?? offering.annual).priceString);
     } catch {
       // Prices unavailable offline; the reminder is re-synced next time.
     }

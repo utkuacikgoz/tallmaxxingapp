@@ -11,6 +11,7 @@ import { openPaywall } from '@/features/paywall/open';
 import { rememberBest, setHabit, useHabits } from '@/features/plan/useHabits';
 import { planVars } from '@/features/plan/vars';
 import { useT } from '@/i18n';
+import { RetentionCards } from '@/features/retention/Cards';
 import { useEntitlement } from '@/services/entitlements';
 import { haptics } from '@/services/haptics';
 import { openUrl } from '@/services/links';
@@ -197,6 +198,8 @@ export default function TodayScreen() {
         {ent.isPro || readOnly ? (
           <StreakCard count={habitsModel.streak.current} best={habitsModel.streak.best} week={week} today={todayIndex} />
         ) : null}
+
+        <RetentionCards childId={child?.id ?? null} bestStreak={habitsModel.streak.best} />
 
         {canRepair ? (
           <View style={{ paddingHorizontal: space.margin, marginTop: 16, gap: 8 }}>

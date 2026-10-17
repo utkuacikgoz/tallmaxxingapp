@@ -42,7 +42,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - [x] `eas.json` (development / preview / production), EAS Submit config
 - [x] Docs: README (build/run/test), REVIEW_NOTES.md (App Review), PLAY_DECLARATIONS.md, manual checklist (store products, RevenueCat keys, privacy URL, consented testimonials, pediatric content review)
 - [ ] Accessibility pass (shared fixes complete; full native assistive-technology audit pending): large font sizes on every screen, VoiceOver labels, Reduce Motion
-- [ ] Milestone share cards (7/30/100-day streaks, first check-in), weekly-to-annual upgrade card after week 2
+- [x] Milestone share cards (7/30/100-day streaks, first check-in), weekly-to-annual upgrade card after week 2
 - [ ] Debug-only demo data mode for store screenshots
 
 ## Completed waves
@@ -105,6 +105,13 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   warnings and apricot glyphs use accessible contrast. Brand-filled buttons retain the agreed tint.
 - Contrast results and limits: `docs/ACCESSIBILITY.md`. Browser light/dark walkthroughs pass;
   VoiceOver/TalkBack and every screen at largest native text size remain a separate verification gate.
+
+### Wave 5 · retention and private milestone sharing
+- Added Day 3 grocery and Day 7 plan-review touchpoints, 7/30/100-day streak and first check-in
+  share cards in Story and Square sizes. Milestone images omit dates of birth and measurements.
+- Weekly users can compare Annual after 14 locally observed subscription days; the store paywall
+  still supplies the actual price. Trial reminders use the selected trial package renewal price.
+- Added calendar-boundary and entitlement-gating tests and browser coverage of both card sizes.
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.

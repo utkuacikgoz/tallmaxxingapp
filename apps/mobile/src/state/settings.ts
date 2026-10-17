@@ -38,6 +38,8 @@ export interface SettingsState {
   firstOpenedOn: string | null;
   /** Day the paid plan started (Week 1, Day 1). */
   planStartedOn: string | null;
+  /** First local day of the current uninterrupted Weekly subscription. */
+  weeklyStartedOn: string | null;
   measurementsLoggedCount: number;
   reviewRequested: boolean;
   set: (patch: Partial<Omit<SettingsState, 'set' | 'reset'>>) => void;
@@ -71,6 +73,7 @@ const initial = (): Omit<SettingsState, 'set' | 'reset'> => ({
   proHint: false,
   firstOpenedOn: null,
   planStartedOn: null,
+  weeklyStartedOn: null,
   measurementsLoggedCount: 0,
   reviewRequested: false,
 });

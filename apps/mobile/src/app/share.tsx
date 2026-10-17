@@ -10,6 +10,9 @@ import { formatHeightRange } from '@tallsoon/engine';
 import { AppConfig } from '@/config/app-config';
 import { useActiveChild, useChildModel } from '@/features/child/useChild';
 import { ResultCard } from '@/features/share/ResultCard';
+import { MilestoneCard } from '@/features/share/MilestoneCard';
+import { milestoneKeys } from '@/features/retention/model';
+import { Button } from '@/ui/Button';
 import { useT } from '@/i18n';
 import { analytics } from '@/services/analytics';
 import { moveToTemp } from '@/services/files';
@@ -24,13 +27,15 @@ import { SheetHeader, SheetScroll } from '@/ui/Sheet';
 export default function ShareSheet() {
   const t = useT();
   const { c } = useTheme();
-  const params = useLocalSearchParams<{ parent?: string }>();
+  const params = useLocalSearchParams<{ parent?: string; milestone?: string }>();
   const role = useSettings((s) => s.role);
   const unit = useSettings((s) => s.heightUnit);
   const child = useActiveChild();
   const model = useChildModel(child);
   const cardRef = useRef<ComponentRef<typeof View>>(null);
   const [busy, setBusy] = useState(false);
+  const [square, setSquare] = useState(false);
+  const milestone = milestoneKeys.find((key) => key === params.milestone);
   const summary = model?.summary;
 
   if (!child || !summary) return <View style={{ flex: 1, backgroundColor: c.sheetBg }} />;
@@ -40,7 +45,7 @@ export default function ShareSheet() {
 
   const capture = async (): Promise<string | null> => {
     if (!cardRef.current) return null;
-    const tmp = await captureRef(cardRef, { format: 'png', quality: 1, result: 'tmpfile', width: 1080, height: 1920 });
+    const tmp = await captureRef(cardRef, { format: 'png', quality: 1, result: 'tmpfile', width: 1080, height: milestone && square ? 1080 : 1920 });
     return Platform.OS === 'web' ? tmp : moveToTemp(tmp, `${AppConfig.appName}-result.png`);
   };
 
@@ -87,18 +92,27 @@ export default function ShareSheet() {
   };
 
   const parentMessage = t('share.parentMessage', { range, url: AppConfig.websiteUrl });
-  const shareMessage = t('share.shareMessage', { range, method, url: AppConfig.websiteUrl });
-  const showParent = role === 'teen' || params.parent === '1';
+  const shareMessage = milestone
+    ? t('retention.shareMessage', { title: t(`retention.milestone.${milestone}`) })
+    : t('share.shareMessage', { range, method, url: AppConfig.websiteUrl });
+  const showParent = !milestone && (role === 'teen' || params.parent === '1');
 
   return (
     <View style={{ flex: 1 }} testID="share-sheet">
-      <SheetHeader title={t('share.title')} close />
+      <SheetHeader title={t(milestone ? 'retention.shareTitle' : 'share.title')} close />
       <SheetScroll>
         <View style={styles.preview}>
           <View style={styles.shadow}>
-            <ResultCard ref={cardRef} summary={summary} unit={unit} nickname={child.nickname} sex={child.sexAtBirth} />
+            {milestone ? <MilestoneCard ref={cardRef} milestone={milestone} nickname={child.nickname} square={square} />
+              : <ResultCard ref={cardRef} summary={summary} unit={unit} nickname={child.nickname} sex={child.sexAtBirth} />}
           </View>
         </View>
+        {milestone ? (
+          <View style={{ padding: 16, gap: 8 }}>
+            <Button testID="milestone-story" title={t('retention.story')} variant={square ? 'plain' : 'tinted'} onPress={() => setSquare(false)} />
+            <Button testID="milestone-square" title={t('retention.square')} variant={square ? 'tinted' : 'plain'} onPress={() => setSquare(true)} />
+          </View>
+        ) : null}
         <Section>
           {showParent ? (
             <Row
