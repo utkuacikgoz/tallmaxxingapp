@@ -167,6 +167,16 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   typecheck and lint passed (34 existing lint warnings, no errors). Profile installation uses
   Fastlane's Xcode-aware path rather than the obsolete MobileDevice profile location.
 
+### First signed TestFlight run · 2026-10-18
+- All seven required GitHub secrets are configured. Verified App Store Connect app `6824177611`
+  belongs to `com.belevate.tallsoon` and set `ASC_APP_ID`; configured the TallSoon public iOS SDK key.
+- Run `39117605979` passed Apple authentication, certificate import, profile installation and native
+  dependency installation. Archive failed because the notifications plugin added a push entitlement
+  absent from the App Store profile. No binary was uploaded.
+- Disabled remote notification capability in the Expo plugin: TallSoon uses on-device scheduled
+  reminders only. Local notification APIs and reminder behavior remain unchanged. Verified a clean
+  production prebuild emits no APNs entitlement; mobile typecheck and lint pass (existing warnings).
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 

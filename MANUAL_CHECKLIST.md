@@ -6,13 +6,15 @@ Items below need access to the product owner's store, Expo, domain, or review ac
 
 - [x] Created and verified `@utkuacikgoz/tallsoon`; configured its real owner and project ID as defaults in `apps/mobile/app.config.ts`. Environment overrides remain available. See `docs/TESTFLIGHT_SETUP.md`.
 - [x] Verified the RevenueCat production iOS app record `app5829101f0b` in project `40ce0c3d` for bundle ID `com.belevate.tallsoon`, with both Apple credentials valid in RevenueCat. This does not verify the numeric Apple ID or TestFlight upload.
-- [ ] Add TallSoon's public iOS RevenueCat SDK key as GitHub Actions secret `EXPO_PUBLIC_RC_IOS_KEY`. It is currently not configured. This is a public app key, not a RevenueCat private API key. Keep other apps' keys separate.
-- [ ] Confirm the numeric App Store Connect Apple ID and set GitHub Actions variable `ASC_APP_ID`. Do not use RevenueCat app record ID `app5829101f0b` as the Apple ID.
-- [ ] Create/import the Apple Distribution signing identity and provide GitHub secrets `IOS_DISTRIBUTION_P12_BASE64` (PKCS#12 containing certificate and private key) and `IOS_DISTRIBUTION_P12_PASSWORD`.
-- [ ] Create an App Store Connect distribution provisioning profile for exact bundle ID `com.belevate.tallsoon`, team `9D78WTZAD8`, and the matching Apple Distribution certificate; add it as GitHub secret `IOS_PROVISIONING_PROFILE_BASE64`.
-- [ ] Add GitHub secrets `ASC_KEY_P8`, `ASC_KEY_ID`, and `ASC_ISSUER_ID` for the App Store Connect API key. The full PEM, key ID, and issuer ID are currently not configured. Never add Apple passwords or 2FA codes.
-- [x] Implemented the TestFlight workflow using a `macos-26` runner, Xcode (SDK 58 requires Xcode 26.4 or newer), Expo clean prebuild, CocoaPods, and Fastlane. It does not use EAS Build, EAS signing, or `EXPO_TOKEN`. No TestFlight upload has been completed.
-- [ ] Trigger the first successful CI-to-TestFlight run or dispatch it manually on `main`. Missing credentials should be reported before build. Wait for Apple's processing to confirm the build before treating it as available in TestFlight.
+- [x] Configured TallSoon's public iOS RevenueCat SDK key as GitHub Actions secret `EXPO_PUBLIC_RC_IOS_KEY`. Keep this separate from other apps' keys; it is not a private RevenueCat API key.
+- [x] Verified and set numeric App Store Connect Apple ID `6824177611` as `ASC_APP_ID` for `com.belevate.tallsoon`. It is distinct from RevenueCat app record ID `app5829101f0b`.
+- [x] Imported the Apple Distribution signing identity and configured `IOS_DISTRIBUTION_P12_BASE64` plus `IOS_DISTRIBUTION_P12_PASSWORD` in GitHub Actions.
+- [x] Created and configured the App Store Connect distribution provisioning profile for bundle ID `com.belevate.tallsoon`, team `9D78WTZAD8`, and the matching Apple Distribution certificate.
+- [x] Configured GitHub secrets `ASC_KEY_P8`, `ASC_KEY_ID`, and `ASC_ISSUER_ID` for the App Store Connect API key. Never add Apple passwords or 2FA codes.
+- [x] Implemented and ran the TestFlight workflow with a `macos-26` runner, Xcode, Expo clean prebuild, CocoaPods, and Fastlane. It does not use EAS Build, EAS signing, or `EXPO_TOKEN`. Initial workflow run `39117605979` validated Apple API access, certificate import, profile installation, and pods, but archive failed on an unexpected `aps-environment` entitlement.
+- [x] Fixed the Expo Notifications configuration for this local-reminders-only app; clean production prebuild now generates an empty entitlements file, and typecheck/lint pass.
+- [ ] Retry the TestFlight archive and wait for Apple processing; no archive or upload is verified yet.
+- [ ] After a processed build appears in TestFlight, install it on a device and verify onboarding, free prediction/paywall close, purchases, restore, and subscription/billing flows. Device and billing tests remain pending.
 
 Store-listing and billing screenshots do not block the first binary upload to TestFlight; complete any required screenshots and metadata before App Store review.
 

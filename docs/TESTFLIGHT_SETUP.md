@@ -9,12 +9,14 @@
 | RevenueCat Apple credentials | Both Apple credentials are valid in RevenueCat |
 | Android package | `app.tallsoon` |
 | Apple Developer team | `9D78WTZAD8` |
-| TestFlight automation | Xcode/Fastlane GitHub workflow implemented; waiting for credentials and first signed run |
-| GitHub Actions credentials | Required secrets and `ASC_APP_ID` are not configured |
-| RevenueCat iOS SDK key | Not configured for the TestFlight workflow |
-| TestFlight build | No upload or processed build is verified |
+| App Store Connect app ID | `6824177611`, verified for `com.belevate.tallsoon` and configured as `ASC_APP_ID` |
+| GitHub Actions credentials | All seven required secrets are configured |
+| TestFlight automation | Xcode/Fastlane workflow configured; initial archive hit an entitlement error |
+| TestFlight build | No archive or upload has completed |
 
 The TestFlight binary uses iOS bundle ID `com.belevate.tallsoon`; Android stays `app.tallsoon`. The numeric App Store Connect Apple ID is a separate value from RevenueCat app record `app5829101f0b`.
+
+Workflow run `39117605979` confirmed App Store Connect API access, imported the signing certificate, installed the provisioning profile, and completed native dependency installation. Xcode archive then failed because Expo Notifications added an unexpected `aps-environment` entitlement; this app uses local reminders only. The notification config has since been corrected, and a clean production prebuild now generates an empty entitlements file. Typecheck and lint pass; the archive retry is pending. No IPA was uploaded and no TestFlight build is available yet.
 
 ## GitHub Actions configuration
 
@@ -78,7 +80,7 @@ The **TestFlight** workflow at `.github/workflows/testflight.yml` runs after suc
 
 The release job will validate that `ASC_APP_ID` belongs to `com.belevate.tallsoon`, that the supplied signing profile and certificate match the production app, and that the RevenueCat SDK key is a production key rather than a `test_` key. It uses Node/pnpm, selects the pinned Xcode version, runs a clean Expo iOS prebuild without installing packages, runs `pod install`, then uses Fastlane to archive and upload with the App Store Connect API key. GitHub-provided certificate/profile material is used for codesigning. It does not invoke EAS Build or require `EXPO_TOKEN`.
 
-The workflow waits for the archive/upload operation and checks Apple's processing status. It only reports the build as ready after Apple confirms processing; a failure or timeout is reported as a failure and needs an App Store Connect check. Uploading to TestFlight does not submit an App Store release or invite testers. Credentials are not configured, so no signed build or upload has been verified.
+The workflow waits for the archive/upload operation and checks Apple's processing status. It only reports the build as ready after Apple confirms processing; a failure or timeout is reported as a failure and needs an App Store Connect check. Uploading to TestFlight does not submit an App Store release or invite testers. Credentials and `ASC_APP_ID` are configured, but the first run failed during Xcode archive on the entitlement issue above; no signed archive or upload is verified.
 
 Store listing and billing screenshots are not blockers for the initial TestFlight binary upload. Complete any required store metadata and screenshots before App Store review.
 

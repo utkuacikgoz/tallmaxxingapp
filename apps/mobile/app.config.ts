@@ -90,7 +90,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       'expo-sqlite',
       'expo-localization',
       'expo-sharing',
-      ['expo-notifications', { color: '#2F7D6D', defaultChannel: 'reminders' }],
+      ['expo-notifications', { color: '#2F7D6D', defaultChannel: 'reminders', enableRemoteNotifications: false }],
       ['expo-media-library', { photosPermission: false, savePhotosPermission: 'Save your result card to Photos so you can share it.', granularPermissions: ['photo'] }],
       ['expo-build-properties', { android: { targetSdkVersion: 36, compileSdkVersion: 37 }, ios: { deploymentTarget: '16.4' } }],
     ],
