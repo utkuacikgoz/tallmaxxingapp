@@ -164,7 +164,8 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   wrong-team/bundle, expired, development, ad hoc and enterprise profiles. An explicit final
   check requires Apple state `VALID` for the exact app/version/build/platform; Fastlane alone
   treats failed processing as finished. Clean production prebuild, Fastlane lane loading, mobile
-  typecheck and lint passed (34 existing lint warnings, no errors).
+  typecheck and lint passed (34 existing lint warnings, no errors). Profile installation uses
+  Fastlane's Xcode-aware path rather than the obsolete MobileDevice profile location.
 
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
