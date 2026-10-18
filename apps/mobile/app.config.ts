@@ -49,7 +49,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypePurchaseHistory',
             NSPrivacyCollectedDataTypeLinked: false,
             NSPrivacyCollectedDataTypeTracking: false,
-            NSPrivacyCollectedDataTypePurposes: ['NSPrivacyCollectedDataTypePurposeAppFunctionality'],
+            NSPrivacyCollectedDataTypePurposes: [
+              'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+              'NSPrivacyCollectedDataTypePurposeAnalytics',
+            ],
           },
         ],
         NSPrivacyAccessedAPITypes: [

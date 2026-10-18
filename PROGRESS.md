@@ -209,6 +209,16 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Review screenshots and sandbox transactions remain outstanding. See `docs/TESTFLIGHT_SETUP.md`
   for verified records and the distinction between catalog setup and working store purchases.
 
+### App Store privacy alignment · 2026-10-18
+- Added Analytics to the Purchase History privacy-manifest purposes alongside App Functionality,
+  matching RevenueCat's current Apple App Privacy guidance. Data remains not linked and not tracked.
+  The app configures anonymous RevenueCat IDs without custom attributes or an analytics sink; child
+  profiles and measurements remain on-device. Store privacy fields are being completed separately.
+- Owner explicitly retained website/privacy/support placeholders until hosting is purchased. They
+  remain pre-submission work; no public App Store release or review submission is authorized here.
+- Polish PR #10 merged after both CI runs passed. Its automatic archive was canceled before upload
+  so the next build can include this privacy declaration correction.
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 
