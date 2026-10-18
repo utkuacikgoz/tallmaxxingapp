@@ -177,6 +177,38 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
   reminders only. Local notification APIs and reminder behavior remain unchanged. Verified a clean
   production prebuild emits no APNs entitlement; mobile typecheck and lint pass (existing warnings).
 
+### TestFlight build 1 processed · 2026-10-18
+- After the notification entitlement fix, workflow `39118784001` successfully signed and uploaded
+  version 1.0.0 (1). Apple confirmed processing state `VALID`. The owner tested this build on device.
+- The GitHub macOS/Xcode/Fastlane pipeline and all seven configured secrets are verified end to end.
+
+### Device feedback polish · 2026-10-18
+- Shared onboarding scrolling reserves the measured sticky footer height when a keyboard is open;
+  sheet bodies disable automatic native inset adjustment and keep their headers in normal layout.
+- Puberty signs are alphabetical; exclusive None/Not sure choices remain separate. Shortened helper
+  copy across onboarding and core screens while retaining method, privacy and billing disclosures.
+- Added shared button feedback and safe platform-specific haptics. Family child actions are visible,
+  chart data has table semantics, and Restore Purchases announces its action correctly.
+- Existing iOS/Android review requests now count only new measurements and wait for save confirmation
+  to finish. Edits/replacements do not trigger requests; background requests are deferred. Store
+  quotas can suppress prompts, and TestFlight does not display the iOS review prompt.
+- Validation: workspace TypeScript, 49 engine + 58 content + 32 mobile tests, release guards, web
+  export and final light/dark walkthroughs pass. Lint has zero errors and 33 existing warnings.
+  Native iOS 26.5 simulator checks confirm weight/father input visibility with the keyboard, A–Z
+  options and method sheet headers at half/full height and after scrolling in light/dark mode.
+  Maestro keyboard-dismiss/focus limitations required manual native input verification; the full
+  Maestro onboarding flow is not claimed as passing. Physical haptic feel and full assistive-
+  technology coverage remain device checks. Release CI must pass before merge.
+
+### Subscription catalog setup · 2026-10-18
+- TallSoon-specific RevenueCat Apple credentials are valid; three products and the default offering
+  map weekly to pro, and both annuals to pro + multi_child. Apple English product metadata is saved.
+- App pricing is Free; app/subscriptions have worldwide (175-region) availability configured for
+  release. U.S. prices are $4.99 weekly and $39.99 annual. The separate opt-in trial annual has a
+  one-week free offer starting October 19, 2026 with no end date. Nothing was submitted or published.
+- Review screenshots and sandbox transactions remain outstanding. See `docs/TESTFLIGHT_SETUP.md`
+  for verified records and the distinction between catalog setup and working store purchases.
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 

@@ -1,5 +1,10 @@
 # Decisions
 
+- **Device feedback takes precedence over the prototype for readability.** Puberty signs are sorted
+  by displayed label; None/Not sure stay separate. Helper copy is shortened without removing method
+  limitations, privacy assurances or subscription disclosures. Shared buttons provide light feedback;
+  selection controls keep their existing selection feedback to avoid duplicate vibrations.
+
 - **TestFlight builds run on GitHub macOS with Xcode and Fastlane** (owner approved). Expo prebuild
   generates the native project locally on the runner. Signing uses a temporary keychain and an
   existing Apple Distribution certificate/profile; uploads use a separate TallSoon App Store Connect

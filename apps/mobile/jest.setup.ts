@@ -17,4 +17,6 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
+jest.mock('react-native-keyboard-controller', () => require('react-native-keyboard-controller/jest'));
+
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;

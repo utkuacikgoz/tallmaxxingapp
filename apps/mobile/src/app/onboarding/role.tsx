@@ -14,7 +14,6 @@ export default function RoleStep() {
       <ChoiceList<Role>
         testID="role"
         value={role}
-        footer={t('onboarding.role.footer')}
         choices={[
           { value: 'teen', title: t('onboarding.role.teen'), subtitle: t('onboarding.role.teenSub'), icon: 'person' },
           { value: 'parent', title: t('onboarding.role.parent'), subtitle: t('onboarding.role.parentSub'), icon: 'people' },

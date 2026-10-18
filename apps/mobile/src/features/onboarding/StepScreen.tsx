@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,6 +29,7 @@ export function StepScreen({ title, helper, progress, backLabel, onBack, childre
   const { c } = useTheme();
   const t = useT();
   const insets = useSafeAreaInsets();
+  const [footerHeight, setFooterHeight] = useState(0);
   const android = Platform.OS === 'android';
   const goBack = onBack ?? (() => (router.canGoBack() ? router.back() : undefined));
 
@@ -54,7 +55,11 @@ export function StepScreen({ title, helper, progress, backLabel, onBack, childre
         {progress ? <ProgressLine step={progress.step} total={progress.total} /> : <View style={{ height: 2 }} />}
       </View>
       <KeyboardAwareScrollView
-        bottomOffset={24}
+        // Sticky footers move over the scroll view; reserve their measured height for focus.
+        bottomOffset={footerHeight + 16}
+        style={styles.scroll}
+        contentInsetAdjustmentBehavior="never"
+        keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
@@ -70,7 +75,7 @@ export function StepScreen({ title, helper, progress, backLabel, onBack, childre
         {children}
       </KeyboardAwareScrollView>
       {bottom ? (
-        <KeyboardStickyView offset={{ opened: insets.bottom - 6 }}>
+        <KeyboardStickyView offset={{ opened: Math.max(insets.bottom - 6, 0) }} onLayout={(event) => setFooterHeight(event.nativeEvent.layout.height)}>
           <BottomBar>{bottom}</BottomBar>
         </KeyboardStickyView>
       ) : (
@@ -100,6 +105,7 @@ const styles = StyleSheet.create({
   root: { flex: 1 },
   nav: { minHeight: minTouch, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 },
   back: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: minTouch, paddingHorizontal: 8 },
+  scroll: { flex: 1 },
   content: { paddingBottom: 32 },
   title: { paddingHorizontal: space.margin, marginTop: 18 },
   helper: { paddingHorizontal: space.margin, marginTop: 6 },

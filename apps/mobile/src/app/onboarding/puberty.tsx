@@ -16,7 +16,9 @@ export default function PubertyStep() {
   const step = useStep('puberty');
   const sex = useDraft((s) => s.sex);
   const selected = useDraft((s) => s.pubertySigns);
-  const signs = [...BOTH, ...(sex === 'female' ? GIRLS : BOYS)];
+  const signs = [...BOTH, ...(sex === 'female' ? GIRLS : BOYS)].sort((a, b) =>
+    t(`onboarding.puberty.signs.${a}`).localeCompare(t(`onboarding.puberty.signs.${b}`)),
+  );
 
   const toggle = (key: string) => {
     haptics.light();

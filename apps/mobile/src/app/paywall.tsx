@@ -332,13 +332,13 @@ export default function Paywall() {
           ) : null}
           <View style={styles.links}>
             {[
-              [t('paywall.restore'), () => void restore()],
-              [t('paywall.terms'), () => openLegal('terms')],
-              [t('paywall.privacy'), () => openLegal('privacy')],
-            ].map(([label, fn]) => (
-              <Pressable key={label as string} onPress={fn as () => void} accessibilityRole="link" hitSlop={4} style={styles.link}>
+              { label: t('paywall.restore'), onPress: () => void restore(), role: 'button' as const },
+              { label: t('paywall.terms'), onPress: () => openLegal('terms'), role: 'link' as const },
+              { label: t('paywall.privacy'), onPress: () => openLegal('privacy'), role: 'link' as const },
+            ].map(({ label, onPress, role }) => (
+              <Pressable key={label} onPress={onPress} accessibilityRole={role} hitSlop={4} style={styles.link}>
                 <Text variant="subhead" color="tint">
-                  {label as string}
+                  {label}
                 </Text>
               </Pressable>
             ))}

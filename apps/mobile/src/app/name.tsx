@@ -6,7 +6,7 @@ import { childrenRepo } from '@/db/repo';
 import { useActiveChild } from '@/features/child/useChild';
 import { useT } from '@/i18n';
 import { radius, space, typeScale, useTheme } from '@/theme';
-import { SheetHeader } from '@/ui/Sheet';
+import { SheetHeader, SheetScroll } from '@/ui/Sheet';
 import { Text } from '@/ui/Text';
 
 /** Optional nickname (brief §3.1): a nickname or initial is plenty. */
@@ -26,7 +26,7 @@ export default function NameSheet() {
         left={{ label: t('common.cancel'), onPress: () => router.back() }}
         right={{ label: t('common.save'), bold: true, onPress: () => void save(), testID: 'name-save' }}
       />
-      <View style={{ paddingHorizontal: space.margin, paddingTop: 12, gap: 10 }}>
+      <SheetScroll contentContainerStyle={{ paddingHorizontal: space.margin, paddingTop: 12, gap: 10 }}>
         <TextInput
           testID="name-input"
           value={name}
@@ -46,7 +46,7 @@ export default function NameSheet() {
         <Text variant="footnote" color="label2" style={{ paddingHorizontal: space.margin }}>
           {t('result.nameBody')}
         </Text>
-      </View>
+      </SheetScroll>
     </View>
   );
 }

@@ -2,7 +2,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as StoreReview from 'expo-store-review';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Platform, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, AppState, Platform, StyleSheet, TextInput, View } from 'react-native';
 
 import { addMonths, compareMeasurementsAscending, DROP_WARNING_CM, toIsoDate, type HeightUnit, type WeightUnit } from '@tallsoon/engine';
 
@@ -16,6 +16,7 @@ import { useT } from '@/i18n';
 import { formatShortDate } from '@/lib/time';
 import { analytics } from '@/services/analytics';
 import { haptics } from '@/services/haptics';
+import { shouldRequestMeasurementReview } from '@/services/review-opportunity';
 import { useSettings } from '@/state/settings';
 import { radius, space, typeScale, useTheme } from '@/theme';
 import { showBanner } from '@/ui/Banner';
@@ -101,8 +102,9 @@ export default function LogSheet() {
     haptics.success();
     analytics.track('measurement_logged', { past: date !== today });
     const s = useSettings.getState();
-    const count = s.measurementsLoggedCount + 1;
-    s.set({ measurementsLoggedCount: count });
+    const isNewMeasurement = !editing && !replaceMode;
+    const count = s.measurementsLoggedCount + (isNewMeasurement ? 1 : 0);
+    if (isNewMeasurement) s.set({ measurementsLoggedCount: count });
 
     let subtitle = t('log.savedHistory');
     if (date === today && before != null && after != null) {
@@ -113,9 +115,19 @@ export default function LogSheet() {
     setTimeout(() => showBanner({ title: t('log.added'), subtitle, icon: 'ruler' }), 350);
     void refreshReminders();
     // Ask for a rating only after the 2nd logged measurement, never after a paywall (brief §7).
-    if (count >= 2 && !s.reviewRequested && (await StoreReview.isAvailableAsync().catch(() => false))) {
+    if (
+      shouldRequestMeasurementReview({ measurementCount: count, reviewRequested: s.reviewRequested, isNewMeasurement }) &&
+      (await StoreReview.isAvailableAsync().catch(() => false))
+    ) {
       s.set({ reviewRequested: true });
-      setTimeout(() => void StoreReview.requestReview().catch(() => undefined), 1500);
+      // Let the confirmation banner and sheet dismissal finish before asking the OS.
+      setTimeout(() => {
+        if (AppState.currentState !== 'active') {
+          s.set({ reviewRequested: false });
+          return;
+        }
+        void StoreReview.requestReview().catch(() => undefined);
+      }, 4200);
     }
   };
 

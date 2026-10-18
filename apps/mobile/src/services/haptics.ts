@@ -7,22 +7,30 @@ import { Platform } from 'react-native';
  */
 const enabled = Platform.OS === 'ios' || Platform.OS === 'android';
 
+function run(effect: () => Promise<void>) {
+  if (!enabled) return;
+  void Promise.resolve().then(effect).catch(() => undefined);
+}
+
 export const haptics = {
   selection() {
-    if (!enabled) return;
-    void Haptics.selectionAsync().catch(() => undefined);
+    if (Platform.OS === 'android') {
+      run(() => Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Segment_Tick));
+      return;
+    }
+    run(() => Haptics.selectionAsync());
   },
   light() {
-    if (!enabled) return;
-    if (Platform.OS === 'android') return void Haptics.selectionAsync().catch(() => undefined);
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+    if (Platform.OS === 'android') {
+      run(() => Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Virtual_Key));
+      return;
+    }
+    run(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
   },
   success() {
-    if (!enabled) return;
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+    run(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
   },
   warning() {
-    if (!enabled) return;
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
+    run(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning));
   },
 };

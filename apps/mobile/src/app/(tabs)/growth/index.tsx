@@ -169,26 +169,26 @@ export default function GrowthScreen() {
                   style={{ marginHorizontal: 8, marginBottom: 6 }}
                 />
                 {table ? (
-                  <View style={{ paddingHorizontal: 8, paddingVertical: 8 }}>
-                    <View style={styles.tableRow}>
+                  <View role="table" style={{ paddingHorizontal: 8, paddingVertical: 8 }}>
+                    <View role="row" style={styles.tableRow}>
                       {[t('growth.tableDate'), t('growth.tableAge'), t('growth.tableHeight'), t('growth.tablePercentile')].map((h) => (
-                        <Text key={h} variant="footnote" color="label2" style={styles.tableCell}>
+                        <Text key={h} role="columnheader" variant="footnote" color="label2" style={styles.tableCell}>
                           {h}
                         </Text>
                       ))}
                     </View>
                     {[...chart.measurements].reverse().map((m) => (
-                      <View key={m.date} style={styles.tableRow}>
-                        <Text variant="subhead" style={styles.tableCell}>
+                      <View key={m.date} role="row" style={styles.tableRow}>
+                        <Text role="cell" variant="subhead" style={styles.tableCell}>
                           {formatShortDate(m.date)}
                         </Text>
-                        <Text variant="subhead" style={styles.tableCell} tabular>
+                        <Text role="cell" variant="subhead" style={styles.tableCell} tabular>
                           {m.ageYears.toFixed(1)}
                         </Text>
-                        <Text variant="subhead" style={styles.tableCell} tabular>
+                        <Text role="cell" variant="subhead" style={styles.tableCell} tabular>
                           {formatHeight(m.heightCm, unit)}
                         </Text>
-                        <Text variant="subhead" style={styles.tableCell} tabular>
+                        <Text role="cell" variant="subhead" style={styles.tableCell} tabular>
                           {m.percentile != null ? ordinal(displayPercentile(m.percentile)) : '–'}
                         </Text>
                       </View>

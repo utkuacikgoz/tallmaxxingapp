@@ -23,12 +23,12 @@ import { mailSupport, openLegal, openSystemSettings } from '@/services/links';
 import { cancelAllNotifications, notificationPermission, requestNotificationPermission } from '@/services/notifications';
 import { useSettings } from '@/state/settings';
 import { kv } from '@/state/storage';
-import { space, useTheme } from '@/theme';
+import { minTouch, space, useTheme } from '@/theme';
 import { Row, Section } from '@/ui/List';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { Text } from '@/ui/Text';
 
-function ChildCard({ child, unit, active, onPress, onLongPress }: { child: Child; unit: HeightUnit; active: boolean; onPress: () => void; onLongPress: () => void }) {
+function ChildCard({ child, unit, active, showActions, onPress, onActions }: { child: Child; unit: HeightUnit; active: boolean; showActions: boolean; onPress: () => void; onActions: () => void }) {
   const t = useT();
   const { c } = useTheme();
   const [line, setLine] = useState<{ sub: string; pred: string } | null>(null);
@@ -45,41 +45,56 @@ function ChildCard({ child, unit, active, onPress, onLongPress }: { child: Child
   }, [child, unit, t]);
   const name = child.nickname || t('family.unnamed');
   return (
-    <Pressable
-      onPress={onPress}
-      onLongPress={onLongPress}
-      accessibilityRole="button"
-      accessibilityLabel={[name, line?.sub, line?.pred].filter(Boolean).join(', ')}
-      accessibilityActions={[{ name: 'longpress', label: t('family.deleteChild') }]}
-      onAccessibilityAction={(e) => e.nativeEvent.actionName === 'longpress' && onLongPress()}
-      android_ripple={{ color: c.fill }}
-      style={({ pressed }) => [styles.childRow, pressed && Platform.OS === 'ios' && { backgroundColor: c.fill }]}
-    >
-      <View style={[styles.avatar, { backgroundColor: active ? c.tint : c.tintFill }]}>
-        <Text variant="headline" style={{ color: active ? c.onTint : c.tint }}>
-          {(child.nickname || name).slice(0, 1).toUpperCase()}
-        </Text>
-      </View>
-      <View style={{ flex: 1, gap: 2 }}>
-        <Text variant="headline">{name}</Text>
-        {line ? (
-          <>
-            <Text variant="subhead" color="label2">
-              {line.sub}
-            </Text>
-            <Text variant="subhead" color="tint">
-              {line.pred}
-            </Text>
-          </>
-        ) : null}
-      </View>
-    </Pressable>
+    <View style={styles.childRow}>
+      <Pressable
+        onPress={onPress}
+        onLongPress={onActions}
+        accessibilityRole="button"
+        accessibilityState={{ selected: active }}
+        accessibilityLabel={[name, line?.sub, line?.pred].filter(Boolean).join(', ')}
+        accessibilityActions={showActions ? [{ name: 'longpress', label: t('family.deleteChild') }] : undefined}
+        onAccessibilityAction={(e) => e.nativeEvent.actionName === 'longpress' && onActions()}
+        android_ripple={{ color: c.fill }}
+        style={({ pressed }) => [styles.childContent, pressed && Platform.OS === 'ios' && { backgroundColor: c.fill }]}
+      >
+        <View style={[styles.avatar, { backgroundColor: active ? c.tint : c.tintFill }]}>
+          <Text variant="headline" style={{ color: active ? c.onTint : c.tint }}>
+            {(child.nickname || name).slice(0, 1).toUpperCase()}
+          </Text>
+        </View>
+        <View style={{ flex: 1, gap: 2 }}>
+          <Text variant="headline">{name}</Text>
+          {line ? (
+            <>
+              <Text variant="subhead" color="label2">
+                {line.sub}
+              </Text>
+              <Text variant="subhead" color="tint">
+                {line.pred}
+              </Text>
+            </>
+          ) : null}
+        </View>
+      </Pressable>
+      {showActions ? (
+        <Pressable
+          onPress={onActions}
+          accessibilityRole="button"
+          accessibilityLabel={t('family.childActions', { name })}
+          hitSlop={4}
+          style={({ pressed }) => [styles.childActions, pressed && { backgroundColor: c.fill }]}
+        >
+          <Text variant="subhead" color="tint" weight="600">
+            {t('family.childActionsText')}
+          </Text>
+        </Pressable>
+      ) : null}
+    </View>
   );
 }
 
 export default function FamilyScreen() {
   const t = useT();
-  const { c } = useTheme();
   const kids = useChildren();
   const active = useActiveChild();
   const ent = useEntitlement();
@@ -271,11 +286,12 @@ export default function FamilyScreen() {
               child={k}
               unit={s.heightUnit}
               active={kids.length > 1 && active?.id === k.id}
+              showActions={kids.length > 1}
               onPress={() => {
                 useSettings.getState().set({ activeChildId: k.id });
                 router.push('/result');
               }}
-              onLongPress={() => childMenu(k)}
+              onActions={() => childMenu(k)}
             />
           ))}
           <Row
@@ -387,7 +403,9 @@ export default function FamilyScreen() {
 }
 
 const styles = StyleSheet.create({
-  childRow: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: space.margin, paddingVertical: 12, minHeight: 64 },
+  childRow: { flexDirection: 'row', alignItems: 'center', paddingLeft: space.margin, paddingRight: 4, minHeight: 64 },
+  childContent: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingRight: 8, minHeight: 64 },
+  childActions: { width: minTouch, height: minTouch, alignItems: 'center', justifyContent: 'center', borderRadius: minTouch / 2 },
   avatar: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   inlineControl: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: space.margin, paddingVertical: 8, minHeight: 52, gap: 12 },
 });

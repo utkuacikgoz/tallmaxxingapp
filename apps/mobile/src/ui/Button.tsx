@@ -2,6 +2,7 @@ import { memo, type ReactNode } from 'react';
 import { ActivityIndicator, Platform, Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { minTouch, radius, typeScale, useTheme } from '@/theme';
+import { haptics } from '@/services/haptics';
 import { Text } from './Text';
 
 export type ButtonVariant = 'filled' | 'tinted' | 'bordered' | 'plain';
@@ -20,6 +21,8 @@ export interface ButtonProps {
   accessibilityLabel?: string;
   accessibilityHint?: string;
   testID?: string;
+  /** Selection feedback on an enabled tap; use none when the action already provides haptics. */
+  haptic?: 'light' | 'selection' | 'none';
 }
 
 /** HIG button styles (brief §13.1): filled 50 pt / radius 14, tinted, bordered, plain. */
@@ -36,6 +39,7 @@ export const Button = memo(function Button({
   accessibilityLabel,
   accessibilityHint,
   testID,
+  haptic = 'light',
 }: ButtonProps) {
   const { c, isDark } = useTheme();
   const inactive = disabled || loading;
@@ -55,7 +59,11 @@ export const Button = memo(function Button({
   const isPlain = variant === 'plain';
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        if (onPress && haptic === 'light') haptics.light();
+        else if (onPress && haptic === 'selection') haptics.selection();
+        onPress?.();
+      }}
       disabled={inactive}
       testID={testID}
       accessibilityRole="button"

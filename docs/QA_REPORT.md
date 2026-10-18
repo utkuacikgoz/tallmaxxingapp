@@ -27,3 +27,22 @@ check square dimensions and verify the card excludes height measurements. Second
 and native verification limits are recorded in `docs/ACCESSIBILITY.md`. Workspace typechecks,
 49 engine tests, 58 content tests, 26 mobile tests, website browser smoke checks and release
 configuration checks pass. Mobile lint has zero errors and 27 existing warnings.
+
+## Device feedback verification · 2026-10-18
+
+A dedicated iPhone 17 simulator running iOS 26.5 loaded the updated development app. With the
+software keyboard visible, the weight field and father-height field remain fully above Continue.
+Puberty choices render alphabetically. The method sheet shows its first section below the header
+at half and full height; scrolling keeps body text below the opaque header in light and dark mode.
+
+Maestro captured weight and sheet screenshots, but its keyboard dismissal and offscreen-input
+focus behavior prevented a clean full onboarding run. Parent input was corrected and checked
+through native UI controls. This verifies the layouts above, not a passing full Maestro suite.
+Screenshots are local QA artifacts, not App Store billing screenshots.
+
+A fresh web export and final light/dark walkthroughs pass with zero console errors. One initial
+light run displayed a generic boundary during direct Growth navigation; the subsequent complete
+light run and dark run both passed. Shared API props were checked against installed declarations.
+Workspace TypeScript, 49 engine, 58 content and 32 mobile tests pass; lint has zero errors and 33
+existing warnings. Physical haptic feel, store transactions and full VoiceOver/TalkBack testing
+remain device checks; TestFlight does not display Apple's review prompt.

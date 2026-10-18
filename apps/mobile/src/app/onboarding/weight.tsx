@@ -13,7 +13,6 @@ import { space } from '@/theme';
 import { Button } from '@/ui/Button';
 import { MeasureField } from '@/ui/MeasureField';
 import { SegmentedControl } from '@/ui/SegmentedControl';
-import { Text } from '@/ui/Text';
 
 export default function WeightStep() {
   const t = useT();
@@ -46,9 +45,6 @@ export default function WeightStep() {
         <>
           <Button testID="weight-continue" title={step.continueLabel} disabled={!field.valid} onPress={submit} />
           <Button testID="weight-skip" variant="plain" title={t('common.skip')} onPress={skip} />
-          <Text variant="footnote" color="label2" align="center" style={{ paddingHorizontal: 8 }}>
-            {t('onboarding.weight.skipNote')}
-          </Text>
         </>
       }
     >

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Pressable, Text as NativeText, View } from 'react-native';
-import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor, within } from '@testing-library/react-native';
 
 jest.mock('expo-router', () => {
   let focused = true;
@@ -251,6 +251,16 @@ describe('onboarding input regressions', () => {
     await fireEvent.press(ui.getByLabelText(/Don’t know, Father/));
     expect(useDraft.getState().unknownParent).toBe('mother');
     expect(alertSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['male', 'female'] as const)('shows %s puberty signs alphabetically and keeps exclusive choices separate', async (sex) => {
+    useDraft.getState().patch({ sex, pubertySigns: [] });
+    const ui = await render(<PubertyStep />);
+    const rows = ui.getAllByRole('checkbox');
+    const signRows = rows.filter((row) => !['puberty-none', 'puberty-unsure'].includes(row.props.testID));
+    const labels = signRows.map((row) => within(row).getByText(/.+/).props.children as string);
+    expect(labels).toEqual([...labels].sort((a, b) => a.localeCompare(b)));
+    expect(rows.slice(-2).map((row) => row.props.testID)).toEqual(['puberty-none', 'puberty-unsure']);
   });
 
   it('keeps puberty exclusive options exclusive in both directions', async () => {

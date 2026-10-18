@@ -11,12 +11,12 @@
 | Apple Developer team | `9D78WTZAD8` |
 | App Store Connect app ID | `6824177611`, verified for `com.belevate.tallsoon` and configured as `ASC_APP_ID` |
 | GitHub Actions credentials | All seven required secrets are configured |
-| TestFlight automation | Xcode/Fastlane workflow configured; initial archive hit an entitlement error |
-| TestFlight build | No archive or upload has completed |
+| TestFlight automation | Xcode/Fastlane workflow configured; APNs entitlement issue corrected |
+| TestFlight build | Run `39118784001` uploaded signed version `1.0.0 (1)`; Apple processing status `VALID` |
 
 The TestFlight binary uses iOS bundle ID `com.belevate.tallsoon`; Android stays `app.tallsoon`. The numeric App Store Connect Apple ID is a separate value from RevenueCat app record `app5829101f0b`.
 
-Workflow run `39117605979` confirmed App Store Connect API access, imported the signing certificate, installed the provisioning profile, and completed native dependency installation. Xcode archive then failed because Expo Notifications added an unexpected `aps-environment` entitlement; this app uses local reminders only. The notification config has since been corrected, and a clean production prebuild now generates an empty entitlements file. Typecheck and lint pass; the archive retry is pending. No IPA was uploaded and no TestFlight build is available yet.
+Workflow run `39117605979` confirmed App Store Connect API access, imported the signing certificate, installed the provisioning profile, and completed native dependency installation. Its Xcode archive initially failed because Expo Notifications added an unexpected `aps-environment` entitlement; this app uses local reminders only. The notification config was corrected, and a clean production prebuild generated an empty entitlements file. The retry, workflow run `39118784001`, successfully signed and uploaded version `1.0.0 (1)`; Apple processed it with status `VALID`. Uploading does not submit an App Store release or invite testers. Confirm the processed build appears in TestFlight before treating it as available to testers.
 
 ## GitHub Actions configuration
 
@@ -80,7 +80,7 @@ The **TestFlight** workflow at `.github/workflows/testflight.yml` runs after suc
 
 The release job will validate that `ASC_APP_ID` belongs to `com.belevate.tallsoon`, that the supplied signing profile and certificate match the production app, and that the RevenueCat SDK key is a production key rather than a `test_` key. It uses Node/pnpm, selects the pinned Xcode version, runs a clean Expo iOS prebuild without installing packages, runs `pod install`, then uses Fastlane to archive and upload with the App Store Connect API key. GitHub-provided certificate/profile material is used for codesigning. It does not invoke EAS Build or require `EXPO_TOKEN`.
 
-The workflow waits for the archive/upload operation and checks Apple's processing status. It only reports the build as ready after Apple confirms processing; a failure or timeout is reported as a failure and needs an App Store Connect check. Uploading to TestFlight does not submit an App Store release or invite testers. Credentials and `ASC_APP_ID` are configured, but the first run failed during Xcode archive on the entitlement issue above; no signed archive or upload is verified.
+The workflow waits for the archive/upload operation and checks Apple's processing status. It only reports the build as ready after Apple confirms processing; a failure or timeout is reported as a failure and needs an App Store Connect check. Run `39118784001` successfully signed and uploaded version `1.0.0 (1)`, which Apple processed with status `VALID`. Uploading to TestFlight does not submit an App Store release or invite testers.
 
 Store listing and billing screenshots are not blockers for the initial TestFlight binary upload. Complete any required store metadata and screenshots before App Store review.
 
@@ -90,15 +90,29 @@ EAS remains available for optional cloud development/preview/production builds a
 
 ## RevenueCat product checks before tester validation
 
-Verify these products, entitlements, and packages in the TallSoon RevenueCat project before testing purchase paths:
+The TallSoon RevenueCat catalog is configured as follows (verified 2026-10-18):
 
-| App Store product | Duration | Offer | Entitlements |
+| App Store product | Duration | Offer | RevenueCat entitlements |
 | --- | --- | --- | --- |
 | `app.pro.weekly` | 1 week | None | `pro` |
 | `app.family.annual` | 1 year | None | `pro`, `multi_child` |
 | `app.family.annual.trial` | 1 year | Optional 7-day trial product | `pro`, `multi_child` |
 
-The current offering should be `default`, with `$rc_weekly` → `app.pro.weekly`, `$rc_annual` → `app.family.annual`, and `annual_trial` → `app.family.annual.trial`. Verify store metadata, localized prices, eligibility, restore, cancel, renewal, expiration, and upgrades using Apple's sandbox. The first prediction remains free, and the paywall must not appear before it.
+The `default` offering contains `$rc_weekly` → `app.pro.weekly`, `$rc_annual` → `app.family.annual`, and `annual_trial` → `app.family.annual.trial`. RevenueCat's store status may lag App Store Connect changes; refresh and confirm its product metadata before tester validation.
+
+App Store Connect records are in `Prepare for Submission` in group `TallSoon Pro` (ID `22490278`): weekly Apple ID `6824198112`, annual `6824197855`, and annual-trial `6824198797`. English (U.S.) display names and descriptions are saved on all three products. The iOS app is priced free in all 175 countries or regions and app availability is set to all 175 (`Available on App Release`). The current price table shows $0.00 in the U.S. and generated zero-price tiers elsewhere. Subscription product pricing and availability are set as follows:
+
+| Product | U.S. starting price | Availability | Introductory offer |
+| --- | --- | --- | --- |
+| `app.pro.weekly` | $4.99 per week | All 175 countries or regions | None |
+| `app.family.annual` | $39.99 per year | All 175 countries or regions | None |
+| `app.family.annual.trial` | $39.99 per year | All 175 countries or regions | Free for 1 week, starting October 19, 2026, with no end date; configured for all 175 countries or regions |
+
+Prices and availability were reopened in App Store Connect and verified after saving. The app and subscriptions are configured for future availability on release; they have not been published or submitted for review.
+
+App Store Connect requires the first subscription group and first auto-renewable subscription to be submitted with a new app version. The required review screenshot is not uploaded. Do not use **Add for Review** until the owner is ready to submit the app and subscriptions together. The first prediction remains free, and the paywall must not appear before it.
+
+Before tester validation, refresh RevenueCat's product metadata, verify localized prices and trial eligibility, then test restore, cancellation, renewal, expiration, and upgrades using Apple's sandbox.
 
 ## Verify the TestFlight build
 
@@ -107,6 +121,6 @@ The current offering should be `default`, with `$rc_weekly` → `app.pro.weekly`
 - Confirm weekly and annual prices and durations match the sandbox products. Opt-in trial selects the separate trial product; ineligible or unknown trial status must not fall back to a charge.
 - Confirm RevenueCat grants `pro` for weekly, and `pro` plus `multi_child` for both annual products.
 - Test purchase, restore, cancellation, renewal, expiration, upgrade, reinstall, reminders, export, notifications, and delete-all-data on a native device.
-- Treat the build as available to testers only after App Store processing completes and it appears in TestFlight.
+- Treat the build as available to testers only after it appears in TestFlight and is assigned to the intended tester group.
 
 Sources: [Expo SDK 58 requirements](https://docs.expo.dev/versions/v58.0.0/), [Apple App Store Connect provisioning profiles](https://developer.apple.com/help/account/provisioning-profiles/create-an-app-store-provisioning-profile/), [Apple certificates](https://developer.apple.com/help/account/certificates/certificates-overview/), [Apple Keychain export](https://support.apple.com/guide/keychain-access/kyca35961/mac), and [RevenueCat TestFlight testing](https://www.revenuecat.com/docs/test-and-launch/sandbox/apple-app-store).

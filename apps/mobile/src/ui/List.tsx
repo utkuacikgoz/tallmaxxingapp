@@ -2,6 +2,7 @@ import { Children, Fragment, isValidElement, memo, type ReactNode } from 'react'
 import { Platform, Pressable, StyleSheet, Switch, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { radius, space, useTheme } from '@/theme';
+import { haptics } from '@/services/haptics';
 import { Icon, IconTile, type IconName, type TileTone } from './Icon';
 import { Text } from './Text';
 
@@ -102,6 +103,8 @@ export interface RowProps {
   accessibilityHint?: string;
   testID?: string;
   numberOfLines?: number;
+  /** Opt in for rows whose action does not already provide haptics. */
+  haptic?: 'light' | 'selection';
 }
 
 export const Row = memo(function Row({
@@ -126,6 +129,7 @@ export const Row = memo(function Row({
   accessibilityHint,
   testID,
   numberOfLines,
+  haptic,
 }: RowProps) {
   const { c } = useTheme();
   const isSwitch = onSwitch != null;
@@ -153,7 +157,11 @@ export const Row = memo(function Row({
       {isSwitch ? (
         <Switch
           value={!!switchValue}
-          onValueChange={onSwitch}
+          onValueChange={(nextValue) => {
+            if (haptic === 'light') haptics.light();
+            else if (haptic === 'selection') haptics.selection();
+            onSwitch(nextValue);
+          }}
           disabled={disabled}
           accessibilityRole="switch"
           accessibilityState={{ checked: !!switchValue, disabled: !!disabled }}
@@ -189,7 +197,11 @@ export const Row = memo(function Row({
   return (
     <Pressable
       testID={testID}
-      onPress={onPress}
+      onPress={() => {
+        if (haptic === 'light') haptics.light();
+        else if (haptic === 'selection') haptics.selection();
+        onPress();
+      }}
       disabled={disabled}
       accessibilityRole={role}
       accessibilityLabel={accessibilityLabel ?? [title, subtitle, value].filter(Boolean).join(', ')}
