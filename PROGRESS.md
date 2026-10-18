@@ -47,6 +47,14 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 
 ## Completed waves
 
+### Wave 12 · public website and production links
+- Rebuilt the Astro landing page around the free estimate, real light-mode app captures, published methods, and an explicit coming-soon app CTA. Retained the working browser calculator.
+- Added mobile-app and website Privacy Policy, Terms of Use, Health Disclaimer, and Support for Bosphorus Elevate LLC; owner selected `support@tallsoon.pro`. The policy distinguishes local child records/backups/exports from RevenueCat purchase processing and Vercel hosting logs.
+- Updated app links to `https://tallsoon.pro`, configured Vercel static deployment and canonical/www handling, and added social preview, sitemap, and crawler rules. Hostinger apex DNS now points to Vercel; domain registration and nameservers remain at Hostinger.
+- Refreshed stale release docs: TestFlight 1.0.0 (2) is processed and owner-installed; iOS RevenueCat catalog is configured. Sandbox billing, privacy publication, approved store screenshots, Android setup, and clinical/accessibility review remain pending.
+- Validation: Astro check/build and nine-route browser smoke pass; calculator regressions, legal/support links, all responsive images, and 320–1440 px overflow checks pass. Mobile lint has zero errors and 33 existing warnings; release guards pass. Email delivery is not yet verified (no MX records at audit time).
+- Separate App Store creative revisions remain approval drafts and are not uploaded as part of the website release.
+
 ### Wave 1 · browser QA and layout fixes
 - Light and dark walkthroughs pass with no browser console errors. Prototype comparison and native
   verification limits: `docs/QA_REPORT.md`.

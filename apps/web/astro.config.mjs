@@ -1,3 +1,3 @@
 import { defineConfig } from 'astro/config';
 
-export default defineConfig({ output: 'static' });
+export default defineConfig({ site: 'https://tallsoon.pro', output: 'static' });

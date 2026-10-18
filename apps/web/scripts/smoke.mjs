@@ -12,6 +12,8 @@ const contentTypes = {
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
   '.woff2': 'font/woff2',
 };
 const server = createServer(async (request, response) => {
@@ -45,7 +47,7 @@ page.on('request', (request) => { if (new URL(request.url()).origin !== origin) 
 page.on('dialog', async (dialog) => { dialogs.push(dialog.type()); await dialog.dismiss(); });
 
 try {
-  const routes = ['/', '/height-predictor/', '/method/', '/pricing/', '/privacy/', '/terms/', '/support/', '/r/?h=171-181&u=cm'];
+  const routes = ['/', '/height-predictor/', '/method/', '/pricing/', '/privacy/', '/terms/', '/health-disclaimer/', '/support/', '/r/?h=171-181&u=cm'];
   const routeStatuses = {};
   for (const route of routes) {
     const response = await page.goto(`${origin}${route}`);
@@ -53,13 +55,40 @@ try {
     assert.equal(routeStatuses[route], 200, `${route} should return HTTP 200`);
   }
 
+  await page.goto(`${origin}/privacy/`);
+  assert.match(await page.locator('main').innerText(), /Bosphorus Elevate LLC/);
+  assert.match(await page.locator('main').innerText(), /RevenueCat/);
+  await page.goto(`${origin}/support/`);
+  assert.equal(await page.locator('main a[href="mailto:support@tallsoon.pro"]').count(), 1);
+
   await page.goto(`${origin}/`);
   const schemaTypes = await page.locator('script[type="application/ld+json"]').evaluateAll((nodes) => nodes.map((node) => JSON.parse(node.textContent ?? '{}')['@type']));
   assert.deepEqual(schemaTypes, ['WebApplication', 'FAQPage']);
+  const settleImages = async () => {
+    await page.evaluate(() => new Promise((resolveFrame) => requestAnimationFrame(() => requestAnimationFrame(resolveFrame))));
+    await page.locator('img').evaluateAll((images) => Promise.all(images.map((image) => {
+      image.loading = 'eager';
+      return image.decode();
+    })));
+  };
+  await settleImages();
   await mkdir(screenshots, { recursive: true });
   await page.screenshot({ path: `${screenshots}/home-light-mobile.png`, fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await settleImages();
+  await page.locator('.parent-story').scrollIntoViewIfNeeded();
+  assert.equal(await page.locator('.story-photo img').evaluate((image) => image.naturalWidth > 0), true, 'the parent-story image must load');
+  await page.screenshot({ path: `${screenshots}/parent-story-desktop.png` });
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.screenshot({ path: `${screenshots}/home-light-desktop.png`, fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await settleImages();
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.screenshot({ path: `${screenshots}/home-dark-mobile.png`, fullPage: true });
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth), false, `the ${width}px layout should not overflow horizontally`);
+  }
   await page.setViewportSize({ width: 320, height: 800 });
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
   assert.equal(overflow, false, 'the 320px layout should not overflow horizontally');

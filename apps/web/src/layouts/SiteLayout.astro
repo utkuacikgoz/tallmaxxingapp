@@ -1,45 +1,83 @@
 ---
+import { Image, getImage } from 'astro:assets';
 import { copy } from '../lib/copy';
+import icon from '../assets/icon.png';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
+  landing?: boolean;
 }
 
-const { title = copy.brand, description = copy.footerLine } = Astro.props;
-const pageTitle = title === copy.brand ? title : `${title} · ${copy.brand}`;
+const { title = copy.brand, description = copy.footerLine, landing = false } = Astro.props;
+const pageTitle = title.includes(copy.brand) ? title : `${title} · ${copy.brand}`;
+const canonical = new URL(Astro.url.pathname, 'https://tallsoon.pro');
+const socialImage = new URL('/og-image.png', canonical);
+const c = copy.landing;
+const favicon = await getImage({ src: icon, width: 48, height: 48, format: 'png' });
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" class:list={{ 'landing-theme': landing }}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f2f2f7" />
+    <meta name="theme-color" content={landing ? '#f8f9f3' : '#f2f2f7'} />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href={favicon.src} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={copy.brand} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={c.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
     <title>{pageTitle}</title>
     <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main">{copy.skipToContent}</a>
     <header class="site-header">
-      <a class="brand" href="/" aria-label={copy.brand}>{copy.brand}<span aria-hidden="true">.</span></a>
+      <a class="brand" href="/" aria-label={copy.brand}>
+        <Image src={icon} alt="" width={36} height={36} format="webp" />
+        {copy.brand}
+      </a>
       <nav aria-label={copy.menu}>
-        <a href="/height-predictor">{copy.navPredictor}</a>
-        <a href="/method">{copy.navMethod}</a>
-        <a href="/pricing">{copy.navPricing}</a>
+        <a href="/#the-app">{c.navAbout}</a>
+        <a href="/method">{c.navMethod}</a>
         <a href="/support">{copy.navSupport}</a>
       </nav>
-      <a class="header-cta" href="/height-predictor">{copy.heroCta}</a>
+      <a class="header-cta" href="/height-predictor">{c.navCalculator}<span aria-hidden="true">↗</span></a>
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer">
-      <div><a class="brand" href="/">{copy.brand}<span aria-hidden="true">.</span></a><p>{copy.footerLine}</p></div>
-      <nav aria-label={copy.menu}>
-        <a href="/privacy">{copy.privacyLink}</a>
-        <a href="/terms">{copy.termsLink}</a>
-        <a href="/support">{copy.supportLink}</a>
-      </nav>
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="/">
+            <Image src={icon} alt="" width={32} height={32} format="webp" />
+            {copy.brand}
+          </a>
+          <p>{c.footerLine}</p>
+          <a class="footer-email" href={`mailto:${c.footerEmail}`}>{c.footerEmail}</a>
+        </div>
+        <nav aria-label={copy.menu}>
+          <a href="/privacy">{copy.privacyLink}</a>
+          <a href="/terms">{copy.termsLink}</a>
+          <a href="/health-disclaimer">{c.footerDisclaimer}</a>
+          <a href="/support">{copy.supportLink}</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>{c.footerMedical}</p>
+        <small>{c.footerCopyright}</small>
+      </div>
     </footer>
   </body>
 </html>

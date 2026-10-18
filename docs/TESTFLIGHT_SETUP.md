@@ -12,11 +12,11 @@
 | App Store Connect app ID | `6824177611`, verified for `com.belevate.tallsoon` and configured as `ASC_APP_ID` |
 | GitHub Actions credentials | All seven required secrets are configured |
 | TestFlight automation | Xcode/Fastlane workflow configured; APNs entitlement issue corrected |
-| TestFlight build | Run `39118784001` uploaded signed version `1.0.0 (1)`; Apple processing status `VALID` |
+| TestFlight build | Run `39126029888` uploaded signed version `1.0.0 (2)`; Apple processing status `VALID`; owner installed build 2 from TestFlight |
 
 The TestFlight binary uses iOS bundle ID `com.belevate.tallsoon`; Android stays `app.tallsoon`. The numeric App Store Connect Apple ID is a separate value from RevenueCat app record `app5829101f0b`.
 
-Workflow run `39117605979` confirmed App Store Connect API access, imported the signing certificate, installed the provisioning profile, and completed native dependency installation. Its Xcode archive initially failed because Expo Notifications added an unexpected `aps-environment` entitlement; this app uses local reminders only. The notification config was corrected, and a clean production prebuild generated an empty entitlements file. The retry, workflow run `39118784001`, successfully signed and uploaded version `1.0.0 (1)`; Apple processed it with status `VALID`. Uploading does not submit an App Store release or invite testers. Confirm the processed build appears in TestFlight before treating it as available to testers.
+The first archive retry, workflow run `39118784001`, signed and uploaded version `1.0.0 (1)` after correcting the unexpected `aps-environment` entitlement; Apple processed that build as `VALID`. The latest verified run, `39126029888`, uploaded version `1.0.0 (2)`, which Apple processed as `VALID` and the owner installed through TestFlight. Uploading does not submit an App Store release.
 
 ## GitHub Actions configuration
 
@@ -80,13 +80,13 @@ The **TestFlight** workflow at `.github/workflows/testflight.yml` runs after suc
 
 The release job will validate that `ASC_APP_ID` belongs to `com.belevate.tallsoon`, that the supplied signing profile and certificate match the production app, and that the RevenueCat SDK key is a production key rather than a `test_` key. It uses Node/pnpm, selects the pinned Xcode version, runs a clean Expo iOS prebuild without installing packages, runs `pod install`, then uses Fastlane to archive and upload with the App Store Connect API key. GitHub-provided certificate/profile material is used for codesigning. It does not invoke EAS Build or require `EXPO_TOKEN`.
 
-The workflow waits for the archive/upload operation and checks Apple's processing status. It only reports the build as ready after Apple confirms processing; a failure or timeout is reported as a failure and needs an App Store Connect check. Run `39118784001` successfully signed and uploaded version `1.0.0 (1)`, which Apple processed with status `VALID`. Uploading to TestFlight does not submit an App Store release or invite testers.
+The workflow waits for the archive/upload operation and checks Apple's processing status. It only reports the build as ready after Apple confirms processing; a failure or timeout is reported as a failure and needs an App Store Connect check. Run `39126029888` successfully signed and uploaded version `1.0.0 (2)`, which Apple processed with status `VALID`; the owner installed it from TestFlight. Uploading does not submit an App Store release.
 
 Store listing and billing screenshots are not blockers for the initial TestFlight binary upload. Complete any required store metadata and screenshots before App Store review.
 
 ## Optional EAS and Android paths
 
-EAS remains available for optional cloud development/preview/production builds and Android submission. Those paths may use EAS credentials, `EXPO_TOKEN`, and platform-specific RevenueCat keys in EAS environments; they are separate from the GitHub TestFlight pipeline. For direct EAS production builds, `app.config.ts` requires the matching EAS environment RevenueCat key. The iOS production key is currently absent there. Android remains on package `app.tallsoon` and its existing Play internal-track/EAS setup is not changed by this iOS pipeline.
+EAS remains available for optional cloud development/preview/production builds. Those paths may use EAS credentials, `EXPO_TOKEN`, and platform-specific RevenueCat keys in EAS environments; they are separate from the GitHub TestFlight pipeline. For direct EAS production builds, `app.config.ts` requires the matching EAS environment RevenueCat key. Android release setup, Play billing validation, and Play declarations remain pending for package `app.tallsoon`.
 
 ## RevenueCat product checks before tester validation
 
@@ -98,7 +98,7 @@ The TallSoon RevenueCat catalog is configured as follows (verified 2026-10-18):
 | `app.family.annual` | 1 year | None | `pro`, `multi_child` |
 | `app.family.annual.trial` | 1 year | Optional 7-day trial product | `pro`, `multi_child` |
 
-The `default` offering contains `$rc_weekly` → `app.pro.weekly`, `$rc_annual` → `app.family.annual`, and `annual_trial` → `app.family.annual.trial`. RevenueCat's store status may lag App Store Connect changes; refresh and confirm its product metadata before tester validation.
+The `default` offering contains `$rc_weekly` → `app.pro.weekly`, `$rc_annual` → `app.family.annual`, and `annual_trial` → `app.family.annual.trial`. The products, entitlements, and offering were configured and checked in RevenueCat. Refresh its store metadata and validate actual prices, trial eligibility, purchase, and restore with the App Store sandbox before release.
 
 App Store Connect records are in `Prepare for Submission` in group `TallSoon Pro` (ID `22490278`): weekly Apple ID `6824198112`, annual `6824197855`, and annual-trial `6824198797`. English (U.S.) display names and descriptions are saved on all three products. The iOS app is priced free in all 175 countries or regions and app availability is set to all 175 (`Available on App Release`). The current price table shows $0.00 in the U.S. and generated zero-price tiers elsewhere. Subscription product pricing and availability are set as follows:
 
@@ -108,9 +108,11 @@ App Store Connect records are in `Prepare for Submission` in group `TallSoon Pro
 | `app.family.annual` | $39.99 per year | All 175 countries or regions | None |
 | `app.family.annual.trial` | $39.99 per year | All 175 countries or regions | Free for 1 week, starting October 19, 2026, with no end date; configured for all 175 countries or regions |
 
-Prices and availability were reopened in App Store Connect and verified after saving. The app and subscriptions are configured for future availability on release; they have not been published or submitted for review.
+Prices and availability were reopened in App Store Connect and verified after saving. The app and subscriptions are configured for future availability on release; they have not been published or submitted for review. App Store purchase and restore paths still need sandbox validation.
 
-App Store Connect requires the first subscription group and first auto-renewable subscription to be submitted with a new app version. The required review screenshot is not uploaded. Do not use **Add for Review** until the owner is ready to submit the app and subscriptions together. The first prediction remains free, and the paywall must not appear before it.
+App Store Connect requires the first subscription group and first auto-renewable subscription to be submitted with a new app version. The required subscription review screenshot has not been uploaded; the owner has not approved the current screenshot set. Do not use **Add for Review** until the owner approves the screenshots and is ready to submit the app and subscriptions together. The first prediction remains free, and the paywall must not appear before it.
+
+The configured public listing URLs are `https://tallsoon.pro`, `https://tallsoon.pro/privacy`, `https://tallsoon.pro/terms`, and `https://tallsoon.pro/support`. The site deployment and live HTTP 200 responses still need verification. The owner selected `support@tallsoon.pro`, but its MX/mail delivery is not verified. The App Store privacy disclosure remains an unpublished draft and still needs owner/legal review; do not publish it or submit the app for review as part of this setup.
 
 Before tester validation, refresh RevenueCat's product metadata, verify localized prices and trial eligibility, then test restore, cancellation, renewal, expiration, and upgrades using Apple's sandbox.
 

@@ -166,5 +166,5 @@ cd apps/mobile && npx drizzle-kit generate     # after any schema change
 
 ## 8. Open items for the product owner (don't decide these yourself; list them in your summary)
 - Population averages outside the US for an unknown parent (currently US NHANES).
-- Domain and support email (`tallsoon.app` and `support@tallsoon.app` are placeholders in `AppConfig`).
+- Public domain is `tallsoon.pro`; operator is Bosphorus Elevate LLC and selected support email is `support@tallsoon.pro`. Verify email delivery before launch.
 - A pediatric professional's review of all content marked `REVIEW`, including the velocity bands.

@@ -7,11 +7,11 @@ import type { UnknownParentMode } from '@tallsoon/engine';
 export const AppConfig = {
   appName: 'TallSoon',
   /** Marketing site; also used in share cards. */
-  websiteHost: 'tallsoon.app',
-  websiteUrl: 'https://tallsoon.app',
-  privacyUrl: 'https://tallsoon.app/privacy',
-  termsUrl: 'https://tallsoon.app/terms',
-  supportEmail: 'support@tallsoon.app',
+  websiteHost: 'tallsoon.pro',
+  websiteUrl: 'https://tallsoon.pro',
+  privacyUrl: 'https://tallsoon.pro/privacy',
+  termsUrl: 'https://tallsoon.pro/terms',
+  supportEmail: 'support@tallsoon.pro',
   /** Brief §13.4, flagged for product review before launch. */
   unknownParentMode: 'populationAverage' as UnknownParentMode,
   plans: {

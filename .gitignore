@@ -23,3 +23,5 @@ artifacts/
 vendor/bundle/
 apps/mobile/build/
 apps/mobile/fastlane/report.xml
+.vercel
+.env*.local

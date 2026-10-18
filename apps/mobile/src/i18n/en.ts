@@ -701,6 +701,152 @@ const en = {
     methodsTitle: 'Methods & Sources',
   },
 
+  legalWebsite: {
+    effectiveDate: 'October 18, 2026',
+    privacy: {
+      title: 'Privacy Policy',
+      intro: 'Bosphorus Elevate LLC (“TallSoon,” “we,” “us”) explains here what information is handled when you visit tallsoon.pro or use the TallSoon app. We do not sell personal information or share it for cross-context behavioral advertising. We disclose information to service providers as described below.',
+      sections: [
+        {
+          heading: 'Information on tallsoon.pro',
+          paragraphs: [
+            'The website’s height calculator runs in your browser. Values you enter are held in page memory to calculate and display a result; the calculator does not send those values to TallSoon or save them in browser storage. Refreshing or closing the page clears the form.',
+            'Our hosting provider, Vercel, may process technical request information such as IP address, browser and device details, requested page, and request time to deliver and secure the website. Hosting logs and any security technologies are controlled by the provider and may be retained under the settings and plan used for hosting. TallSoon does not add website analytics or advertising trackers.',
+          ],
+        },
+        {
+          heading: 'Information in the app',
+          paragraphs: [
+            'The app does not require an account. Child profiles, birth details, family heights, other profile answers, measurements, and habit records are stored in the app’s local database and settings on the device. TallSoon does not send these child details to our servers or to RevenueCat.',
+            'Device backups may include app data, depending on your operating system, account, and backup settings. You can export data or share a report when you choose; exported files or shared content may contain information shown in the app. The device’s sharing feature sends it to the person or service you select, and copies they receive are no longer controlled by TallSoon.',
+            'You can delete app records from Family settings using Delete All Data. This removes the app’s local profiles, measurements, habits, and settings from the device. It does not delete a file you previously exported, copies held in device backups, or subscription records maintained by an app store or RevenueCat.',
+          ],
+        },
+        {
+          heading: 'Subscriptions and RevenueCat',
+          paragraphs: [
+            'If you view or buy a subscription, RevenueCat and the Apple App Store or Google Play process information needed to show subscription options, validate purchases, restore purchases, determine subscription access, and provide subscription analytics. This can include a random anonymous app user ID, product and transaction identifiers, purchase history, subscription status, and related store information. RevenueCat does not receive child names, birth details, heights, weights, or habit records from TallSoon.',
+            'Payment details are handled by the app store or payment provider, not by TallSoon. RevenueCat and the app stores handle information under their own privacy terms. Their retention periods and request procedures may differ from ours.',
+          ],
+        },
+        {
+          heading: 'Support and requests',
+          paragraphs: [
+            'If you email support@tallsoon.pro, we receive the email address and anything you choose to include so we can respond and handle the request. Please do not email a child’s measurements or other sensitive details unless they are necessary to explain an issue. We keep support correspondence as needed to respond, maintain support records, and meet applicable obligations; we do not set a fixed deletion period.',
+            'You can contact us at support@tallsoon.pro with questions or requests about personal information. Depending on where you live, you may have rights to request access, correction, or deletion. We will review and respond to requests as required by applicable law. No account is required to use the app, and app data can also be deleted in Family settings.',
+          ],
+        },
+        {
+          heading: 'Children and teens',
+          paragraphs: [
+            'TallSoon is designed for parents and guardians managing a child’s growth information, and for teens age 13 or older using the teen experience. Children under 13 must not use the app on their own. A parent or guardian must complete the parent handoff and operate the app for a child under 13. Teens under 18 should ask a parent or guardian to review and authorize any purchase.',
+            'If you believe a child under 13 has used the app without an adult, contact support@tallsoon.pro. We will review the request and take appropriate steps.',
+          ],
+        },
+        {
+          heading: 'Changes',
+          paragraphs: [
+            'We may update this policy as the service changes. The effective date above shows when this version was last updated. Material changes will be reflected on this page.',
+          ],
+        },
+      ],
+      links: [
+        { label: 'Vercel Privacy Notice', href: 'https://vercel.com/legal/privacy-notice' },
+        { label: 'RevenueCat Privacy Policy', href: 'https://www.revenuecat.com/privacy/' },
+        { label: 'Apple Privacy Policy', href: 'https://www.apple.com/legal/privacy/' },
+        { label: 'Google Privacy Policy', href: 'https://policies.google.com/privacy' },
+      ],
+    },
+    terms: {
+      title: 'Terms of Use',
+      intro: 'These Terms apply when you use tallsoon.pro and the TallSoon app. By using the service, you agree to these Terms. If you do not agree, do not use the service.',
+      sections: [
+        {
+          heading: 'Who may use TallSoon',
+          paragraphs: [
+            'The app is for parents and guardians managing a child’s information and teens age 13 or older using the teen experience. Children under 13 may not use the app independently; a parent or guardian must complete the adult handoff and operate it for them. If you are under 18, ask a parent or guardian to review these Terms and authorize any purchase.',
+            'If you enter information about another person, you must be authorized to do so and must use the service in a lawful, respectful way.',
+          ],
+        },
+        {
+          heading: 'Estimates and health information',
+          paragraphs: [
+            'TallSoon provides educational tools and estimates for general information. A height estimate is not a measurement of future height and may differ from a person’s actual adult height. Results depend on the information entered and the limits of the methods used.',
+            'The app and website are not medical devices and do not diagnose, treat, cure, or prevent any condition. Habit, nutrition, sleep, and activity content is general wellness information; it does not promise or cause extra height. Talk with a pediatrician or qualified health professional about growth concerns or health decisions.',
+          ],
+        },
+        {
+          heading: 'Subscriptions and app-store purchases',
+          paragraphs: [
+            'Some app features require a paid subscription. The offer screen and the relevant app store show the available plan, price, billing period, trial if offered, and renewal terms before purchase. Subscriptions renew automatically unless you cancel before renewal. If a free trial is offered, its length, eligibility, and the price that applies after the trial are shown in the purchase flow; trial availability may depend on your store account and prior purchases.',
+            'Subscriptions are billed by Apple or Google under the store account used to subscribe. Manage or cancel an Apple subscription in your Apple Account subscription settings, or a Google Play subscription in Google Play subscriptions. Uninstalling the app does not cancel a subscription. Refund requests are handled under the applicable store’s policies and applicable law.',
+          ],
+        },
+        {
+          heading: 'Your information and device',
+          paragraphs: [
+            'You are responsible for the information you choose to enter and for keeping your device and any exported file secure. The app stores child profiles, measurements, and habits on your device; its operation also uses app stores and RevenueCat for subscription processing as described in the Privacy Policy.',
+          ],
+        },
+        {
+          heading: 'Availability and intellectual property',
+          paragraphs: [
+            'We may change, suspend, or discontinue features and will make reasonable efforts to keep the service available, but do not promise uninterrupted or error-free operation. TallSoon and its content are owned by Bosphorus Elevate LLC or its licensors and are protected by applicable intellectual-property laws. These Terms give you permission to use the service for personal, non-commercial purposes; they do not transfer ownership.',
+          ],
+        },
+        {
+          heading: 'App-store terms and legal rights',
+          paragraphs: [
+            'For an Apple download, Apple’s standard Licensed Application End User License Agreement applies unless a custom agreement is provided. App-store terms also govern store billing and purchases. Nothing in these Terms excludes, limits, or waives a right or remedy that applicable law does not allow us to exclude, limit, or waive.',
+            'To the extent permitted by applicable law, the service is provided as available and without promises beyond those expressly stated here. Any liability limitation applies only to the maximum extent permitted by applicable law and does not remove mandatory consumer protections.',
+          ],
+        },
+        {
+          heading: 'Contact',
+          paragraphs: ['Questions about these Terms can be sent to support@tallsoon.pro.'],
+        },
+      ],
+      links: [
+        { label: 'Apple Standard Licensed Application EULA', href: 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/' },
+        { label: 'Manage Apple subscriptions', href: 'https://apps.apple.com/account/subscriptions' },
+        { label: 'Manage Google Play subscriptions', href: 'https://play.google.com/store/account/subscriptions' },
+      ],
+    },
+    healthDisclaimer: {
+      title: 'Health Disclaimer',
+      intro: 'TallSoon estimates are for general educational information only. They are not medical advice or a substitute for care from a pediatrician or other qualified health professional.',
+      sections: [
+        {
+          heading: 'Limits of an estimate',
+          paragraphs: [
+            'Adult-height estimates are uncertain and can differ from actual adult height. Results depend on the information entered and on the population data and methods described on our Methods page. Individual growth can vary, and the methods may be less suitable for some children or circumstances.',
+            'TallSoon is not a medical device and does not diagnose, treat, cure, or prevent any disease or condition. No result or habit plan guarantees or causes additional height.',
+          ],
+        },
+        {
+          heading: 'When to seek advice',
+          paragraphs: [
+            'Talk with a pediatrician or qualified health professional about concerns regarding a child’s growth, development, nutrition, sleep, activity, or health. Do not delay or change medical care based on an estimate or general wellness content in TallSoon.',
+          ],
+        },
+      ],
+    },
+    support: {
+      title: 'Support',
+      intro: 'For help with TallSoon, email support@tallsoon.pro.',
+      sections: [
+        {
+          heading: 'Privacy requests',
+          paragraphs: ['For a privacy question or request, email support@tallsoon.pro. Do not include a child’s measurements unless needed to resolve the issue.'],
+        },
+        {
+          heading: 'Subscriptions',
+          paragraphs: ['For billing, cancellation, or refund questions, contact Apple or Google Play for store purchases. You can also email us if you need help finding the right store support page.'],
+        },
+      ],
+    },
+  },
+
   notifications: {
     channelReminders: 'Reminders',
     channelReminderDesc: 'Bedtime, morning plan and check-in reminders',
@@ -762,6 +908,57 @@ const en = {
     annualCta: 'Compare Plans',
   },
   web: {
+    landing: {
+      pageTitle: 'TallSoon · See how tall they could grow',
+      description: 'A little more clarity about your child’s growth. Get a free adult height estimate based on published methods. The TallSoon app is coming soon to iOS and Android.',
+      navAbout: 'The app',
+      navMethod: 'Our methods',
+      navCalculator: 'Free calculator',
+      eyebrow: 'BIG QUESTIONS. LITTLE GROWTH SPURTS.',
+      titleStart: 'See how tall',
+      titleEnd: 'they could grow.',
+      introduction: 'For the “how tall will they be?” years. A free height estimate, a clearer picture of their growth, and everyday habits that support their health.',
+      comingSoon: 'Coming soon',
+      heroSecondary: 'Try the free calculator',
+      availability: 'For iOS & Android',
+      proof: 'Free estimate. No account needed.',
+      resultAlt: 'The TallSoon app showing a sample adult height estimate of 164 cm, a likely range of 160–169 cm, and the methods behind the result.',
+      resultCaption: 'A range of possibilities. Room to grow.',
+      trust: ['Published prediction methods', 'A free answer, with a range', 'Your child’s details stay on your device'],
+      storyEyebrow: 'A LITTLE PERSPECTIVE',
+      storyTitle: 'They grow up.\nThe questions grow, too.',
+      storyBody: 'The marks on the doorframe tell one part of the story. TallSoon helps you understand the bigger picture, with an estimate grounded in family heights and their growth today.',
+      storyNote: 'A useful starting point for your curiosity. And for conversations with their pediatrician.',
+      photoAlt: 'A mother and her teenage child sharing a smile while measuring height at a doorframe.',
+      methodEyebrow: 'CURIOSITY, MEET CONTEXT',
+      methodTitle: 'More understanding.\nLess guesswork.',
+      methodBody: 'Family heights. Current measurements. Published growth references. TallSoon brings the available methods together and shows you where each estimate comes from.',
+      methodLink: 'Explore the methods & sources',
+      methodNames: ['Khamis–Roche', 'Mid-parental height', 'Percentile projection'],
+      methodCaveat: 'Every child grows differently. An estimate is a range of possibilities, never a promise.',
+      appEyebrow: 'MEET THE APP',
+      appTitle: 'For the everyday\nbetween growth spurts.',
+      appBody: 'The estimate is just the beginning. Optional Pro tools help you follow the changes and make room for healthy routines. Coming soon in the TallSoon app.',
+      screens: [
+        { number: '01', title: 'See the bigger picture.', body: 'Keep measurements together and watch their growth take shape over time.', alt: 'TallSoon Growth screen with a sample growth chart, a projected height range, and measurement history.' },
+        { number: '02', title: 'Build on the small things.', body: 'Simple check-ins for sleep, food, and movement. Healthy habits, without height promises.', alt: 'TallSoon Today screen with sample healthy habit check-ins for sleep, nutrition, and activity.' },
+        { number: '03', title: 'Keep the family in view.', body: 'A place for each child’s measurements, with family profiles and device settings.', alt: 'TallSoon Family screen showing a fictional child profile and app settings.' },
+      ],
+      sampleNote: 'Actual app screens with fictional profiles and sample data. App features and appearance may change before release.',
+      faqEyebrow: 'GOOD QUESTIONS',
+      faqTitle: 'A few things to know.',
+      launchEyebrow: 'A LITTLE MORE CLARITY IS COMING',
+      launchTitle: 'Growing up,\nwith TallSoon.',
+      launchBody: 'Coming soon to iOS and Android. The height estimate will be free. Growth tracking and habit tools will be available with optional Pro.',
+      launchPill: 'iOS & Android · Coming soon',
+      launchLink: 'Get a free estimate on the web',
+      footerLine: 'A little more clarity. Plenty of room to grow.',
+      footerMedical: 'Estimates and educational information only. TallSoon does not provide medical advice, diagnosis, treatment, or guaranteed height gains. Talk with a pediatrician about growth concerns.',
+      footerDisclaimer: 'Health disclaimer',
+      footerEmail: 'support@tallsoon.pro',
+      footerCopyright: '© 2026 Bosphorus Elevate LLC. All rights reserved.',
+      ogImageAlt: 'TallSoon height prediction and growth tracking app',
+    },
     brand: 'TallSoon',
     navHome: 'Home',
     navPredictor: 'Height predictor',
@@ -880,15 +1077,15 @@ const en = {
     privacyBody: 'The height calculator runs on your device. Measurements and birth details entered into the calculator are used only to produce the result in your browser. The site has no calculator account, analytics, or measurement submission endpoint.',
     privacyServer: 'Like most websites, the hosting provider may process basic request data such as an IP address to deliver pages and protect the service. TallSoon has not configured a separate analytics or advertising tracker for this site.',
     privacyStorage: 'The calculator does not save entries to browser storage. Closing or refreshing the page clears the form.',
-    privacyContact: 'The support address is still being configured. Privacy questions can be sent after the contact details are published.',
+    privacyContact: 'For privacy questions, contact Bosphorus Elevate LLC at support@tallsoon.pro.',
     termsTitle: 'Terms of use',
-    termsStatus: 'Draft terms for the pre-launch website. Final owner and legal review is required before public launch.',
+    termsStatus: 'Operated by Bosphorus Elevate LLC. Read the terms for the website, app, and optional subscriptions.',
     termsBody: 'TallSoon provides estimates and general educational information only. It is not a medical device, does not diagnose or treat conditions, and cannot predict an individual child’s final height with certainty.',
     termsUse: 'Use the calculator only for a child whose information you are authorized to enter. You are responsible for the accuracy of the measurements you provide.',
     termsNoAdvice: 'This site is provided as available for informational use. It does not replace medical advice. Talk with a pediatrician or qualified health professional about concerns regarding growth.',
     supportTitle: 'Support',
-    supportBody: 'TallSoon support contact details are being finalized before launch. The free calculator works without an account or purchase.',
-    supportEmailPending: 'Support email pending',
+    supportBody: 'Questions about TallSoon? Contact support@tallsoon.pro. The free calculator works without an account or purchase.',
+    supportEmailPending: 'support@tallsoon.pro',
     shareTitle: 'A TallSoon height estimate',
     shareBody: 'This shared range is an estimate, not a promise of final height. Your own details are not included in this link.',
     shareRange: 'Likely range',

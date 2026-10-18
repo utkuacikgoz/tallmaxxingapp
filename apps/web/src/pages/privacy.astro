@@ -1,8 +1,5 @@
 ---
-import SiteLayout from '../layouts/SiteLayout.astro';
-import { copy } from '../lib/copy';
+import LegalDocument from '../components/LegalDocument.astro';
+import { privacyPolicy } from '../lib/legal';
 ---
-<SiteLayout title={copy.privacyTitle} description={copy.privacyBody}>
-  <header class="page-intro"><p class="eyebrow">{copy.brand}</p><h1>{copy.privacyTitle}</h1></header>
-  <div class="content-narrow"><section><h2>{copy.predictorTitle}</h2><p>{copy.privacyBody}</p></section><section><h2>{copy.privacyTitle}</h2><p>{copy.privacyServer}</p><p>{copy.privacyStorage}</p></section><section><h2>{copy.supportTitle}</h2><p>{copy.privacyContact}</p></section></div>
-</SiteLayout>
+<LegalDocument document={privacyPolicy} />

@@ -1,8 +1,5 @@
 ---
-import SiteLayout from '../layouts/SiteLayout.astro';
-import { copy } from '../lib/copy';
+import LegalDocument from '../components/LegalDocument.astro';
+import { termsOfUse } from '../lib/legal';
 ---
-<SiteLayout title={copy.termsTitle} description={copy.termsBody}>
-  <header class="page-intro"><p class="eyebrow">{copy.brand}</p><h1>{copy.termsTitle}</h1><p>{copy.termsStatus}</p></header>
-  <div class="content-narrow"><section><h2>{copy.termsTitle}</h2><p>{copy.termsBody}</p></section><section><h2>{copy.navPredictor}</h2><p>{copy.termsUse}</p></section><section><h2>{copy.supportTitle}</h2><p>{copy.termsNoAdvice}</p></section></div>
-</SiteLayout>
+<LegalDocument document={termsOfUse} />

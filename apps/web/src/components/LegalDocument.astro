@@ -1,0 +1,32 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { legalWebsite, type LegalDocument } from '../lib/legal';
+import { AppConfig } from '../../../mobile/src/config/app-config';
+
+interface Props { document: LegalDocument; contact?: boolean; }
+const { document, contact = false } = Astro.props;
+---
+<SiteLayout title={document.title} description={document.intro}>
+  <header class="page-intro legal-intro">
+    <p class="eyebrow">{AppConfig.appName}</p>
+    <h1>{document.title}</h1>
+    <p>{document.intro}</p>
+    <p class="legal-date">{legalWebsite.effectiveDate}</p>
+    {contact && <a class="landing-button" href={`mailto:${AppConfig.supportEmail}`}>{AppConfig.supportEmail}</a>}
+  </header>
+  <article class="content-narrow legal-content">
+    {document.sections.map((section) => <section>
+      <h2>{section.heading}</h2>
+      {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </section>)}
+    {document.links && <ul class="legal-links">{document.links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}</ul>}
+  </article>
+</SiteLayout>
+
+<style>
+  .legal-intro { max-width: 800px; }
+  .legal-intro .legal-date { font-size: .85rem; margin-top: 1.5rem; }
+  .legal-content { overflow-wrap: anywhere; }
+  .legal-content p { line-height: 1.85; }
+  .legal-links { padding-left: 1.2rem; }
+</style>

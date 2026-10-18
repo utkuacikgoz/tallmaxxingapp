@@ -1,5 +1,11 @@
 # Decisions
 
+## Public website launch (2026-10-18)
+- The owner purchased `tallsoon.pro`, selected Bosphorus Elevate LLC as operator and `support@tallsoon.pro` as contact, and requested Vercel hosting. Use the existing Astro app with Vercel rather than changing hosting providers or duplicating the site.
+- Keep domain registration and DNS authority at Hostinger; change website records only and preserve mail records. Point `www` visitors to the canonical apex.
+- Publish a coming-soon mobile landing page with real fictional-profile app captures and a working free web calculator. Do not show unavailable download buttons, fabricated social proof, or collect waitlist emails without an implemented flow.
+- Legal copy reflects actual local data, backup/export behavior, hosting logs and RevenueCat purchase processing. Do not invent a US state/address or legal certification. Apple standard EULA continues to apply to the iOS download.
+
 - **iOS headers use SDK 58’s native system appearance.** Forced transparency, blur and opaque
   large-title backgrounds hid titles on iOS 26. Keep the system appearance and apply theme text
   colors explicitly; Android retains its themed background.

@@ -16,7 +16,7 @@ The actual target audience needs product-owner confirmation before submission be
 - **Complete the Health apps declaration:** Yes. Google requires the declaration even when an app has no health features, and this app includes health-related height tracking, growth references, and wellbeing habit content.
 - **Draft feature areas to review in the form:** Health and fitness features involving activity/exercise, nutrition and weight management, and sleep management may apply to the plan content and tracking. Explain that height prediction and percentile display are informational estimates from published methods and reference data. Do not select medical-device, diagnosis, treatment, medication-management, or clinical-decision-support categories unless the product scope changes and the appropriate regulatory review supports it.
 - **Health claim and risk disclosure:** Describe the app as a non-diagnostic estimate and general habits tracker. Keep the in-app limitations and pediatrician guidance visible. Confirm whether the product's prediction functionality changes the declaration category with Google Play before launch.
-- **Privacy policy:** Play requires an active public privacy policy URL and a policy link or text in the app. The current `tallsoon.app/privacy` value is a placeholder until the domain is live.
+- **Privacy policy:** Play requires an active public privacy policy URL and a policy link or text in the app. The configured URL is `https://tallsoon.pro/privacy`; deployment and an HTTP 200 response are not yet verified. The policy and its data disclosures still need owner/legal review before release.
 
 ## Data safety — preliminary inventory
 
