@@ -1,16 +1,20 @@
 import { router } from 'expo-router';
-import { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import {
   ageInYears,
   CITATIONS,
   displayPercentile,
   formatHeight,
+  formatHeightRange,
+  formatPlusMinus,
   khamisRocheWorked,
   lookupKhamisRoche,
   ordinal,
   toIsoDate,
+  type MethodId,
+  type Prediction,
   type PredictionSummary,
   type Sex,
 } from '@tallsoon/engine';
@@ -21,8 +25,10 @@ import { useActiveChild, useChildModel } from '@/features/child/useChild';
 import { draft, draftBirthDate } from '@/features/onboarding/draft';
 import { useT } from '@/i18n';
 import { engine, krSourcesCount, predictOptions } from '@/lib/engine';
+import { haptics } from '@/services/haptics';
 import { useSettings } from '@/state/settings';
 import { monoFamily, radius, space, useTheme } from '@/theme';
+import { Icon } from '@/ui/Icon';
 import { Row, Section } from '@/ui/List';
 import { SheetHeader, SheetScroll } from '@/ui/Sheet';
 import { Text } from '@/ui/Text';
@@ -35,6 +41,38 @@ interface Inputs {
   motherCm: number;
   fatherCm: number;
 }
+
+interface MethodDefinition {
+  id: MethodId;
+  titleKey: string;
+  descriptionKey: string;
+  calculationIntroKey: string;
+  formulaKey: string;
+}
+
+const METHODS: MethodDefinition[] = [
+  {
+    id: 'khamisRoche',
+    titleKey: 'method.krHeader',
+    descriptionKey: 'method.krDescription',
+    calculationIntroKey: 'method.krIntro',
+    formulaKey: 'method.krFormula',
+  },
+  {
+    id: 'midParental',
+    titleKey: 'method.mphHeader',
+    descriptionKey: 'method.mphDescription',
+    calculationIntroKey: 'method.mphIntro',
+    formulaKey: 'method.mphFormula',
+  },
+  {
+    id: 'percentileProjection',
+    titleKey: 'method.projHeader',
+    descriptionKey: 'method.projDescription',
+    calculationIntroKey: 'method.projIntro',
+    formulaKey: 'method.projFormula',
+  },
+];
 
 /** Uses the saved child, or the onboarding answers when opened from the research screen. */
 function useMethodData(): { summary: PredictionSummary | null; inputs: Inputs | null } {
@@ -89,11 +127,179 @@ function useMethodData(): { summary: PredictionSummary | null; inputs: Inputs | 
 function Mono({ children }: { children: string }) {
   const { c } = useTheme();
   return (
-    <View style={[styles.mono, { backgroundColor: c.card }]}>
+    <View style={[styles.mono, { backgroundColor: c.fill }]}>
       <Text style={{ fontFamily: monoFamily, fontSize: 13, lineHeight: 20, color: c.label }} selectable>
         {children}
       </Text>
     </View>
+  );
+}
+
+export function CalculationDisclosure({
+  method,
+  title,
+  intro,
+  formula,
+  footer,
+}: {
+  method: MethodId;
+  title: string;
+  intro: string;
+  formula: string;
+  footer?: string;
+}) {
+  const t = useT();
+  const { c } = useTheme();
+  const [expanded, setExpanded] = useState(false);
+  const toggle = () => {
+    haptics.selection();
+    setExpanded((value) => !value);
+  };
+
+  return (
+    <View>
+      <Pressable
+        testID={`method-calculation-${method}`}
+        onPress={toggle}
+        accessibilityRole="button"
+        accessibilityLabel={t(expanded ? 'method.hideCalculation' : 'method.viewCalculation', { method: title })}
+        accessibilityState={{ expanded }}
+        android_ripple={{ color: c.fill }}
+        style={({ pressed }) => [styles.disclosure, pressed && { backgroundColor: c.fill }]}
+      >
+        <Text variant="body" color="tint" style={styles.disclosureText}>
+          {t(expanded ? 'method.hideCalculation' : 'method.viewCalculation', { method: title })}
+        </Text>
+        <Icon name={expanded ? 'chevronDown' : 'chevronRight'} size={16} color={c.label2} />
+      </Pressable>
+      {expanded ? (
+        <View style={styles.expanded}>
+          <Text variant="subhead" color="label2">{intro}</Text>
+          <Mono>{formula}</Mono>
+          {footer ? <Text variant="footnote" color="label2">{footer}</Text> : null}
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+function unavailableMessage(method: MethodId, summary: PredictionSummary | null, t: ReturnType<typeof useT>) {
+  if (!summary) return t('method.resultsAfterSetup');
+  if (method === 'khamisRoche') {
+    if (summary.fallback === 'noWeight') return t('method.noWeight');
+    if (summary.fallback === 'underFour') return t('method.underFour');
+    if (summary.fallback === 'overKhamisRocheAge') return t('method.overAge');
+    if (summary.fallback === 'coefficientsUnverified') return t('method.unverified');
+    if (summary.fallback === 'parentUnknownDisabled') return t('method.parentRequired');
+  }
+  if (method === 'midParental' && summary.fallback === 'parentUnknownDisabled') return t('method.parentRequired');
+  if (method === 'percentileProjection' && summary.ageYears < 4) return t('method.projectionUnderFour');
+  return t('method.notAvailable');
+}
+
+function MethodCard({
+  definition,
+  prediction,
+  summary,
+  unit,
+  formula,
+  t,
+  calculationFooter,
+}: {
+  definition: MethodDefinition;
+  prediction?: Prediction;
+  summary: PredictionSummary | null;
+  unit: 'cm' | 'ftin';
+  formula: string;
+  t: ReturnType<typeof useT>;
+  calculationFooter?: string;
+}) {
+  const title = t(definition.titleKey);
+  const description =
+    definition.id === 'percentileProjection' && summary?.today && prediction
+      ? t('method.projBody', {
+          ordinal: ordinal(displayPercentile(summary.today.percentile)),
+          ref: summary.today.reference.toUpperCase(),
+          value: formatHeight(prediction.estimateCm, unit),
+        })
+      : t(definition.descriptionKey);
+
+  return (
+    <Section header={title}>
+      <View style={styles.cardBody}>
+        <Text variant="body" color="label2">{description}</Text>
+        {prediction ? (
+          <View style={styles.range}>
+            <Text variant="caption" color="label2">{t('method.methodEstimate')}</Text>
+            <Text variant="title3" color="tint" tabular>{formatHeight(prediction.estimateCm, unit)}</Text>
+            <Text variant="caption" color="label2" style={styles.rangeLabel}>{t('method.rangeShort')}</Text>
+            <Text variant="headline" color="label" tabular>{formatHeightRange(prediction.lowCm, prediction.highCm, unit)}</Text>
+          </View>
+        ) : (
+          summary ? (
+            <Text variant="subhead" color="label2" style={styles.unavailable}>
+              {unavailableMessage(definition.id, summary, t)}
+            </Text>
+          ) : null
+        )}
+      </View>
+      <CalculationDisclosure
+        method={definition.id}
+        title={title}
+        intro={t(definition.calculationIntroKey)}
+        formula={formula}
+        footer={calculationFooter}
+      />
+    </Section>
+  );
+}
+
+function SourcesAndLimits({ t, unit }: { t: ReturnType<typeof useT>; unit: 'cm' | 'ftin' }) {
+  const { c } = useTheme();
+  const [expanded, setExpanded] = useState(false);
+  const toggle = () => {
+    haptics.selection();
+    setExpanded((value) => !value);
+  };
+  const accuracy = t('method.krAccuracyValue', {
+    boys: formatPlusMinus(5.3, unit),
+    girls: formatPlusMinus(4.3, unit),
+  });
+  const familyAccuracy = t('method.mphAccuracyValue', { value: formatPlusMinus(8.5, unit) });
+
+  return (
+    <Section>
+      <Pressable
+        testID="method-limits-toggle"
+        onPress={toggle}
+        accessibilityRole="button"
+        accessibilityLabel={t(expanded ? 'method.hideLimits' : 'method.viewLimits')}
+        accessibilityState={{ expanded }}
+        android_ripple={{ color: c.fill }}
+        style={({ pressed }) => [styles.disclosure, pressed && { backgroundColor: c.fill }]}
+      >
+        <Text variant="body" color="tint" style={styles.disclosureText}>
+          {t(expanded ? 'method.hideLimits' : 'method.viewLimits')}
+        </Text>
+        <Icon name={expanded ? 'chevronDown' : 'chevronRight'} size={16} color={c.label2} />
+      </Pressable>
+      {expanded ? (
+        <View style={styles.limitsContent}>
+          <Text variant="subhead" color="label2">{t('method.framing')}</Text>
+          <Row title={t('method.krAccuracy')} value={accuracy} />
+          <Row title={t('method.mphAccuracy')} value={familyAccuracy} />
+          <Row title={t('method.validAges')} value={t('method.validAgesValue')} />
+          <Row title={t('method.pubertySigns')} value={t('method.pubertySignsValue')} />
+          <Text variant="caption" color="label2" uppercase style={styles.sourcesHeading}>{t('method.sourcesHeader')}</Text>
+          {[CITATIONS.khamisRoche, CITATIONS.midParental, CITATIONS.cdc, CITATIONS.who].map((cite) => (
+            <Text key={cite} variant="footnote" color="label2" selectable style={styles.citation}>{cite}</Text>
+          ))}
+          <Text variant="footnote" color="label2" style={styles.disclaimer}>
+            {t('legal.disclaimer', { app: AppConfig.appName })}
+          </Text>
+        </View>
+      ) : null}
+    </Section>
   );
 }
 
@@ -104,115 +310,114 @@ export default function MethodSheet() {
   const t = useT();
   const unit = useSettings((s) => s.heightUnit);
   const { summary, inputs } = useMethodData();
-
   const kr = summary?.predictions.find((p) => p.method === 'khamisRoche');
   const mph = summary?.predictions.find((p) => p.method === 'midParental');
-  const proj = summary?.predictions.find((p) => p.method === 'percentileProjection');
   const estimated = summary?.estimatedParent ?? null;
 
-  let krText: string | null = null;
+  let krFormula = t('method.krFormula');
+  let krSourcesNote: string | undefined;
   if (kr && inputs && inputs.weightKg != null) {
     const look = lookupKhamisRoche(engine.khamisRocheRows, inputs.sex, inputs.ageYears);
     if (look.ok) {
-      const w = khamisRocheWorked(look.row, inputs.heightCm, inputs.weightKg, inputs.motherCm, inputs.fatherCm);
-      krText = [
+      const worked = khamisRocheWorked(look.row, inputs.heightCm, inputs.weightKg, inputs.motherCm, inputs.fatherCm);
+      krFormula = [
         `${inputs.sex === 'male' ? 'boys' : 'girls'}, age ${look.row.age} row`,
         `PAS = ${look.row.intercept}`,
-        `    ${signed(look.row.stature_coef, `${n(w.statureIn)} in`, 'height')}`,
-        `    ${signed(look.row.weight_coef, `${n(w.weightLb)} lb`, 'weight')}`,
-        `    ${signed(look.row.midparent_coef, `${n(w.midparentIn)} in`, 'midparent')}`,
-        `    = ${n(w.resultIn)} in × 2.54 = ${n(w.resultCm)} cm`,
+        `    ${signed(look.row.stature_coef, `${n(worked.statureIn)} in`, 'height')}`,
+        `    ${signed(look.row.weight_coef, `${n(worked.weightLb)} lb`, 'weight')}`,
+        `    ${signed(look.row.midparent_coef, `${n(worked.midparentIn)} in`, 'midparent')}`,
+        `    = ${n(worked.resultIn)} in × 2.54 = ${n(worked.resultCm)} cm`,
       ].join('\n');
+      krSourcesNote = t('method.verified', { n: krSourcesCount });
     }
   }
 
   const sign = inputs?.sex === 'female' ? '−' : '+';
-  const mphText = inputs
-    ? `${inputs.sex === 'male' ? 'boys' : 'girls'}: (mother + father ${sign} 13) / 2\n= (${n(inputs.motherCm)} + ${n(inputs.fatherCm)} ${sign} 13) / 2\n= ${n(mph?.estimateCm ?? 0)} cm`
-    : 'boys: (mother + father + 13) / 2\ngirls: (mother + father − 13) / 2';
-
-  const generic = !summary;
+  const mphFormula = inputs
+    ? `${inputs.sex === 'male' ? 'boys' : 'girls'}: (mother + father ${sign} 13) / 2\n= (${n(inputs.motherCm)} + ${n(inputs.fatherCm)} ${sign} 13) / 2${mph ? `\n= ${n(mph.estimateCm)} cm` : ''}`
+    : t('method.mphFormula');
 
   return (
-    <View style={{ flex: 1 }} testID="method-sheet">
+    <View style={styles.screen} testID="method-sheet">
       <SheetHeader title={t('method.title')} right={{ label: t('common.done'), bold: true, onPress: () => router.back() }} />
       <SheetScroll>
-        {kr || generic ? (
-          <Section header={t('method.krHeader')} footer={t('method.verified', { n: krSourcesCount })}>
-            <View style={styles.pad}>
-              <Text variant="subhead" color="label2" style={{ marginBottom: 8 }}>
-                {t('method.krIntro')}
-              </Text>
-              <Mono>{krText ?? 'PAS (in) = intercept\n    + a × height (in)\n    + b × weight (lb)\n    + c × midparent (in)\nresult × 2.54 = cm'}</Mono>
-            </View>
-            {kr ? <Row title={t('method.resultRow')} value={`${formatHeight(kr.estimateCm, unit)} ± ${n(kr.plusMinusCm)} cm`} /> : null}
-          </Section>
-        ) : null}
-        {kr?.notes.includes('flooredAtCurrentHeight') ? (
-          <Text variant="footnote" color="label2" style={styles.note}>
-            {t('method.flooredNote')}
-          </Text>
-        ) : null}
-
-        <Section header={t('method.mphHeader')}>
-          <View style={styles.pad}>
-            <Mono>{mphText}</Mono>
+        <Section header={summary ? t('method.currentEstimate') : t('method.estimateAfterSetup')}>
+          <View style={styles.estimateCard}>
+            {summary ? (
+              <>
+                <Text variant="largeTitle" color="tint" tabular>{formatHeight(summary.estimateCm, unit)}</Text>
+                <Text variant="body" color="label2">{t('method.likelyRange')}: {formatHeightRange(summary.lowCm, summary.highCm, unit)}</Text>
+                <Text variant="footnote" color="label2">{t('method.estimateNotGuarantee', { method: t(METHODS.find((item) => item.id === summary.lead.method)?.titleKey ?? 'method.krHeader') })}</Text>
+              </>
+            ) : (
+              <Text variant="body" color="label2">{t('method.estimateAfterSetupBody')}</Text>
+            )}
           </View>
-          {mph ? <Row title={t('method.resultRow')} value={`${formatHeight(mph.estimateCm, unit)} ± ${n(mph.plusMinusCm)} cm`} /> : null}
+          {estimated ? (
+            <Text variant="footnote" color="label2" style={styles.inlineNote}>
+              {t('method.estimatedNote', {
+                parent: t(`result.lead.${estimated}`),
+                height: formatHeight(populationAdultHeightCm[estimated], unit),
+                sd: unit === 'cm'
+                  ? `${engine.adultHeightSdCm[estimated].toFixed(1)} cm`
+                  : `${(engine.adultHeightSdCm[estimated] / 2.54).toFixed(1)} in`,
+              })}
+            </Text>
+          ) : null}
+          {kr?.notes.includes('flooredAtCurrentHeight') ? (
+            <Text variant="footnote" color="label2" style={styles.inlineNote}>{t('method.flooredNote')}</Text>
+          ) : null}
         </Section>
 
-        {estimated ? (
-          <Text variant="footnote" color="label2" style={styles.note}>
-            {t('method.estimatedNote', {
-              parent: t(`result.lead.${estimated}`),
-              height: formatHeight(populationAdultHeightCm[estimated], unit),
-              sd: engine.adultHeightSdCm[estimated].toFixed(1),
-            })}
-          </Text>
-        ) : null}
+        {METHODS.map((definition) => {
+          const prediction = summary?.predictions.find((item) => item.method === definition.id);
+          const formula = definition.id === 'khamisRoche'
+            ? krFormula
+            : definition.id === 'midParental'
+              ? mphFormula
+              : t(definition.formulaKey);
+          return (
+            <MethodCard
+              key={definition.id}
+              definition={definition}
+              prediction={prediction}
+              summary={summary}
+              unit={unit}
+              formula={formula}
+              t={t}
+              calculationFooter={definition.id === 'khamisRoche' ? krSourcesNote : undefined}
+            />
+          );
+        })}
 
-        {proj && summary?.today ? (
-          <Section header={t('method.projHeader')}>
-            <View style={styles.pad}>
-              <Text variant="subhead">
-                {t('method.projBody', {
-                  ordinal: ordinal(displayPercentile(summary.today.percentile)),
-                  ref: summary.today.reference.toUpperCase(),
-                  value: formatHeight(proj.estimateCm, unit),
-                })}
-              </Text>
-            </View>
-          </Section>
-        ) : null}
-
-        <Section header={t('method.limitsHeader')} footer={t('method.framing')}>
-          <Row title={t('method.krAccuracy')} value={t('method.krAccuracyValue')} numberOfLines={2} />
-          <Row title={t('method.mphAccuracy')} value={t('method.mphAccuracyValue')} />
-          <Row title={t('method.validAges')} value={t('method.validAgesValue')} />
-          <Row title={t('method.pubertySigns')} value={t('method.pubertySignsValue')} />
-        </Section>
-
-        <Section header={t('method.sourcesHeader')}>
-          {[CITATIONS.khamisRoche, CITATIONS.midParental, CITATIONS.cdc, CITATIONS.who].map((cite) => (
-            <View key={cite} style={styles.cite}>
-              <Text variant="footnote" color="label2" selectable>
-                {cite}
-              </Text>
-            </View>
-          ))}
-        </Section>
-        <Text variant="footnote" color="label2" style={styles.note}>
-          {t('legal.disclaimer', { app: AppConfig.appName })}
-        </Text>
+        <SourcesAndLimits t={t} unit={unit} />
       </SheetScroll>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pad: { paddingHorizontal: space.margin, paddingVertical: 12 },
-  mono: { borderRadius: radius.field, padding: 0 },
-  note: { paddingHorizontal: space.margin * 2, marginTop: 10 },
-  cite: { paddingHorizontal: space.margin, paddingVertical: 10 },
+  screen: { flex: 1 },
+  estimateCard: { padding: space.margin, gap: 8 },
+  inlineNote: { paddingHorizontal: space.margin * 2, paddingVertical: 8 },
+  cardBody: { paddingHorizontal: space.margin, paddingTop: 14, paddingBottom: 4, gap: 12 },
+  range: { gap: 4 },
+  rangeLabel: { paddingTop: 4 },
+  unavailable: { paddingTop: 2 },
+  disclosure: {
+    minHeight: space.rowMinHeight,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: space.margin,
+    paddingVertical: 10,
+    gap: 12,
+  },
+  disclosureText: { flex: 1 },
+  expanded: { paddingHorizontal: space.margin, paddingBottom: 16, gap: 10 },
+  mono: { borderRadius: radius.field, padding: space.margin },
+  limitsContent: { paddingHorizontal: space.margin, paddingBottom: 16 },
+  sourcesHeading: { paddingTop: 12, paddingBottom: 4 },
+  citation: { paddingVertical: 7 },
+  disclaimer: { paddingTop: 10 },
 });
-

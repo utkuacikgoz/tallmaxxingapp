@@ -1,5 +1,9 @@
 # Decisions
 
+## Readable estimate explanation (2026-10-19)
+- The owner rejected the formula-heavy method sheet and its marketing screenshot. Lead with the actual estimate and range, then explain method inputs in plain language. Keep equations and sources optional but fully accessible; do not change prediction math or hide uncertainty.
+- The first four campaign screenshots and revised fifth (“Their estimate. Explained.”) are explicitly approved. Keep their order: free estimate, growth tracking, healthy habits, family profiles, explanation. Do not upload the rejected formula-heavy fifth.
+
 ## Async web database bridge (2026-10-19)
 - Async startup alone does not protect subsequent synchronous Expo SQLite queries from worker timeouts. Use Drizzle's async SQLite proxy adapter over the local Expo database on web, with the same schema, migration journal and change events. The proxy is an in-process adapter; no SQL or profile data is sent to a server. Keep native storage unchanged.
 - Fix the database operation instead of increasing walkthrough timeouts or retrying failed onboarding saves. Keep the loader's presentation delay on success while handling save errors immediately.

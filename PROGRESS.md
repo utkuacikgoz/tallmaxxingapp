@@ -47,6 +47,12 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 
 ## Completed waves
 
+### Estimate explanation redesign · 2026-10-19
+- Replaced the formula-first sheet with Behind the Estimate: current estimate and range first, then readable method cards. Actual equations and sources remain accessible behind collapsed disclosures, with selection feedback and accessible expanded states.
+- Retained unknown-parent and floor explanations, method availability, population limitations, and the distinction between projection bands and statistical ranges. Metric/imperial ranges use the shared formatters.
+- Native light/dark captures show readable ranges and no header overlap. Typecheck and all 36 mobile tests pass. The replacement fifth marketing screenshot uses this real collapsed screen and is explicitly approved with the first four; upload verification is in progress.
+- The web database correction merged as PR #14 after both exact-commit CI runs passed; main CI also passed.
+
 ### CI database worker correction · 2026-10-19
 - Investigated the failed PR walkthrough: Expo's synchronous web SQLite worker timed out while saving onboarding. The same commit's branch run passed, exposing a scheduling-dependent failure rather than a website build error.
 - Replaced the web-only synchronous Drizzle connection with a local async SQLite adapter and async bundled migrations. Native SQLite and its migrations remain unchanged. Initialization/migration failures use the existing error screen, and onboarding observes save rejection immediately.
