@@ -25,7 +25,7 @@ const webApplication = {
 const faqPage = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: copy.faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  mainEntity: c.faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
 ---
 <SiteLayout title={c.pageTitle} description={c.description} landing>
@@ -36,15 +36,14 @@ const faqPage = {
 
   <section class="landing-hero landing-wrap">
     <div class="hero-words">
-      <p class="landing-eyebrow"><span aria-hidden="true"></span>{c.eyebrow}</p>
+      <p class="landing-eyebrow">{c.eyebrow}</p>
       <h1>{c.titleStart}<br /><span>{c.titleEnd}</span></h1>
       <p class="hero-introduction">{c.introduction}</p>
       <div class="hero-actions">
-        <a class="landing-button" href="#coming-soon">{c.comingSoon}<span aria-hidden="true">↗</span></a>
+        <a class="landing-button" href="#coming-soon">{c.comingSoon}</a>
         <span class="platform-note">{c.availability}</span>
       </div>
-      <a class="landing-text-link hero-calculator" href="/height-predictor">{c.heroSecondary}<span aria-hidden="true">→</span></a>
-      <p class="hero-proof">{c.proof}</p>
+      <a class="landing-text-link hero-calculator" href="/height-predictor">{c.heroSecondary}</a>
     </div>
     <figure class="hero-product">
       <div class="product-stage">
@@ -55,33 +54,25 @@ const faqPage = {
         </div>
         <span class="stage-spark" aria-hidden="true">✳</span>
       </div>
-      <figcaption>{c.resultCaption}</figcaption>
     </figure>
   </section>
-
-  <div class="landing-trust landing-wrap">
-    {c.trust.map((item) => <p><span aria-hidden="true">✓</span>{item}</p>)}
-  </div>
 
   <section class="parent-story landing-wrap">
     <div class="story-photo"><Image src={parent} alt={c.photoAlt} width={640} widths={[400, 640, 960]} sizes="(max-width: 760px) 100vw, 45vw" format="webp" quality={85} loading="lazy" /></div>
     <div class="story-copy">
-      <p class="landing-eyebrow">{c.storyEyebrow}</p>
       <h2>{c.storyTitle}</h2>
       <p>{c.storyBody}</p>
-      <p class="story-note">{c.storyNote}</p>
     </div>
   </section>
 
   <section class="methods-section landing-wrap">
     <div class="methods-copy">
-      <p class="landing-eyebrow">{c.methodEyebrow}</p>
       <h2>{c.methodTitle}</h2>
       <p>{c.methodBody}</p>
-      <a class="landing-text-link" href="/method">{c.methodLink}<span aria-hidden="true">↗</span></a>
+      <a class="landing-text-link" href="/method">{c.methodLink}</a>
     </div>
     <div class="method-list">
-      {c.methodNames.map((name, index) => <a href="/method"><span class="method-number">0{index + 1}</span><h3>{name}</h3><span aria-hidden="true">↗</span></a>)}
+      {c.methodNames.map((name) => <a href="/method"><h3>{name}</h3></a>)}
       <p>{c.methodCaveat}</p>
     </div>
   </section>
@@ -95,7 +86,7 @@ const faqPage = {
       <div class="app-screens">
         {c.screens.map((screen, index) => <figure class={`screen-feature screen-feature-${index}`}>
           <div class="screen-stage"><div class="phone"><Image src={appScreens[index]} alt={screen.alt} width={300} widths={[300, 600]} sizes="(max-width: 760px) 250px, (max-width: 1000px) 24vw, 280px" format="webp" quality={90} loading="lazy" /></div></div>
-          <figcaption><span class="feature-number">{screen.number}</span><h3>{screen.title}</h3><p>{screen.body}</p></figcaption>
+          <figcaption><h3>{screen.title}</h3><p>{screen.body}</p></figcaption>
         </figure>)}
       </div>
       <p class="sample-note">{c.sampleNote}</p>
@@ -103,18 +94,17 @@ const faqPage = {
   </section>
 
   <section class="landing-faq landing-wrap">
-    <div><p class="landing-eyebrow">{c.faqEyebrow}</p><h2>{c.faqTitle}</h2></div>
+    <div><h2>{c.faqTitle}</h2></div>
     <div class="faq-questions">
-      {copy.faq.map(({ q, a }) => <details><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}
+      {c.faq.map(({ q, a }) => <details><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}
     </div>
   </section>
 
   <section class="coming-soon landing-wrap" id="coming-soon" aria-labelledby="coming-soon-title">
     <div class="launch-mark"><Image src={icon} alt="" width={64} height={64} format="webp" /></div>
-    <p class="landing-eyebrow">{c.launchEyebrow}</p>
     <h2 id="coming-soon-title">{c.launchTitle}</h2>
     <p class="launch-copy">{c.launchBody}</p>
-    <p class="launch-pill"><span aria-hidden="true"></span>{c.launchPill}</p>
-    <a class="landing-text-link" href="/height-predictor">{c.launchLink}<span aria-hidden="true">→</span></a>
+    <p class="launch-availability">{c.launchAvailability}</p>
+    <a class="landing-text-link" href="/height-predictor">{c.launchLink}</a>
   </section>
 </SiteLayout>

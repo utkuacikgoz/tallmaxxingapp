@@ -47,6 +47,13 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 
 ## Completed waves
 
+### Wave 13 · shorter landing copy and simpler controls
+- Removed decorative arrows from website navigation, links, method rows, and CTAs. Replaced capsule CTAs with modest rectangular corners and the launch pill with plain platform text.
+- Rewrote marketing copy around the free estimate and real app screens. Rendered homepage body fell from 417 to 205 words (50.8%); main content from 357 to 151 (57.7%). Counts exclude standalone symbols; with FAQs expanded, body copy fell from 494 to 235 words. Legal disclosures and calculator behavior remain intact.
+- Refreshed the social image to match the new headline. Astro check/build, nine-route browser smoke, and 320–1440 px layout checks pass.
+- App Store description now includes the live Terms of Use and Privacy Policy links; the saved field was reloaded and verified. No review submission was requested.
+- The owner activated Hostinger’s free email plan and created `support@tallsoon.pro`. The mailbox is active; Hostinger and public DNS verify MX, SPF, DKIM, and DMARC. Website DNS remains pointed to Vercel. Sending and receiving a test message remains a manual check.
+
 ### Wave 12 · public website and production links
 - Rebuilt the Astro landing page around the free estimate, real light-mode app captures, published methods, and an explicit coming-soon app CTA. Retained the working browser calculator.
 - Added mobile-app and website Privacy Policy, Terms of Use, Health Disclaimer, and Support for Bosphorus Elevate LLC; owner selected `support@tallsoon.pro`. The policy distinguishes local child records/backups/exports from RevenueCat purchase processing and Vercel hosting logs.

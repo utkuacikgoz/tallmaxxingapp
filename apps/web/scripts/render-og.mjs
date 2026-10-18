@@ -28,7 +28,7 @@ try {
     <p class="eyebrow">${escape(c.eyebrow)}</p>
     <h1>${escape(c.titleStart)}<br><span>${escape(c.titleEnd)}</span></h1>
     <p class="proof">${escape(c.proof)}</p>
-    <div class="launch"><span class="dot"></span>${escape(c.launchPill)}</div>
+    <div class="launch">${escape(c.launchTitle)} ${escape(c.launchAvailability)}</div>
     <div class="stage"></div><div class="orbit"></div>
     <div class="phone"><img src="${await asset('app-result')}" alt="${escape(c.resultAlt)}"></div>
     <span class="spark" aria-hidden="true">✳</span>

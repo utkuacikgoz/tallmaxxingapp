@@ -25,7 +25,7 @@ The app states limitations and advises users to consult a pediatrician before ma
 ## Before submitting
 
 - The public pages at `https://tallsoon.pro`, `/privacy`, `/terms`, `/support`, `/health-disclaimer`, and `/sitemap.xml` were verified live with HTTP 200; `www.tallsoon.pro` redirects to the apex domain.
-- Verify mail delivery for `support@tallsoon.pro`; the address is selected by the owner, but its MX/mail service is not verified.
+- Verify mail delivery for `support@tallsoon.pro`; the mailbox is active on Hostinger’s free plan and public MX, SPF, DKIM, and DMARC records are verified; end-to-end sending/receiving still needs a manual test.
 - Complete App Store sandbox purchase and restore validation for the configured RevenueCat products and offering.
 - Complete the privacy disclosure and app listing review, including owner/legal review of the public privacy policy and the age/content declarations.
 - Complete Apple agreements, financial/tax setup, and content-rights information where applicable. The GitHub/Fastlane TestFlight pipeline is configured; EAS credentials are optional for that pipeline.

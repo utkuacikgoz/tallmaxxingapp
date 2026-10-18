@@ -1,5 +1,9 @@
 # Decisions
 
+## Website copy and controls (2026-10-18)
+- The owner prefers website buttons and links without decorative arrows, and rectangular CTAs rather than pills. Keep platform availability as plain text.
+- Use short, concrete marketing copy and let actual app screens explain the product. Keep the full legal disclosures accessible separately rather than weakening them to meet a marketing word-count target.
+
 ## Public website launch (2026-10-18)
 - The owner purchased `tallsoon.pro`, selected Bosphorus Elevate LLC as operator and `support@tallsoon.pro` as contact, and requested Vercel hosting. Use the existing Astro app with Vercel rather than changing hosting providers or duplicating the site.
 - Keep domain registration and DNS authority at Hostinger; change website records only and preserve mail records. Point `www` visitors to the canonical apex.
