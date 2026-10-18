@@ -2,18 +2,32 @@
 
 Items below need access to the product owner's store, Expo, domain, or review accounts. No credentials, project identifiers, account links, or approvals have been invented.
 
-## EAS and native releases
+## iOS TestFlight release
 
 - [x] Created and verified `@utkuacikgoz/tallsoon`; configured its real owner and project ID as defaults in `apps/mobile/app.config.ts`. Environment overrides remain available. See `docs/TESTFLIGHT_SETUP.md`.
-- [ ] Configure real app-specific RevenueCat SDK keys for `EXPO_PUBLIC_RC_IOS_KEY` and `EXPO_PUBLIC_RC_ANDROID_KEY` in the EAS production environment. The production EAS build now fails during config evaluation if the key for its `EAS_BUILD_PLATFORM` is missing; only debug builds and web previews may simulate purchases. Native preview/release builds need platform-matching SDK keys to test billing; a missing key shows store-unavailable messaging.
-- [ ] Set up EAS iOS signing and App Store Connect access; confirm the actual bundle ID `app.tallsoon` is registered and select the correct app in EAS Submit.
+- [x] Verified the RevenueCat production iOS app record `app5829101f0b` in project `40ce0c3d` for bundle ID `com.belevate.tallsoon`, with both Apple credentials valid in RevenueCat. This does not verify the numeric Apple ID or TestFlight upload.
+- [ ] Add TallSoon's public iOS RevenueCat SDK key as GitHub Actions secret `EXPO_PUBLIC_RC_IOS_KEY`. It is currently not configured. This is a public app key, not a RevenueCat private API key. Keep other apps' keys separate.
+- [ ] Confirm the numeric App Store Connect Apple ID and set GitHub Actions variable `ASC_APP_ID`. Do not use RevenueCat app record ID `app5829101f0b` as the Apple ID.
+- [ ] Create/import the Apple Distribution signing identity and provide GitHub secrets `IOS_DISTRIBUTION_P12_BASE64` (PKCS#12 containing certificate and private key) and `IOS_DISTRIBUTION_P12_PASSWORD`.
+- [ ] Create an App Store Connect distribution provisioning profile for exact bundle ID `com.belevate.tallsoon`, team `9D78WTZAD8`, and the matching Apple Distribution certificate; add it as GitHub secret `IOS_PROVISIONING_PROFILE_BASE64`.
+- [ ] Add GitHub secrets `ASC_KEY_P8`, `ASC_KEY_ID`, and `ASC_ISSUER_ID` for the App Store Connect API key. The full PEM, key ID, and issuer ID are currently not configured. Never add Apple passwords or 2FA codes.
+- [x] Implemented the TestFlight workflow using a `macos-26` runner, Xcode (SDK 58 requires Xcode 26.4 or newer), Expo clean prebuild, CocoaPods, and Fastlane. It does not use EAS Build, EAS signing, or `EXPO_TOKEN`. No TestFlight upload has been completed.
+- [ ] Trigger the first successful CI-to-TestFlight run or dispatch it manually on `main`. Missing credentials should be reported before build. Wait for Apple's processing to confirm the build before treating it as available in TestFlight.
+
+Store-listing and billing screenshots do not block the first binary upload to TestFlight; complete any required screenshots and metadata before App Store review.
+
+## Optional EAS and Android releases
+
+- [ ] Configure `EXPO_PUBLIC_RC_IOS_KEY` and `EXPO_PUBLIC_RC_ANDROID_KEY` in EAS production only if using direct EAS production builds; the iOS EAS production key is currently absent. These are public SDK keys, not RevenueCat private API keys. A production EAS build fails if its platform key is missing.
 - [ ] Set up the Google Play app, signing, and EAS Submit service-account access; confirm package ID `app.tallsoon`. The production submit profile targets the Play **internal** track.
 - [ ] Verify EAS's initial remote build number after the first build; if the app already has a store build number, seed EAS with `eas build:version:set` before release. Production builds auto-increment developer-facing build numbers. Update the user-facing `version` in `app.config.ts` intentionally for each store release, and verify each build has the intended app variant and bundle/package identifier.
 - [ ] If the Play developer account is a personal account created after Nov 13, 2023, complete a closed test with at least 12 opted-in testers for 14 continuous days, then apply for production access. Confirm the account-specific requirement in Play Console ([Google's current testing requirements](https://support.google.com/googleplay/android-developer/answer/14151465)).
 
 ## Store products and RevenueCat
 
-- [ ] Create the RevenueCat project and connect the real App Store Connect and Play apps.
+- [x] Create the RevenueCat project, production iOS app record, and Apple credential connections. Verified record: project `40ce0c3d`, app `app5829101f0b`, iOS bundle `com.belevate.tallsoon`; both Apple credentials are valid.
+- [ ] Connect and verify the Android app in RevenueCat; its package remains `app.tallsoon`.
+- [ ] Keep RevenueCat private keys in RevenueCat. TestFlight uses only the public iOS SDK key stored in GitHub Actions; it is currently not configured.
 - [ ] Configure RevenueCat entitlements `pro` and `multi_child`, plus the `default` offering.
 - [ ] Put iOS subscription products in the intended single subscription group and verify upgrade/crossgrade behavior in the store sandbox.
 - [ ] Create iOS products `app.pro.weekly`, `app.family.annual`, and `app.family.annual.trial`.

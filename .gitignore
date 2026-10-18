@@ -18,3 +18,8 @@ apps/web/.astro/
 dist-ci/
 
 artifacts/
+
+.bundle/
+vendor/bundle/
+apps/mobile/build/
+apps/mobile/fastlane/report.xml

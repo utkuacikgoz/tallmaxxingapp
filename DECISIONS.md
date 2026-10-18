@@ -1,5 +1,10 @@
 # Decisions
 
+- **TestFlight builds run on GitHub macOS with Xcode and Fastlane** (owner approved). Expo prebuild
+  generates the native project locally on the runner. Signing uses a temporary keychain and an
+  existing Apple Distribution certificate/profile; uploads use a separate TallSoon App Store Connect
+  API key. EAS is optional and is not required by the TestFlight workflow.
+
 - **Browser preview tabs:** Expo SDK 58's browser native-tabs implementation overlays screen headers
   with a floating top menu. A web-only Expo Router bottom-tab layout preserves usable preview/QA.
   Native iOS/Android continue to use the agreed system native tabs.

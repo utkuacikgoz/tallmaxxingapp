@@ -35,6 +35,9 @@ jobs:
         run: pnpm --filter @tallsoon/mobile test --runInBand --watchman=false
       - name: Release configuration guards
         run: node scripts/check-release-config.js
+      - name: TestFlight release safety checks
+        run: |
+          node --test scripts/ci/testflight.test.mjs
       - name: Testimonials consent gate
         run: node apps/mobile/scripts/check-testimonials.js
       - name: Web bundle smoke test (Metro resolves every route)
@@ -63,3 +66,23 @@ jobs:
           name: mobile-web-qa
           path: artifacts/qa/
           if-no-files-found: ignore
+
+  release-tools:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      FASTLANE_SKIP_UPDATE_CHECK: '1'
+      FASTLANE_HIDE_CHANGELOG: '1'
+      FASTLANE_OPT_OUT_USAGE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: apps/mobile
+      - name: Check signing profile guards and load the Fastlane lane
+        working-directory: apps/mobile
+        run: |
+          bundle exec ruby ../../scripts/ci/signing_test.rb
+          bundle exec fastlane lanes

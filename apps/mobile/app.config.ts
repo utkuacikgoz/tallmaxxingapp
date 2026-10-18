@@ -5,6 +5,7 @@ const IS_DEV = process.env.APP_VARIANT === 'development';
 const IS_PREVIEW = process.env.APP_VARIANT === 'preview';
 
 const bundleId = IS_DEV ? 'app.tallsoon.dev' : IS_PREVIEW ? 'app.tallsoon.preview' : 'app.tallsoon';
+const iosBundleId = IS_DEV || IS_PREVIEW ? bundleId : 'com.belevate.tallsoon';
 
 function validateProductionRevenueCatKey() {
   if (process.env.APP_VARIANT !== 'production' || process.env.EAS_BUILD !== 'true') return;
@@ -31,7 +32,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     icon: './assets/images/icon.png',
     userInterfaceStyle: 'automatic',
     ios: {
-      bundleIdentifier: bundleId,
+      bundleIdentifier: iosBundleId,
+      appleTeamId: '9D78WTZAD8',
       supportsTablet: false,
       config: { usesNonExemptEncryption: false },
       infoPlist: {

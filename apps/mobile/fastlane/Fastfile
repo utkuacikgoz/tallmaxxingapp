@@ -1,0 +1,57 @@
+require 'base64'
+require 'fileutils'
+require 'open3'
+require 'securerandom'
+require 'plist'
+require_relative 'signing'
+
+default_platform(:ios)
+
+platform :ios do
+  desc 'Archive the production app and upload this IPA to TestFlight'
+  lane :beta do
+    mobile = File.expand_path('..', __dir__)
+    signing_dir = File.join(ENV.fetch('RUNNER_TEMP'), 'tallsoon-signing')
+    FileUtils.mkdir_p(signing_dir, mode: 0700)
+    keychain = File.join(signing_dir, 'distribution.keychain-db')
+    keychain_password = SecureRandom.hex(32)
+    installed_profile = nil
+    begin
+      p12 = File.join(signing_dir, 'distribution.p12')
+      profile_path = File.join(signing_dir, 'distribution.mobileprovision')
+      File.binwrite(p12, Base64.strict_decode64(ENV.fetch('IOS_DISTRIBUTION_P12_BASE64').gsub(/\s/, '')), perm: 0600)
+      File.binwrite(profile_path, Base64.strict_decode64(ENV.fetch('IOS_PROVISIONING_PROFILE_BASE64').gsub(/\s/, '')), perm: 0600)
+      decoded, status = Open3.capture2e('security', 'cms', '-D', '-i', profile_path)
+      UI.user_error!('Cannot decode the provisioning profile') unless status.success?
+      profile = TallSoonSigning.validate_profile!(Plist.parse_xml(decoded))
+      profile_dir = File.expand_path('~/Library/MobileDevice/Provisioning Profiles')
+      FileUtils.mkdir_p(profile_dir)
+      installed_profile = File.join(profile_dir, "#{profile.fetch('UUID')}.mobileprovision")
+      FileUtils.cp(profile_path, installed_profile)
+      create_keychain(path: keychain, password: keychain_password, unlock: true, timeout: 7200, require_create: true)
+      import_certificate(certificate_path: p12, certificate_password: ENV.fetch('IOS_DISTRIBUTION_P12_PASSWORD'), keychain_path: keychain, keychain_password: keychain_password)
+      api_key = app_store_connect_api_key(key_id: ENV.fetch('ASC_KEY_ID'), issuer_id: ENV.fetch('ASC_ISSUER_ID'), key_content: ENV.fetch('ASC_KEY_P8'), duration: 1200, in_house: false)
+      project = File.join(mobile, 'ios/TallSoon.xcodeproj')
+      version = get_version_number(xcodeproj: project, target: 'TallSoon')
+      number = latest_testflight_build_number(api_key: api_key, app_identifier: TallSoonSigning::BUNDLE_ID, version: version, platform: 'ios', initial_build_number: 0) + 1
+      increment_build_number(xcodeproj: project, build_number: number)
+      update_code_signing_settings(path: project, targets: ['TallSoon'], build_configurations: ['Release'], use_automatic_signing: false, team_id: TallSoonSigning::TEAM_ID, code_sign_identity: 'Apple Distribution', profile_uuid: profile.fetch('UUID'), bundle_identifier: TallSoonSigning::BUNDLE_ID)
+      ipa = build_app(workspace: File.join(mobile, 'ios/TallSoon.xcworkspace'), scheme: 'TallSoon', configuration: 'Release', clean: true, export_method: 'app-store', export_team_id: TallSoonSigning::TEAM_ID, output_directory: File.join(mobile, 'build'), output_name: 'TallSoon.ipa', export_options: { signingStyle: 'manual', provisioningProfiles: { TallSoonSigning::BUNDLE_ID => profile.fetch('UUID') } })
+      upload_to_testflight(api_key: api_key, apple_id: ENV.fetch('ASC_APP_ID'), app_identifier: TallSoonSigning::BUNDLE_ID, ipa: ipa, skip_waiting_for_build_processing: false, wait_processing_timeout_duration: 1200, distribute_external: false, skip_submission: true, submit_beta_review: false)
+      processed = Spaceship::ConnectAPI::Build.all(app_id: ENV.fetch('ASC_APP_ID'), version: version, build_number: number.to_s, platform: 'IOS')
+      UI.user_error!('Apple returned an ambiguous build result') unless processed.length == 1
+      TallSoonSigning.validate_build!(processed.first, app_id: ENV.fetch('ASC_APP_ID'), version: version, number: number)
+      File.open(ENV.fetch('GITHUB_STEP_SUMMARY'), 'a') do |file|
+        file.puts("Apple processed TallSoon #{version} (#{number}). [Open TestFlight](https://appstoreconnect.apple.com/apps/#{ENV.fetch('ASC_APP_ID')}/testflight/ios). No public release or tester invitations were requested.")
+      end
+    ensure
+      begin
+        delete_keychain(keychain_path: keychain) if File.exist?(keychain)
+      ensure
+        FileUtils.rm_f(installed_profile) if installed_profile
+        FileUtils.rm_rf(signing_dir)
+        FileUtils.rm_rf(File.expand_path('~/.appstoreconnect/private_keys'))
+      end
+    end
+  end
+end

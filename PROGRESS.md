@@ -148,6 +148,24 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Apple signing, subscription products, RevenueCat iOS credentials/key and TestFlight upload are
   not complete. See `docs/TESTFLIGHT_SETUP.md` for identifiers and the remaining sequence.
 
+### Automated TestFlight setup · 2026-10-18
+- Corrected production iOS identity to the user-configured `com.belevate.tallsoon`, verified in
+  RevenueCat app `app5829101f0b`; both Apple credential checks there are valid. Android and debug/
+  preview identifiers remain unchanged. Apple team is `9D78WTZAD8`.
+- Owner chose GitHub macOS/Xcode/Fastlane instead of EAS Build. Workflow runs after successful
+  main-push CI or manual dispatch on main; missing prerequisites skip the paid macOS build.
+- Clean Expo prebuild generates the native project. Locked CocoaPods/Fastlane dependencies,
+  temporary signing keychain, explicit production profile mapping, Apple-derived build numbers,
+  exact IPA upload and bounded Apple processing wait are configured. No public release or invites.
+- Seven GitHub secrets and numeric `ASC_APP_ID` are required; no Expo token or EAS environment
+  is needed for this pipeline. Credentials were absent when checked; actual signed archive/upload
+  and device verification remain pending. See `docs/TESTFLIGHT_SETUP.md` for exact setup steps.
+- Added Apple JWT/app-identity and signing-profile regression checks; rejected sandbox SDK keys,
+  wrong-team/bundle, expired, development, ad hoc and enterprise profiles. An explicit final
+  check requires Apple state `VALID` for the exact app/version/build/platform; Fastlane alone
+  treats failed processing as finished. Clean production prebuild, Fastlane lane loading, mobile
+  typecheck and lint passed (34 existing lint warnings, no errors).
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 

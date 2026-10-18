@@ -16,12 +16,13 @@ for (const platform of ['ios', 'android']) {
   const env = { APP_VARIANT: 'production', EAS_BUILD: 'true', EAS_BUILD_PLATFORM: platform };
   assert.throws(() => config(env), new RegExp(key));
   assert.throws(() => config({ ...env, [key]: '   ' }), new RegExp(key));
-  assert.equal(config({ ...env, [key]: 'test-public-sdk-key' })[platform][platform === 'ios' ? 'bundleIdentifier' : 'package'], 'app.tallsoon');
+  assert.equal(config({ ...env, [key]: 'test-public-sdk-key' })[platform][platform === 'ios' ? 'bundleIdentifier' : 'package'], platform === 'ios' ? 'com.belevate.tallsoon' : 'app.tallsoon');
 }
 assert.throws(() => config({ APP_VARIANT: 'production', EAS_BUILD: 'true' }), /EAS_BUILD_PLATFORM/);
 assert.equal(config({ APP_VARIANT: 'preview', EAS_BUILD: 'true' }).ios.bundleIdentifier, 'app.tallsoon.preview');
 assert.equal(config({ APP_VARIANT: 'development' }).ios.bundleIdentifier, 'app.tallsoon.dev');
-assert.equal(config({}).ios.bundleIdentifier, 'app.tallsoon');
+assert.equal(config({}).ios.bundleIdentifier, 'com.belevate.tallsoon');
+assert.equal(config({}).ios.appleTeamId, '9D78WTZAD8');
 const eas = JSON.parse(fs.readFileSync('apps/mobile/eas.json', 'utf8'));
 assert.equal(eas.build.production.env.APP_VARIANT, 'production');
 assert.equal(eas.build.development.developmentClient, true);
