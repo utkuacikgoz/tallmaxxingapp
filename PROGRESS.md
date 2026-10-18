@@ -55,6 +55,7 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Validation: Astro check/build and nine-route browser smoke pass; calculator regressions, legal/support links, all responsive images, and 320–1440 px overflow checks pass. Mobile lint has zero errors and 33 existing warnings; release guards pass. Email delivery is not yet verified (no MX records at audit time).
 - Separate App Store creative revisions remain approval drafts and are not uploaded as part of the website release.
 - Verified production: `https://tallsoon.pro` and all legal/support routes return HTTPS 200 with the expected content; `www` redirects to the canonical apex. Added explicit CLI deployment exclusions so local native build products, drafts, dependencies, and credentials cannot enter a Vercel upload.
+- App Store Connect URLs and `2026 Bosphorus Elevate LLC` copyright are saved and reopened for verification; version 1.0.0 has build 2 selected. The privacy disclosure was observed already published, with Purchase History for App Functionality and Analytics, not linked and not tracked. No disclosure publication or review submission was performed during this website work. Vercel confirms `main` as its production branch.
 
 ### Wave 1 · browser QA and layout fixes
 - Light and dark walkthroughs pass with no browser console errors. Prototype comparison and native

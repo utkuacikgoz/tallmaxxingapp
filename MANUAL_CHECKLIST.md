@@ -41,10 +41,11 @@ The TestFlight binary is available to the owner. Store listing screenshots and t
 
 ## Store declarations and public information
 
-- [ ] Deploy and verify `https://tallsoon.pro`, `/privacy`, `/terms`, and `/support` return HTTP 200 before using them for store submission. These are the configured URLs; deployment/live response has not yet been confirmed.
+- [x] Deploy and verify `https://tallsoon.pro`, `/privacy`, `/terms`, `/support`, `/health-disclaimer`, and `/sitemap.xml` return HTTP 200; `www.tallsoon.pro` redirects to the apex domain.
+- [x] Save and reopen the App Store listing fields: marketing URL `https://tallsoon.pro`, support URL `https://tallsoon.pro/support`, privacy URL `https://tallsoon.pro/privacy`, copyright `2026 Bosphorus Elevate LLC`, and build 2 (`1.0.0`).
 - [ ] Verify mail delivery for `support@tallsoon.pro`; the owner chose this address, but its MX/mail service has not been verified.
-- [ ] Complete the current App Store age rating, privacy disclosures, subscription metadata, and review notes.
-- [ ] Publish the App Store privacy disclosure only after owner/legal review; its current draft remains unpublished.
+- [ ] Complete owner/legal review of the published App Store privacy disclosure and verify it against final SDK behavior and the live privacy policy. App Store Connect currently labels it published. The visible summary is Purchase History, not linked to identity, used for App Functionality and Analytics, and not used for tracking.
+- [ ] Complete the remaining App Store age rating, subscription metadata, and review notes.
 - [ ] Complete App Store agreement, banking, tax, and content-rights owner steps as applicable; do not accept a new binding agreement without owner action.
 - [ ] Complete Play's target audience/content rating, Health apps declaration, Data safety form, Ads declaration, and Advertising ID declaration from the final binary and current SDK disclosures. Use `PLAY_DECLARATIONS.md` as a draft only.
 - [ ] Verify the final Android manifest contains no `com.google.android.gms.permission.AD_ID` permission.

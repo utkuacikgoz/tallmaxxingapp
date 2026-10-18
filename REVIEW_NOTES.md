@@ -12,6 +12,8 @@ TallSoon provides an on-device estimate of adult height from the information ent
 
 No reviewer account or sign-in credentials are required. Child profiles and prediction inputs are processed locally; the app sends subscription and purchase information to RevenueCat using its anonymous app user ID. It does not send child names, ages, heights, weights, or parent measurements to RevenueCat. The App Store products and RevenueCat offering are configured, but purchase and restore behavior still needs App Store sandbox validation. Do not add sandbox credentials to App Review Information; no account is required to review the free estimate and methods.
 
+The App Store Connect version 1.0.0 listing currently has build 2 selected, marketing URL `https://tallsoon.pro`, support URL `https://tallsoon.pro/support`, privacy URL `https://tallsoon.pro/privacy`, and copyright `2026 Bosphorus Elevate LLC`. The App Privacy page currently says “Published”; its visible summary lists Purchase History as not linked to identity, used for App Functionality and Analytics, and not used for tracking. Owner/legal review against the final SDK behavior and live policy is still required.
+
 ## Method references
 
 - Kuczmarski RJ et al. *2000 CDC Growth Charts for the United States: Methods and Development.* Vital and Health Statistics, Series 11, No. 246, 2002. The app bundles CDC stature-for-age LMS data; see [`packages/reference/SOURCES.md`](packages/reference/SOURCES.md) for provenance and validation.
@@ -22,7 +24,7 @@ The app states limitations and advises users to consult a pediatrician before ma
 
 ## Before submitting
 
-- Verify the configured public pages at `https://tallsoon.pro`, `https://tallsoon.pro/privacy`, `https://tallsoon.pro/terms`, and `https://tallsoon.pro/support` are deployed and return HTTP 200. They are configured URLs, not yet verified as live.
+- The public pages at `https://tallsoon.pro`, `/privacy`, `/terms`, `/support`, `/health-disclaimer`, and `/sitemap.xml` were verified live with HTTP 200; `www.tallsoon.pro` redirects to the apex domain.
 - Verify mail delivery for `support@tallsoon.pro`; the address is selected by the owner, but its MX/mail service is not verified.
 - Complete App Store sandbox purchase and restore validation for the configured RevenueCat products and offering.
 - Complete the privacy disclosure and app listing review, including owner/legal review of the public privacy policy and the age/content declarations.

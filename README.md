@@ -24,9 +24,9 @@ The web app can be used for development and scripted QA with `cd apps/mobile && 
 The static Astro site shares the mobile prediction engine and English catalog. Run `pnpm web` for
 local development, `pnpm --filter @tallsoon/web build` to export `apps/web/dist`, and
 `pnpm --filter @tallsoon/web test:e2e` for browser checks after installing Chromium with
-`pnpm exec playwright install chromium`. The site is configured for `https://tallsoon.pro`, with
-`/privacy`, `/terms`, and `/support` pages. Deployment and live URL checks are still pending; do not
-treat those URLs as published until the owner verifies HTTP 200 responses.
+`pnpm exec playwright install chromium`. The site is live at `https://tallsoon.pro`; `/privacy`,
+`/terms`, `/support`, `/health-disclaimer`, and `/sitemap.xml` were verified to return HTTP 200,
+with `www.tallsoon.pro` redirecting to the apex domain.
 
 ## Check the project
 
@@ -57,4 +57,4 @@ The production profile uses [EAS remote build-number management](https://docs.ex
 
 The **TestFlight** GitHub Actions workflow targets a `macos-26` runner with Xcode, clean Expo prebuild, CocoaPods, and Fastlane archive/upload. It runs after successful `CI` runs from pushes to `main` and supports manual dispatch on `main`. It checks the Apple app and signing/API inputs before building, then uploads the archive to App Store Connect and confirms Apple's processing status. Missing setup skips the build; failed or unconfirmed processing fails the workflow. This path does not use EAS Build, EAS credentials, or `EXPO_TOKEN`. Version `1.0.0 (2)` was processed and installed by the owner from TestFlight. See [TestFlight setup](docs/TESTFLIGHT_SETUP.md).
 
-See [REVIEW_NOTES.md](REVIEW_NOTES.md), [PLAY_DECLARATIONS.md](PLAY_DECLARATIONS.md), and [MANUAL_CHECKLIST.md](MANUAL_CHECKLIST.md) before preparing store submissions. The configured public URLs are `https://tallsoon.pro`, `https://tallsoon.pro/privacy`, `https://tallsoon.pro/terms`, and `https://tallsoon.pro/support`; confirm the pages are deployed and return HTTP 200 before submitting the app. The support contact is `support@tallsoon.pro`; its mail delivery has not been verified.
+See [REVIEW_NOTES.md](REVIEW_NOTES.md), [PLAY_DECLARATIONS.md](PLAY_DECLARATIONS.md), and [MANUAL_CHECKLIST.md](MANUAL_CHECKLIST.md) before preparing store submissions. App Store Connect now has marketing URL `https://tallsoon.pro`, support URL `https://tallsoon.pro/support`, privacy URL `https://tallsoon.pro/privacy`, copyright `2026 Bosphorus Elevate LLC`, and build 2 (`1.0.0`) selected. The privacy disclosure currently appears as published in App Store Connect; its visible label lists Purchase History as not linked to identity, used for App Functionality and Analytics, and not used for tracking. Owner/legal review, screenshots, billing sandbox validation, and review submission remain pending. The support contact is `support@tallsoon.pro`; its mail delivery has not been verified.
