@@ -39,18 +39,21 @@ export default function Loader() {
     progress.value = withTiming(1, { duration: TOTAL_MS, easing: Easing.inOut(Easing.cubic) });
     const timers = steps.map((_, i) => setTimeout(() => setActive(i + 1), ((i + 1) * TOTAL_MS) / steps.length));
     let cancelled = false;
-    const save = commitDraft();
-    const done = setTimeout(async () => {
-      try {
-        await save;
+    let done: ReturnType<typeof setTimeout> | undefined;
+    const delay = new Promise<void>((resolve) => { done = setTimeout(resolve, TOTAL_MS + 150); });
+    // Observe save failures immediately, including ones before the presentation delay finishes.
+    void Promise.all([commitDraft(), delay]).then(
+      () => {
         if (cancelled) return;
         analytics.track('onboarding_step_completed', { step: 'loader' });
         router.replace({ pathname: '/result', params: { reveal: '1' } });
-      } catch {
+      },
+      () => {
+        if (cancelled) return;
         showBanner({ title: t('errors.genericTitle'), subtitle: t('errors.genericBody'), icon: 'info', tone: 'gray' });
         router.back();
-      }
-    }, TOTAL_MS + 150);
+      },
+    );
     // The loader can't be backed out of mid-way (Android back is swallowed).
     const sub = Platform.OS === 'android' ? BackHandler.addEventListener('hardwareBackPress', () => true) : null;
     return () => {

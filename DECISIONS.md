@@ -1,5 +1,9 @@
 # Decisions
 
+## Async web database bridge (2026-10-19)
+- Async startup alone does not protect subsequent synchronous Expo SQLite queries from worker timeouts. Use Drizzle's async SQLite proxy adapter over the local Expo database on web, with the same schema, migration journal and change events. The proxy is an in-process adapter; no SQL or profile data is sent to a server. Keep native storage unchanged.
+- Fix the database operation instead of increasing walkthrough timeouts or retrying failed onboarding saves. Keep the loader's presentation delay on success while handling save errors immediately.
+
 ## Website copy and controls (2026-10-18)
 - The owner prefers website buttons and links without decorative arrows, and rectangular CTAs rather than pills. Keep platform availability as plain text.
 - Use short, concrete marketing copy and let actual app screens explain the product. Keep the full legal disclosures accessible separately rather than weakening them to meet a marketing word-count target.

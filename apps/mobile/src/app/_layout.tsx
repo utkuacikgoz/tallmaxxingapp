@@ -1,7 +1,6 @@
 import '@/i18n';
 
 import { Nunito_600SemiBold, Nunito_700Bold, useFonts } from '@expo-google-fonts/nunito';
-import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -12,6 +11,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { db, initDb } from '@/db/client';
+import { useMigrations } from '@/db/useMigrations';
 import migrations from '../../drizzle/migrations';
 import { useAppLifecycle } from '@/features/app/lifecycle';
 import { useT } from '@/i18n';
@@ -23,13 +23,32 @@ import { Text } from '@/ui/Text';
 
 void SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
-/** Waits for the database (instant on native; an async warm-up on web). */
+/** Waits for the database (instant on native; an asynchronous local connection on web). */
 export default function RootLayout() {
   const [dbReady, setDbReady] = useState(false);
+  const [dbError, setDbError] = useState<Error>();
   useEffect(() => {
-    void initDb().then(() => setDbReady(true));
+    let cancelled = false;
+    void initDb().then(
+      () => { if (!cancelled) setDbReady(true); },
+      (error: unknown) => { if (!cancelled) setDbError(error instanceof Error ? error : new Error(String(error))); },
+    );
+    return () => { cancelled = true; };
   }, []);
+  if (dbError) return <DatabaseError />;
   return dbReady ? <App /> : null;
+}
+
+function DatabaseError() {
+  const { c } = useTheme();
+  const t = useT();
+  useEffect(() => { void SplashScreen.hideAsync().catch(() => undefined); }, []);
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32, backgroundColor: c.bg }}>
+      <Text variant="headline" align="center">{t('errors.genericTitle')}</Text>
+      <Text variant="subhead" color="label2" align="center" style={{ marginTop: 8 }}>{t('errors.genericBody')}</Text>
+    </View>
+  );
 }
 
 function App() {
@@ -62,16 +81,7 @@ function App() {
 
   if (!ready) return null;
   if (migration.error) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32, backgroundColor: c.bg }}>
-        <Text variant="headline" align="center">
-          {t('errors.genericTitle')}
-        </Text>
-        <Text variant="subhead" color="label2" align="center" style={{ marginTop: 8 }}>
-          {t('errors.genericBody')}
-        </Text>
-      </View>
-    );
+    return <DatabaseError />;
   }
 
   const sheet = {

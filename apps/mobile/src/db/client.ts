@@ -11,5 +11,5 @@ sqlite.execSync('PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;');
 export const db = drizzle(sqlite, { schema });
 export type Db = typeof db;
 
-/** Native opens synchronously; web needs an async warm-up first (see client.web.ts). */
+/** Native opens synchronously; web uses an asynchronous local adapter (see client.web.ts). */
 export async function initDb(): Promise<void> {}

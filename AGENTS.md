@@ -25,7 +25,7 @@ apps/mobile/            Expo SDK 58, RN 0.88, expo-router (routes in src/app), T
                         SegmentedControl, Banner, Sheet, Icon, Celebrate, Layout). Reuse these; don't add new primitives casually
   src/features/         onboarding draft/flow, result, paywall, growth chart, plan habits, child data hooks
   src/services/         entitlements (RevenueCat + mock), notifications, pdf, files, links, haptics, analytics (no-op)
-  src/db/               Drizzle schema, migrations (drizzle/), repos; client.web.ts = web-only async warm-up
+  src/db/               Drizzle schema, migrations (drizzle/), repos; client.web.ts = local async web adapter
   src/state/            Zustand + MMKV settings
   src/i18n/en.ts        ALL user-facing copy. Teen variants use the `_teen` suffix (useT() picks them)
   src/theme/            tokens (§13.2), type scale (HIG / Material 3)
@@ -87,8 +87,9 @@ cd apps/mobile && npx drizzle-kit generate     # after any schema change
   attribution in commits, PRs, code comments or docs.** Work on a branch and keep CI green.
 
 ## 5. Gotchas already solved (don't reintroduce)
-- **Web uses expo-sqlite's async warm-up** (`src/db/client.web.ts`); its sync open times out while
-  WASM loads. Native uses `client.ts`.
+- **Web uses an asynchronous local SQLite adapter** (`src/db/client.web.ts`) and platform migration
+  hook. Expo's synchronous worker bridge can time out on writes even after WASM loads. Keep web
+  queries asynchronous; native retains the synchronous Expo driver in `client.ts`.
 - **Skia (react-native-fast-confetti) crashes on web** without CanvasKit, so `src/ui/Celebrate.web.tsx`
   returns null.
 - **`BackHandler` is Android-only.** Guard it with `Platform.OS === 'android'`.

@@ -47,6 +47,11 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 
 ## Completed waves
 
+### CI database worker correction · 2026-10-19
+- Investigated the failed PR walkthrough: Expo's synchronous web SQLite worker timed out while saving onboarding. The same commit's branch run passed, exposing a scheduling-dependent failure rather than a website build error.
+- Replaced the web-only synchronous Drizzle connection with a local async SQLite adapter and async bundled migrations. Native SQLite and its migrations remain unchanged. Initialization/migration failures use the existing error screen, and onboarding observes save rejection immediately.
+- Extended the browser walkthrough to verify measurement writes, live query updates, reload persistence, replacement transactions, exported data, and persisted habit checks. Enhanced light/dark walkthroughs pass with no console errors; 35 mobile tests pass, workspace typechecks pass, and lint has no errors. GitHub CI verification is pending for this correction.
+
 ### Wave 13 · shorter landing copy and simpler controls
 - Removed decorative arrows from website navigation, links, method rows, and CTAs. Replaced capsule CTAs with modest rectangular corners and the launch pill with plain platform text.
 - Rewrote marketing copy around the free estimate and real app screens. Rendered homepage body fell from 417 to 205 words (50.8%); main content from 357 to 151 (57.7%). Counts exclude standalone symbols; with FAQs expanded, body copy fell from 494 to 235 words. Legal disclosures and calculator behavior remain intact.
