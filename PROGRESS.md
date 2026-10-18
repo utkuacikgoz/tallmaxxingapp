@@ -219,6 +219,16 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 - Polish PR #10 merged after both CI runs passed. Its automatic archive was canceled before upload
   so the next build can include this privacy declaration correction.
 
+### Native large-title contrast · 2026-10-18
+- Native screenshot capture exposed invisible large tab titles after switching to dark appearance.
+  Use SDK 58’s native system header appearance rather than forced transparency/blur and an opaque
+  large-title background, which the installed implementation flags as hiding titles on iOS 26.
+  Explicitly apply the theme label color to the separate large-title style. Native iOS 26.5
+  screenshots verify visible Today titles in light and dark after the fix; typecheck/lint pass.
+- App Store 1.0.0 listing text, app name/subtitle/category, placeholder URLs and review notes have
+  been saved and revisited in App Store Connect. App Privacy draft is saved; Apple's binding Publish
+  attestation awaits owner confirmation. Copyright/reviewer contact and approved screenshots remain.
+
 ## QA harness
 Screenshots and console logs go to ignored `artifacts/qa/` (override with `QA_OUTPUT`). Install Chromium with `pnpm exec playwright install chromium`.
 

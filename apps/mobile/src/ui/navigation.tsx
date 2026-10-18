@@ -11,14 +11,12 @@ export function useLargeTitleOptions(): NativeStackNavigationOptions {
   const ios = Platform.OS === 'ios';
   return {
     headerLargeTitle: true,
-    headerTransparent: ios,
-    headerBlurEffect: ios ? 'systemChromeMaterial' : undefined,
     headerLargeTitleShadowVisible: false,
     headerShadowVisible: !ios,
-    headerLargeStyle: { backgroundColor: c.bg },
     headerStyle: ios ? undefined : { backgroundColor: c.bg },
     headerTintColor: c.tint,
     headerTitleStyle: { color: c.label },
+    headerLargeTitleStyle: { color: c.label },
     headerBackTitle: t('common.back'),
     contentStyle: { backgroundColor: c.bg },
   };

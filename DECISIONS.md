@@ -1,5 +1,9 @@
 # Decisions
 
+- **iOS headers use SDK 58’s native system appearance.** Forced transparency, blur and opaque
+  large-title backgrounds hid titles on iOS 26. Keep the system appearance and apply theme text
+  colors explicitly; Android retains its themed background.
+
 - **Device feedback takes precedence over the prototype for readability.** Puberty signs are sorted
   by displayed label; None/Not sure stay separate. Helper copy is shortened without removing method
   limitations, privacy assurances or subscription disclosures. Shared buttons provide light feedback;

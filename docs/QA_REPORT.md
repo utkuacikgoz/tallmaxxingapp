@@ -46,3 +46,8 @@ light run and dark run both passed. Shared API props were checked against instal
 Workspace TypeScript, 49 engine, 58 content and 32 mobile tests pass; lint has zero errors and 33
 existing warnings. Physical haptic feel, store transactions and full VoiceOver/TalkBack testing
 remain device checks; TestFlight does not display Apple's review prompt.
+
+The native store-capture pass also found blank large tab titles. The shared navigation helper now
+uses SDK 58's native system appearance without forced transparency/blur or an opaque large-title
+background. Fresh iOS 26.5 light/dark captures confirm the Today title is visible. The original
+forced background was specifically incompatible with the installed iOS 26 header path.
