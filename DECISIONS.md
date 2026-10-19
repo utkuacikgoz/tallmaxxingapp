@@ -1,5 +1,8 @@
 # Decisions
 
+## Website typography matches Psst (2026-10-19)
+- The owner requested typography similar to psstapp.fun. Reuse its licensed self-hosted Inter Tight family and heavy headline hierarchy, with readable supporting text. Preserve TallSoon's established colors, approved short copy and arrow-free rectangular controls.
+
 ## Readable estimate explanation (2026-10-19)
 - The owner rejected the formula-heavy method sheet and its marketing screenshot. Lead with the actual estimate and range, then explain method inputs in plain language. Keep equations and sources optional but fully accessible; do not change prediction math or hide uncertainty.
 - The first four campaign screenshots and revised fifth (“Their estimate. Explained.”) are explicitly approved. Keep their order: free estimate, growth tracking, healthy habits, family profiles, explanation. Do not upload the rejected formula-heavy fifth.

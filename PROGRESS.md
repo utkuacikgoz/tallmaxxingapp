@@ -47,6 +47,13 @@ The product spec is `docs/BRIEF.md`; the approved prototype screenshots are in `
 
 ## Completed waves
 
+### Website typography refinement · 2026-10-19
+- Matched Psst's actual self-hosted Inter Tight font family: black-weight headlines, semibold lead text and bold navigation. Improved type sizing and tracking without changing the approved copy, imagery, colors or rectangular controls.
+- Included the original SIL OFL license and font copyright. Updated the social-image renderer to use the same local fonts and wait for loading.
+- Astro check/build and all nine route checks pass. Font loading and overflow checks pass from 320 to 1440 px, including calculator, method and privacy pages. Homepage text remains byte-for-byte unchanged. Production verification follows deployment.
+- All five approved campaign screenshots are uploaded in the intended order for both iPhone display sizes. App Store Connect API verified ten assets in COMPLETE state. The genuine subscription paywall review image remains missing; the available local simulator uses mock prices and the owner's physical iPhone is unavailable.
+- PR #15 merged and TestFlight 1.0.0 (5) finished Apple processing in workflow run 39152983063. It includes the redesigned estimate screen used by the approved fifth screenshot.
+
 ### Estimate explanation redesign · 2026-10-19
 - Replaced the formula-first sheet with Behind the Estimate: current estimate and range first, then readable method cards. Actual equations and sources remain accessible behind collapsed disclosures, with selection feedback and accessible expanded states.
 - Retained unknown-parent and floor explanations, method availability, population limitations, and the distinction between projection bands and statistical ranges. Metric/imperial ranges use the shared formatters.

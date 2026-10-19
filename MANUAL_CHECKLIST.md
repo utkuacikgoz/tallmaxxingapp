@@ -13,9 +13,11 @@ Items below need access to the product owner's store, Expo, domain, or review ac
 - [x] Configured GitHub secrets `ASC_KEY_P8`, `ASC_KEY_ID`, and `ASC_ISSUER_ID` for the App Store Connect API key. Never add Apple passwords or 2FA codes.
 - [x] Implemented the TestFlight workflow with a `macos-26` runner, Xcode, Expo clean prebuild, CocoaPods, and Fastlane. It does not use EAS Build, EAS signing, or `EXPO_TOKEN`.
 - [x] Uploaded version `1.0.0 (2)` in workflow run `39126029888`; Apple processed it and the owner installed it from TestFlight.
+- [x] Uploaded version `1.0.0 (5)` in workflow run `39152983063`; Apple finished processing it. This build includes the redesigned estimate explanation screen.
+- [x] Owner approved all five campaign screenshots; uploaded in order for both iPhone display sizes, with all ten assets reporting COMPLETE.
 - [ ] Complete native billing and restore tests with the App Store sandbox. Purchase, restore, cancellation/renewal and subscription edge cases remain pending.
 
-The TestFlight binary is available to the owner. Store listing screenshots and the subscription review screenshot remain pending; the new screenshot set has not been approved or uploaded. Complete required screenshots and metadata before App Store review.
+The TestFlight binary and approved store listing screenshots are available. The genuine subscription paywall review screenshot remains pending. Capture it from the store-connected TestFlight app; the local simulator currently uses mock prices. Complete subscription metadata and native purchase validation before App Store review.
 
 ## Optional EAS and Android releases
 
