@@ -21,7 +21,10 @@ export function refreshReminders(): Promise<void> {
 
 async function refreshReminderState() {
   const settings = useSettings.getState();
-  const status = useEntitlementStore.getState().status;
+  const entitlement = useEntitlementStore.getState();
+  // Wait for cached CustomerInfo before replacing a schedule from the previous launch.
+  if (!entitlement.ready) return;
+  const status = entitlement.status;
   const kids = await childrenRepo.list();
   const child = kids.find((k) => k.id === settings.activeChildId) ?? kids[0];
   if (!child) {
@@ -60,7 +63,7 @@ export function useAppLifecycle(dbReady: boolean) {
       if (state === 'active') void refreshReminders().catch(() => undefined);
     });
     const unsub = useEntitlementStore.subscribe((st, prev) => {
-      if (st.status.isPro !== prev.status.isPro || st.status.isTrial !== prev.status.isTrial || st.status.expiresAt !== prev.status.expiresAt) void refreshReminders().catch(() => undefined);
+      if (st.ready !== prev.ready || st.status.isPro !== prev.status.isPro || st.status.isTrial !== prev.status.isTrial || st.status.expiresAt !== prev.status.expiresAt) void refreshReminders().catch(() => undefined);
     });
     const settingsSub = useSettings.subscribe((st, prev) => {
       if (st.activeChildId !== prev.activeChildId || st.reminders !== prev.reminders || st.planStartedOn !== prev.planStartedOn) {

@@ -103,7 +103,7 @@ export function syncReminderSchedule(input: PlanReminderInput | null): Promise<v
     const model: ReminderPlanInput = {
       now, pro: input?.pro ?? false, bedtime: input?.bedtime ?? '21:00',
       reminders: settings.reminders, lastMeasuredOn: input?.lastMeasuredOn ?? null,
-      remeasureOn: settings.remeasureReminderAt, trialEndsAt: input?.trial?.endsAt ?? null,
+      remeasureOn: input ? settings.remeasureReminderAt : null, trialEndsAt: input?.trial?.endsAt ?? null,
       planStartedOn: settings.planStartedOn, hasCheckedHabit: input?.hasCheckedHabit ?? true,
       spentToday: elapsed.length,
     };
