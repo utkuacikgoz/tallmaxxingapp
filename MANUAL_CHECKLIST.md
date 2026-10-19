@@ -15,9 +15,11 @@ Items below need access to the product owner's store, Expo, domain, or review ac
 - [x] Uploaded version `1.0.0 (2)` in workflow run `39126029888`; Apple processed it and the owner installed it from TestFlight.
 - [x] Uploaded version `1.0.0 (5)` in workflow run `39152983063`; Apple finished processing it. This build includes the redesigned estimate explanation screen.
 - [x] Owner approved all five campaign screenshots; uploaded in order for both iPhone display sizes, with all ten assets reporting COMPLETE.
-- [ ] Complete native billing and restore tests with the App Store sandbox. Purchase, restore, cancellation/renewal and subscription edge cases remain pending.
+- [x] Owner reported a successful sandbox purchase on 2026-10-19. This is owner confirmation, not an automated transaction test.
+- [ ] Complete remaining native billing tests: restore, cancellation, renewal, trial eligibility and subscription edge cases.
+- [x] Uploaded the genuine full-size paywall capture for Weekly, Annual and Annual Trial; all three review assets are COMPLETE. Product-specific reviewer notes explain plan selection and the opt-in trial. All three subscriptions are READY_TO_SUBMIT; no review submission was made.
 
-The TestFlight binary and approved store listing screenshots are available. The genuine subscription paywall review screenshot remains pending. Capture it from the store-connected TestFlight app; the local simulator currently uses mock prices. Complete subscription metadata and native purchase validation before App Store review.
+The TestFlight binary, five approved listing screenshots and three genuine subscription review images are available. Complete the remaining native billing checks and owner submission steps before App Store review.
 
 ## Optional EAS and Android releases
 

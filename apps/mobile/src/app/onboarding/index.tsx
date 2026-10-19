@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppIcon } from '@/features/brand/AppIcon';
@@ -34,6 +34,35 @@ export default function Welcome() {
   const t = useT();
   const insets = useSafeAreaInsets();
   const { c } = useTheme();
+  const { fontScale, height } = useWindowDimensions();
+  const scrollActions = fontScale >= 1.5 || height < 600;
+
+  const footer = (
+    <BottomBar style={scrollActions ? { paddingHorizontal: 0, marginTop: 24 } : undefined}>
+      <Button
+        testID="welcome-start"
+        title={t('welcome.cta')}
+        onPress={() => {
+          useDraft.getState().reset({ mode: 'first' });
+          analytics.track('onboarding_started');
+          router.push('/onboarding/role');
+        }}
+      />
+      <Text variant="footnote" color="label2" align="center" style={styles.legal}>
+        {t('welcome.legal1')}
+        {'\n'}
+        {t('welcome.legal2')}
+        <Text variant="footnote" color="tint" onPress={() => openLegal('terms')} accessibilityRole="link" suppressHighlighting>
+          {t('welcome.terms')}
+        </Text>
+        {t('welcome.and')}
+        <Text variant="footnote" color="tint" onPress={() => openLegal('privacy')} accessibilityRole="link" suppressHighlighting>
+          {t('welcome.privacy')}
+        </Text>
+        .
+      </Text>
+    </BottomBar>
+  );
 
   return (
     <View style={[styles.root, { backgroundColor: c.bg }]}>
@@ -53,31 +82,9 @@ export default function Welcome() {
           <Feature icon="function" title={t('welcome.f2Title')} body={t('welcome.f2Body')} />
           <Feature icon="shield" title={t('welcome.f3Title')} body={t('welcome.f3Body')} />
         </View>
+        {scrollActions ? footer : null}
       </ScrollView>
-      <BottomBar>
-        <Button
-          testID="welcome-start"
-          title={t('welcome.cta')}
-          onPress={() => {
-            useDraft.getState().reset({ mode: 'first' });
-            analytics.track('onboarding_started');
-            router.push('/onboarding/role');
-          }}
-        />
-        <Text variant="footnote" color="label2" align="center" style={styles.legal}>
-          {t('welcome.legal1')}
-          {'\n'}
-          {t('welcome.legal2')}
-          <Text variant="footnote" color="tint" onPress={() => openLegal('terms')} accessibilityRole="link" suppressHighlighting>
-            {t('welcome.terms')}
-          </Text>
-          {t('welcome.and')}
-          <Text variant="footnote" color="tint" onPress={() => openLegal('privacy')} accessibilityRole="link" suppressHighlighting>
-            {t('welcome.privacy')}
-          </Text>
-          .
-        </Text>
-      </BottomBar>
+      {scrollActions ? null : footer}
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { Pressable, Text as NativeText, View } from 'react-native';
+import { Dimensions, Pressable, Text as NativeText, View } from 'react-native';
 import { act, fireEvent, render, waitFor, within } from '@testing-library/react-native';
 
 jest.mock('expo-router', () => {
@@ -64,6 +64,26 @@ const offer: Offering = {
 };
 
 describe('paywall purchase disclosure', () => {
+  it.each([1, 2.5])('keeps a single actionable purchase disclosure at font scale %s', async (fontScale) => {
+    const original = Dimensions.get('window');
+    Dimensions.set({ window: { width: 390, height: 844, scale: 3, fontScale } });
+    jest.spyOn(entitlements, 'getOffering').mockResolvedValue(offer);
+    try {
+      const ui = await render(<Paywall />);
+      await ui.findByTestId('plan-annual');
+      expect(ui.getAllByTestId('paywall-cta')).toHaveLength(1);
+      expect(ui.getAllByTestId('paywall-terms')).toHaveLength(1);
+      await fireEvent(ui.getByTestId('trial-toggle'), 'valueChange', true);
+      expect(ui.getByTestId('paywall-cta').props.accessibilityLabel).toBe('Start 7-Day Free Trial');
+      await fireEvent.press(ui.getByTestId('plan-weekly'));
+      expect(ui.getByTestId('paywall-cta').props.accessibilityLabel).toBe('Start My Growth Plan · $4.99/week');
+      expect(ui.getByTestId('paywall-terms').props.children).toContain('Billed $4.99 every week.');
+      await ui.unmount();
+    } finally {
+      Dimensions.set({ window: original });
+    }
+  });
+
   beforeEach(() => {
     jest.spyOn(entitlements, 'getOffering').mockResolvedValue(offer);
   });

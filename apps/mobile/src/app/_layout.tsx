@@ -13,6 +13,7 @@ import { useReducedMotion } from 'react-native-reanimated';
 import { db, initDb } from '@/db/client';
 import { useMigrations } from '@/db/useMigrations';
 import migrations from '../../drizzle/migrations';
+import { useNotificationRouting } from '@/features/app/notification-routing';
 import { useAppLifecycle } from '@/features/app/lifecycle';
 import { useT } from '@/i18n';
 import { startEntitlements } from '@/services/entitlements';
@@ -70,6 +71,7 @@ function App() {
   }, [ready]);
 
   useAppLifecycle(migration.success);
+  useNotificationRouting(ready && migration.success);
 
   const navTheme = useMemo(() => {
     const base = isDark ? DarkTheme : DefaultTheme;

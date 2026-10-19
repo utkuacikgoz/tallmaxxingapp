@@ -88,10 +88,9 @@ export const Button = memo(function Button({
           {leading}
           <Text
             variant={isPlain ? 'body' : 'headline'}
-            style={{ color: textColor, fontSize: isPlain ? typeScale.body.fontSize : typeScale.headline.fontSize }}
+            style={{ color: textColor, fontSize: isPlain ? typeScale.body.fontSize : typeScale.headline.fontSize, flexShrink: 1 }}
             weight={isPlain ? '400' : '600'}
             align="center"
-            numberOfLines={2}
           >
             {title}
           </Text>
@@ -114,5 +113,5 @@ const styles = StyleSheet.create({
   },
   full: { alignSelf: 'stretch' },
   plain: { minHeight: minTouch, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8, alignSelf: 'center' },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 8, maxWidth: '100%' },
 });

@@ -1,5 +1,5 @@
 import { Children, Fragment, isValidElement, memo, type ReactNode } from 'react';
-import { Platform, Pressable, StyleSheet, Switch, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, Switch, View, useWindowDimensions, type StyleProp, type ViewStyle } from 'react-native';
 
 import { radius, space, useTheme } from '@/theme';
 import { haptics } from '@/services/haptics';
@@ -133,12 +133,14 @@ export const Row = memo(function Row({
 }: RowProps) {
   const { c } = useTheme();
   const isSwitch = onSwitch != null;
+  const { fontScale } = useWindowDimensions();
+  const stackedSwitch = isSwitch && fontScale >= 1.5;
   const titleColor = destructive ? c.red : tint ? c.tint : dimTitle ? c.label2 : c.label;
 
   const content = (
-    <View style={[styles.row, centered && styles.centered]}>
+    <View style={[styles.row, stackedSwitch && styles.stackedRow, centered && styles.centered]}>
       {icon ? <IconTile name={icon} tone={iconTone} /> : null}
-      <View style={[styles.texts, centered && { alignItems: 'center' }]}>
+      <View style={[styles.texts, stackedSwitch && styles.stackedTexts, centered && { alignItems: 'center' }]}>
         <Text variant="body" style={{ color: titleColor }} align={centered ? 'center' : undefined} numberOfLines={numberOfLines}>
           {title}
         </Text>
@@ -156,6 +158,7 @@ export const Row = memo(function Row({
       {trailing}
       {isSwitch ? (
         <Switch
+          style={[styles.switch, stackedSwitch && styles.stackedSwitch]}
           value={!!switchValue}
           onValueChange={(nextValue) => {
             if (haptic === 'light') haptics.light();
@@ -239,8 +242,12 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     gap: 14,
   },
+  stackedRow: { flexDirection: 'column', alignItems: 'stretch' },
+  stackedTexts: { flex: 0 },
+  stackedSwitch: { alignSelf: 'flex-end' },
   centered: { justifyContent: 'center' },
   texts: { flex: 1, gap: 2 },
+  switch: { alignSelf: 'center', flexShrink: 0 },
   value: { flexShrink: 1, maxWidth: '50%' },
   checkSlot: { width: 20, alignItems: 'center' },
 });

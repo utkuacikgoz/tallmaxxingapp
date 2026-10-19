@@ -56,7 +56,7 @@ export default function Success() {
         showBanner({ title: t('success.reminderSet'), subtitle: t('success.reminderSetSub', { time: formatClock(bedtime) }), icon: 'moon' });
       }
     } else {
-      s.set({ reminders: { ...s.reminders, bedtime: false } });
+      s.set({ reminders: { ...s.reminders, bedtime: false, morning: false, checkin: false } });
     }
     haptics.success();
     router.replace('/(tabs)/today');

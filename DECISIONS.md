@@ -1,5 +1,9 @@
 # Decisions
 
+## Switch row alignment (2026-10-19)
+- The installed React Native iOS Switch applies alignSelf:flex-start internally. Explicitly center it within its row rather than adding a vertical transform or fixed offset. Apply the same correction to shared rows so wrapped labels and accessibility sizes remain aligned.
+- Subscription review uses the owner's genuine, unedited full-size paywall capture. Reviewer notes distinguish the default annual view, weekly selection and opt-in trial; do not present an off toggle as an active trial or replace store prices with generated content.
+
 ## Website typography matches Psst (2026-10-19)
 - The owner requested typography similar to psstapp.fun. Reuse its licensed self-hosted Inter Tight family and heavy headline hierarchy, with readable supporting text. Preserve TallSoon's established colors, approved short copy and arrow-free rectangular controls.
 
@@ -69,3 +73,10 @@ Choices made where the brief left room, or where the brief was deliberately depa
 - **Result exit for free users:** a plain "Maybe Later" button under the CTA, shown only on first reveal, leads to the tabs. The result stays reachable from Growth.
 - **Web DB:** expo-sqlite's first synchronous open times out in browsers while WebAssembly loads, so `client.web.ts` warms up with an async open first. Native is unchanged.
 - **Typed routes are off** to keep CI independent of `expo start`'s type generation.
+
+### Notification frequency and activation · 2026-10-19
+- Use dated local requests over a rolling 28-day window, plus distant measurement/trial notices, rather than independent repeats. A unified planner can enforce two slots per local date and prioritize trial/measurement notices over routine prompts. The schedule uses at most 58 requests; routine prompts stop after prolonged absence and refill on the next app opening. No push server or child-data analytics is introduced.
+- Keep an on-device ledger of scheduled times. Elapsed slots consume today’s allowance even if dismissed or delayed, preventing repeated refreshes or setting changes from adding a third slot. This is a conservative scheduling cap, not a guarantee about the OS’s actual delivery time.
+- Activation is one reminder the morning after plan setup, replacing the routine morning prompt, respecting the morning opt-out and cancelled once a habit is checked. Avoid a separate stream of Day 3/7 notifications.
+- Route only allowlisted internal destinations after data/navigation initialization; keep compatibility with existing notification identifiers. Reuse the real store price for the same trial expiry offline. Respect the setup opt-out for all routine reminders.
+- At expanded Dynamic Type, purchase actions belong in scrollable content and billed prices stack below plan titles. Shared buttons must wrap their complete labels; shared settings switches move below the label when text needs the width.

@@ -874,6 +874,8 @@ const en = {
   },
 
   notifications: {
+    firstHabit: 'One small step today. Open the plan and check off their first habit.',
+    firstHabit_teen: 'One small step today. Open your plan and check off your first habit.',
     channelReminders: 'Reminders',
     channelReminderDesc: 'Bedtime, morning plan and check-in reminders',
     trialTitle: 'Your free trial ends in 2 days',

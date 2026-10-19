@@ -2,7 +2,7 @@ import * as Notifications from 'expo-notifications';
 import { AndroidImportance } from 'expo-notifications';
 import { Platform } from 'react-native';
 
-import { addDays, addMonths, ageInYears, toIsoDate } from '@tallsoon/engine';
+import { addMonths, ageInYears, toIsoDate } from '@tallsoon/engine';
 import { notificationLines, resolveCopy, type Copy } from '@tallsoon/content';
 
 import { AppConfig } from '@/config/app-config';
@@ -10,12 +10,9 @@ import { planVars } from '@/features/plan/vars';
 import { tr } from '@/i18n';
 import { analytics } from '@/services/analytics';
 import { useSettings } from '@/state/settings';
+import { buildReminderPlan, reminderRoute, type ReminderLedger, type ReminderPlanInput } from './reminder-plan';
 
-/**
- * Local notifications only: no push server, no token (brief §5.1). Permission is asked only from a
- * user action after the first result (brief §12.4). At most 2 a day: on Sundays the weekly score
- * replaces the morning plan.
- */
+/** Local-only reminders. Permission is requested from an explicit action after the first result. */
 
 const CHANNEL = 'reminders';
 const isNative = Platform.OS === 'ios' || Platform.OS === 'android';
@@ -65,122 +62,89 @@ function line(lines: Copy[], seed: number, vars: Record<string, string>): string
   return resolveCopy(pick(lines, seed), role === 'teen' ? 'teen' : 'parent', vars);
 }
 
-function minusMinutes(hhmm: string, minutes: number): { hour: number; minute: number } {
-  const [h, m] = hhmm.split(':').map(Number) as [number, number];
-  const total = (h * 60 + m - minutes + 24 * 60) % (24 * 60);
-  return { hour: Math.floor(total / 60), minute: total % 60 };
-}
-
-function atTime(dateIso: string, hour: number, minute: number): Date {
-  const [y, mo, d] = dateIso.split('-').map(Number) as [number, number, number];
-  return new Date(y, mo - 1, d, hour, minute, 0);
-}
-
-const IDS = {
-  bedtime: 'plan.bedtime',
-  morning: (weekday: number) => `plan.morning.${weekday}`,
-  weekly: 'plan.weekly',
-  checkin: 'plan.checkin',
-  trial: 'sub.trial',
-  remeasure: 'free.remeasure',
-};
-
-async function cancel(ids: string[]) {
-  await Promise.all(ids.map((id) => Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined)));
-}
-
 export interface PlanReminderInput {
+  pro: boolean;
   childName: string;
   birthDate: string;
   bedtime: string;
-  /** Latest measurement date, for the next check-in. */
   lastMeasuredOn: string | null;
+  hasCheckedHabit: boolean;
+  trial: { endsAt: string; price: string } | null;
 }
 
-/** (Re)schedules Pro reminders from settings. Safe to call often; rotates the copy each time. */
-export async function schedulePlanReminders(input: PlanReminderInput): Promise<void> {
-  if (!isNative || (await notificationPermission()) !== 'granted') return;
-  const { reminders } = useSettings.getState();
-  const seed = Math.floor(Date.now() / 86_400_000);
-  const age = ageInYears(input.birthDate, toIsoDate(new Date()));
-  const vars = { ...planVars(age, input.bedtime), name: input.childName, bedtime: input.bedtime };
+// Serialize permission, settings, lifecycle and habit updates so schedules cannot interleave.
+let scheduleQueue: Promise<void> = Promise.resolve();
+function serialize(work: () => Promise<void>): Promise<void> {
+  const result = scheduleQueue.then(work);
+  scheduleQueue = result.catch(() => undefined);
+  return result;
+}
 
-  await cancel([IDS.bedtime, IDS.weekly, IDS.checkin, ...[1, 2, 3, 4, 5, 6, 7].map(IDS.morning)]);
+function owned(id: string) {
+  return id.startsWith('reminder.') || id.startsWith('plan.') || id === 'sub.trial' || id === 'free.remeasure';
+}
 
-  if (reminders.bedtime) {
-    const { hour, minute } = minusMinutes(input.bedtime, 30);
-    await Notifications.scheduleNotificationAsync({
-      identifier: IDS.bedtime,
-      content: { title: AppConfig.appName, body: line(notificationLines.bedtime, seed, vars) },
-      trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour, minute, channelId: CHANNEL },
-    });
-  }
-  if (reminders.morning) {
-    const [hour, minute] = reminders.morningTime.split(':').map(Number) as [number, number];
-    // Monday–Saturday (weekday 2–7; 1 = Sunday). Sunday gets the weekly score instead.
-    for (const weekday of [2, 3, 4, 5, 6, 7]) {
-      await Notifications.scheduleNotificationAsync({
-        identifier: IDS.morning(weekday),
-        content: { title: AppConfig.appName, body: line(notificationLines.morning, seed + weekday, vars) },
-        trigger: { type: Notifications.SchedulableTriggerInputTypes.WEEKLY, weekday, hour, minute, channelId: CHANNEL },
-      });
+/** Replaces legacy repeats with at most 58 dated requests (below iOS's 64-request limit). */
+export function syncReminderSchedule(input: PlanReminderInput | null): Promise<void> {
+  return serialize(async () => {
+    if (!isNative) return;
+    const now = new Date();
+    const today = toIsoDate(now);
+    const settings = useSettings.getState();
+    // Keep today's elapsed slots even if a notification was dismissed. Settings changes must not
+    // create a third slot later that day. Counting a delayed/undelivered slot is conservative.
+    const elapsed = settings.reminderLedger.filter((slot) => new Date(slot.at).getTime() <= now.getTime() && toIsoDate(new Date(slot.at)) === today);
+    const pending = await Notifications.getAllScheduledNotificationsAsync();
+    for (const request of pending) {
+      if (owned(request.identifier)) await Notifications.cancelScheduledNotificationAsync(request.identifier);
     }
-    await Notifications.scheduleNotificationAsync({
-      identifier: IDS.weekly,
-      content: { title: AppConfig.appName, body: line(notificationLines.weekly, seed, vars) },
-      trigger: { type: Notifications.SchedulableTriggerInputTypes.WEEKLY, weekday: 1, hour: 18, minute: 0, channelId: CHANNEL },
-    });
-  }
-  if (reminders.checkin) {
-    const base = input.lastMeasuredOn ?? toIsoDate(new Date());
-    let due = addMonths(base, reminders.checkinMonths);
-    const today = toIsoDate(new Date());
-    if (due <= today) due = addDays(today, 1);
-    await Notifications.scheduleNotificationAsync({
-      identifier: IDS.checkin,
-      content: { title: AppConfig.appName, body: line(notificationLines.checkin, seed, vars) },
-      trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: atTime(due, 18, 0), channelId: CHANNEL },
-    });
-  }
+    settings.set({ reminderLedger: elapsed });
+    if ((await notificationPermission()) !== 'granted') return;
+    const model: ReminderPlanInput = {
+      now, pro: input?.pro ?? false, bedtime: input?.bedtime ?? '21:00',
+      reminders: settings.reminders, lastMeasuredOn: input?.lastMeasuredOn ?? null,
+      remeasureOn: settings.remeasureReminderAt, trialEndsAt: input?.trial?.endsAt ?? null,
+      planStartedOn: settings.planStartedOn, hasCheckedHabit: input?.hasCheckedHabit ?? true,
+      spentToday: elapsed.length,
+    };
+    const age = input ? ageInYears(input.birthDate, today) : 13;
+    const vars = { ...planVars(age, model.bedtime), name: input?.childName ?? tr('family.unnamed'), bedtime: model.bedtime };
+    const seed = Math.floor(now.getTime() / 86_400_000);
+    const ledger: ReminderLedger[] = [...elapsed];
+    for (const slot of buildReminderPlan(model)) {
+      let title: string = AppConfig.appName;
+      let body: string;
+      if (slot.kind === 'activation') body = tr('notifications.firstHabit');
+      else if (slot.kind === 'trial') {
+        if (!input?.trial) continue;
+        title = tr('notifications.trialTitle');
+        const date = new Date(input.trial.endsAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
+        body = tr('notifications.trialBody', { date, price: input.trial.price });
+      } else body = line(notificationLines[slot.kind], seed + slot.at.getDay(), vars);
+      await Notifications.scheduleNotificationAsync({
+        identifier: slot.id,
+        content: { title, body, data: { url: reminderRoute(slot.id, undefined) } },
+        trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: slot.at, channelId: CHANNEL },
+      });
+      ledger.push({ at: slot.at.toISOString() });
+      settings.set({ reminderLedger: [...ledger] });
+    }
+  });
 }
 
-export async function cancelPlanReminders() {
-  if (!isNative) return;
-  await cancel([IDS.bedtime, IDS.weekly, IDS.checkin, ...[1, 2, 3, 4, 5, 6, 7].map(IDS.morning)]);
-}
-
-/** Free users: one re-measure reminder in 3 months (brief §12.4). Asks permission (user action). */
-export async function scheduleRemeasureReminder(childName = ''): Promise<boolean> {
+/** Free users explicitly opt in to a single three-month reminder. */
+export async function scheduleRemeasureReminder(): Promise<boolean> {
   if ((await requestNotificationPermission()) !== 'granted') return false;
   const due = addMonths(toIsoDate(new Date()), AppConfig.freeRemeasureMonths);
-  await Notifications.scheduleNotificationAsync({
-    identifier: IDS.remeasure,
-    content: { title: AppConfig.appName, body: line(notificationLines.remeasure, 0, { name: childName || tr('family.unnamed') }) },
-    trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: atTime(due, 18, 0), channelId: CHANNEL },
-  });
   useSettings.getState().set({ remeasureReminderAt: due });
-  return true;
+  return true; // The caller refreshes using the current entitlement, including an upgrade in flight.
 }
 
-/** Trial reminder 2 days before conversion (brief §5.6). Cancelled if the trial is gone. */
-export async function syncTrialReminder(trialEndsAt: string | null, price: string | null) {
-  if (!isNative) return;
-  await cancel([IDS.trial]);
-  if (!trialEndsAt || !price || (await notificationPermission()) !== 'granted') return;
-  const endIso = trialEndsAt.slice(0, 10);
-  const remindOn = addDays(endIso, -AppConfig.trialReminderDaysBefore);
-  const when = atTime(remindOn, 10, 0);
-  if (when.getTime() <= Date.now()) return;
-  const date = new Date(endIso).toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
-  await Notifications.scheduleNotificationAsync({
-    identifier: IDS.trial,
-    content: { title: tr('notifications.trialTitle'), body: tr('notifications.trialBody', { date, price }), data: { url: 'tallsoon://family' } },
-    trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: when, channelId: CHANNEL },
+/** Delete All Data also removes every scheduled reminder. */
+export function cancelAllNotifications(): Promise<void> {
+  return serialize(async () => {
+    if (!isNative) return;
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    useSettings.getState().set({ reminderLedger: [], reminderTrial: null });
   });
-}
-
-/** Delete All Data also removes every scheduled reminder (brief §2 F6). */
-export async function cancelAllNotifications() {
-  if (!isNative) return;
-  await Notifications.cancelAllScheduledNotificationsAsync();
 }

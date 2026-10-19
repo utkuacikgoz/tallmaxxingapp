@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Switch, View } from 'react-native';
+import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, Share, StyleSheet, Switch, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppConfig } from '@/config/app-config';
@@ -34,6 +34,7 @@ function PlanCard({
   per,
   onPress,
   testID,
+  stacked,
 }: {
   selected: boolean;
   title: string;
@@ -43,8 +44,18 @@ function PlanCard({
   per: string;
   onPress: () => void;
   testID: string;
+  stacked: boolean;
 }) {
   const { c } = useTheme();
+  // Keep the complete billed amount visible when the system text size needs more space.
+  const priceLabel = (
+    <View style={[styles.priceCol, stacked && styles.priceColStacked]}>
+      <Text style={[styles.price, { color: c.label }]} tabular>
+        {price}
+        <Text variant="subhead" color="label2" style={{ fontWeight: '400' }}>{per}</Text>
+      </Text>
+    </View>
+  );
   return (
     <Pressable
       testID={testID}
@@ -73,19 +84,13 @@ function PlanCard({
             </Text>
           </View>
         ) : null}
+        {stacked ? priceLabel : null}
         <Text variant="subhead" color="label2">
           {sub}
         </Text>
       </View>
       {/* The billed amount is always the most prominent price (brief §11.6, App Store 3.1.2). */}
-      <View style={styles.priceCol}>
-        <Text style={[styles.price, { color: c.label }]} tabular>
-          {price}
-          <Text variant="subhead" color="label2" style={{ fontWeight: '400' }}>
-            {per}
-          </Text>
-        </Text>
-      </View>
+      {stacked ? null : priceLabel}
     </Pressable>
   );
 }
@@ -94,6 +99,8 @@ export default function Paywall() {
   const t = useT();
   const { c } = useTheme();
   const insets = useSafeAreaInsets();
+  const { fontScale, height } = useWindowDimensions();
+  const scrollActions = fontScale >= 1.5 || height < 600;
   const params = useLocalSearchParams<{ context?: PaywallContext }>();
   const role = useSettings((s) => s.role);
   const [offering, setOffering] = useState<Offering | null>(null);
@@ -193,9 +200,29 @@ export default function Paywall() {
     ['doc', t('paywall.inc4')],
   ];
 
+  const footer = (
+    <View style={[styles.footer, scrollActions && styles.inlineFooter, { borderTopColor: c.separator, paddingBottom: Math.max(insets.bottom, 12), backgroundColor: c.sheetBg }]}>
+      <Button testID="paywall-cta" title={cta} disabled={!offering} loading={busy} onPress={() => void buy()} />
+      {terms ? (
+        <Text variant="footnote" color="label2" align="center" style={styles.terms} testID="paywall-terms">{terms}</Text>
+      ) : null}
+      <View style={styles.links}>
+        {[
+          { label: t('paywall.restore'), onPress: () => void restore(), role: 'button' as const },
+          { label: t('paywall.terms'), onPress: () => openLegal('terms'), role: 'link' as const },
+          { label: t('paywall.privacy'), onPress: () => openLegal('privacy'), role: 'link' as const },
+        ].map(({ label, onPress, role }) => (
+          <Pressable key={label} onPress={onPress} accessibilityRole={role} hitSlop={4} style={styles.link}>
+            <Text variant="subhead" color="tint">{label}</Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+
   return (
     <View style={[styles.root, { backgroundColor: c.cover }]} testID="paywall">
-      <BubbleBackground top={insets.top} />
+      {scrollActions ? null : <BubbleBackground top={insets.top} />}
 
       {/* Close X: top-right, visible from the first frame, 44×44 hit area (brief §13.6). */}
       <Pressable
@@ -211,7 +238,7 @@ export default function Paywall() {
         </View>
       </Pressable>
 
-      <View style={[styles.sheet, { backgroundColor: c.sheetBg, top: insets.top + 118 }]}>
+      <View style={[styles.sheet, { backgroundColor: c.sheetBg, top: insets.top + (scrollActions ? 54 : 118) }]}>
         <ScrollView contentContainerStyle={styles.sheetContent} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <AppIcon size={52} />
@@ -251,6 +278,7 @@ export default function Paywall() {
               <PlanCard
                 testID="plan-annual"
                 selected={plan === 'annual'}
+                stacked={scrollActions}
                 title={t('paywall.annual')}
                 badge={save != null ? t('paywall.badge', { pct: save }) : null}
                 sub={t('paywall.annualSub', { perWeek })}
@@ -264,6 +292,7 @@ export default function Paywall() {
               <PlanCard
                 testID="plan-weekly"
                 selected={plan === 'weekly'}
+                stacked={scrollActions}
                 title={t('paywall.weekly')}
                 sub={t('paywall.weeklySub')}
                 price={weekly?.priceString ?? ''}
@@ -279,6 +308,7 @@ export default function Paywall() {
                     {t('paywall.trial')}
                   </Text>
                   <Switch
+                    style={styles.switch}
                     testID="trial-toggle"
                     value={trial}
                     onValueChange={(v) => {
@@ -321,29 +351,9 @@ export default function Paywall() {
             {t('paywall.reassure')}
           </Text>
           {role === 'teen' ? <Button variant="plain" title={t('paywall.askParent')} onPress={askParent} testID="ask-parent" /> : null}
+          {scrollActions ? footer : null}
         </ScrollView>
-
-        <View style={[styles.footer, { borderTopColor: c.separator, paddingBottom: Math.max(insets.bottom, 12), backgroundColor: c.sheetBg }]}>
-          <Button testID="paywall-cta" title={cta} disabled={!offering} loading={busy} onPress={() => void buy()} />
-          {terms ? (
-            <Text variant="footnote" color="label2" align="center" style={styles.terms} testID="paywall-terms">
-              {terms}
-            </Text>
-          ) : null}
-          <View style={styles.links}>
-            {[
-              { label: t('paywall.restore'), onPress: () => void restore(), role: 'button' as const },
-              { label: t('paywall.terms'), onPress: () => openLegal('terms'), role: 'link' as const },
-              { label: t('paywall.privacy'), onPress: () => openLegal('privacy'), role: 'link' as const },
-            ].map(({ label, onPress, role }) => (
-              <Pressable key={label} onPress={onPress} accessibilityRole={role} hitSlop={4} style={styles.link}>
-                <Text variant="subhead" color="tint">
-                  {label}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
+        {scrollActions ? null : footer}
       </View>
     </View>
   );
@@ -379,14 +389,18 @@ const styles = StyleSheet.create({
   radio: { width: 26, height: 26, borderRadius: 13, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   badge: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6 },
   priceCol: { alignItems: 'flex-end', maxWidth: '45%' },
+  priceColStacked: { alignItems: 'flex-start', maxWidth: '100%' },
   price: { fontSize: 22, fontWeight: '700' },
-  trialRow: { flexDirection: 'row', alignItems: 'center', minHeight: 56, paddingHorizontal: 16, borderRadius: radius.list, borderCurve: 'continuous' },
+  trialRow: { flexDirection: 'row', alignItems: 'center', minHeight: 56, paddingHorizontal: 16, paddingVertical: 12, gap: 12, borderRadius: radius.list, borderCurve: 'continuous' },
+  // The native iOS Switch defaults to alignSelf:flex-start; keep it centered with wrapped labels.
+  switch: { alignSelf: 'center', flexShrink: 0 },
   incHeader: { marginTop: 26, marginBottom: 7, paddingHorizontal: 16 },
   incCard: { borderRadius: radius.list, borderCurve: 'continuous', overflow: 'hidden' },
   incRow: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, paddingVertical: 12, minHeight: 52 },
   sep: { height: StyleSheet.hairlineWidth, marginLeft: 60 },
   reassure: { marginTop: 16, paddingHorizontal: 12 },
   footer: { borderTopWidth: StyleSheet.hairlineWidth, paddingHorizontal: space.margin, paddingTop: 12, gap: 6 },
+  inlineFooter: { paddingHorizontal: 0, marginTop: 16 },
   terms: { paddingHorizontal: 8 },
   links: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', columnGap: 16 },
   link: { minHeight: minTouch, justifyContent: 'center' },

@@ -17,6 +17,7 @@ import { useT } from '@/i18n';
 import { analytics } from '@/services/analytics';
 import { useIsPro } from '@/services/entitlements';
 import { haptics } from '@/services/haptics';
+import { refreshReminders } from '@/features/app/lifecycle';
 import { scheduleRemeasureReminder } from '@/services/notifications';
 import { useSettings } from '@/state/settings';
 import { minTouch, space, useTheme } from '@/theme';
@@ -282,6 +283,7 @@ export default function ResultScreen() {
               disabled={!!remeasureAt}
               onPress={async () => {
                 const ok = await scheduleRemeasureReminder();
+                if (ok) await refreshReminders();
                 if (ok) showBanner({ title: t('result.remindSet'), subtitle: t('result.remindSetSub'), icon: 'bell' });
               }}
             />

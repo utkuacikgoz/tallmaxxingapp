@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { addDays, computeStreak, habitScore, type DayLog, type HabitScore, type StreakResult } from '@tallsoon/engine';
 import { habits as allHabits, type HabitCategory } from '@tallsoon/content';
 
+import { refreshReminders } from '@/features/app/lifecycle';
 import { db } from '@/db/client';
 import { habitsRepo } from '@/db/repo';
 import { habitChecks } from '@/db/schema';
@@ -54,6 +55,7 @@ export type TickOutcome = 'none' | 'streak' | 'allDone';
 /** Ticks or unticks a habit. Returns the milestone this tick reached, for the banner. */
 export async function setHabit(childId: string, day: string, key: string, done: boolean, before: number, total: number): Promise<TickOutcome> {
   await habitsRepo.set(childId, day, key, done);
+  void refreshReminders().catch(() => undefined);
   if (!done) return 'none';
   analytics.track('habit_checked');
   const after = before + 1;

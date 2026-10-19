@@ -4,6 +4,8 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { HeightUnit, ReferenceId, WeightUnit } from '@tallsoon/engine';
 
+import type { ReminderLedger } from '@/services/reminder-plan';
+
 import { AppConfig } from '@/config/app-config';
 import { zustandStorage } from './storage';
 
@@ -27,6 +29,8 @@ export interface SettingsState {
   reminders: Reminders;
   /** Free users' single 3-month re-measure reminder. */
   remeasureReminderAt: string | null;
+  reminderLedger: ReminderLedger[];
+  reminderTrial: { endsAt: string; price: string } | null;
   resultVariant: 'honest' | 'soft';
   softPaywallShown: boolean;
   diet: { vegetarian: boolean; dairyFree: boolean };
@@ -65,6 +69,8 @@ const initial = (): Omit<SettingsState, 'set' | 'reset'> => ({
   activeChildId: null,
   reminders: { bedtime: true, morning: true, checkin: true, checkinMonths: 1, morningTime: '07:30' },
   remeasureReminderAt: null,
+  reminderLedger: [],
+  reminderTrial: null,
   resultVariant: AppConfig.defaultResultVariant,
   softPaywallShown: false,
   diet: { vegetarian: false, dairyFree: false },
