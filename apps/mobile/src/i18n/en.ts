@@ -737,7 +737,7 @@ const en = {
           heading: 'Information on tallsoon.pro',
           paragraphs: [
             'The website’s height calculator runs in your browser. Values you enter are held in page memory to calculate and display a result; the calculator does not send those values to TallSoon or save them in browser storage. Refreshing or closing the page clears the form.',
-            'Our hosting provider, Vercel, may process technical request information such as IP address, browser and device details, requested page, and request time to deliver and secure the website. Hosting logs and any security technologies are controlled by the provider and may be retained under the settings and plan used for hosting. TallSoon does not add website analytics or advertising trackers.',
+            'Our hosting provider, Vercel, may process technical request information such as IP address, browser and device details, requested page, and request time to deliver and secure the website. Hosting logs and any security technologies are controlled by the provider and may be retained under the settings and plan used for hosting. TallSoon uses Vercel Web Analytics to count page views: the page path (without query strings), referrer, country, and browser, operating system and device type. It uses no cookies, identifies visitors only by a hash that resets daily, and never receives anything typed into the calculator. TallSoon does not use advertising trackers.',
           ],
         },
         {
@@ -1100,8 +1100,8 @@ const en = {
     weeklyTerms: 'Billed $4.99 every week. Renews every week until you cancel. Cancel in your Apple App Store or Google Play account settings.',
     pricingDisclaimer: 'Prices and availability are subject to the final store listings. No purchase is needed for the calculator.',
     privacyTitle: 'Privacy',
-    privacyBody: 'The height calculator runs on your device. Measurements and birth details entered into the calculator are used only to produce the result in your browser. The site has no calculator account, analytics, or measurement submission endpoint.',
-    privacyServer: 'Like most websites, the hosting provider may process basic request data such as an IP address to deliver pages and protect the service. TallSoon has not configured a separate analytics or advertising tracker for this site.',
+    privacyBody: 'The height calculator runs on your device. Measurements and birth details entered into the calculator are used only to produce the result in your browser. The site has no calculator account or measurement submission endpoint, and calculator inputs are never sent to analytics.',
+    privacyServer: 'Like most websites, the hosting provider may process basic request data such as an IP address to deliver pages and protect the service. The site counts page views with cookieless Vercel Web Analytics (no calculator inputs, no query strings) and uses no advertising trackers.',
     privacyStorage: 'The calculator does not save entries to browser storage. Closing or refreshing the page clears the form.',
     privacyContact: 'For privacy questions, contact Bosphorus Elevate LLC at support@tallsoon.pro.',
     termsTitle: 'Terms of use',

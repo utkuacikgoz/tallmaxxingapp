@@ -1,4 +1,5 @@
 ---
+import Analytics from '@vercel/analytics/astro';
 import { Image, getImage } from 'astro:assets';
 import { copy } from '../lib/copy';
 import icon from '../assets/icon.png';
@@ -81,5 +82,10 @@ const favicon = await getImage({ src: icon, width: 48, height: 48, format: 'png'
         <small>{c.footerCopyright}</small>
       </div>
     </footer>
+    <!-- Page views only. Query strings are stripped so shared result links (/r?h=…) never send ranges. -->
+    <script is:inline>
+      window.webAnalyticsBeforeSend = (event) => ({ ...event, url: event.url.split(/[?#]/)[0] });
+    </script>
+    <Analytics />
   </body>
 </html>

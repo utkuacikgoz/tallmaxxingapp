@@ -13,6 +13,7 @@
   "dependencies": {
     "@tallsoon/engine": "workspace:*",
     "@tallsoon/reference": "workspace:*",
+    "@vercel/analytics": "2.0.1",
     "astro": "^7.4.0"
   },
   "devDependencies": {
