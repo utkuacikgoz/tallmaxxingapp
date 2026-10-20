@@ -16,6 +16,8 @@ const pageTitle = title.includes(copy.brand) ? title : `${title} · ${copy.brand
 const canonical = new URL(Astro.url.pathname, 'https://tallsoon.pro');
 const socialImage = new URL('/og-image.png', canonical);
 const c = copy.landing;
+// Vercel serves the analytics script at /_vercel/insights; elsewhere (CI, local preview) it would 404.
+const analyticsEnabled = process.env.VERCEL === '1';
 const favicon = await getImage({ src: icon, width: 48, height: 48, format: 'png' });
 ---
 <!doctype html>
@@ -83,9 +85,13 @@ const favicon = await getImage({ src: icon, width: 48, height: 48, format: 'png'
       </div>
     </footer>
     <!-- Page views only. Query strings are stripped so shared result links (/r?h=…) never send ranges. -->
-    <script is:inline>
-      window.webAnalyticsBeforeSend = (event) => ({ ...event, url: event.url.split(/[?#]/)[0] });
-    </script>
-    <Analytics />
+    {analyticsEnabled && (
+      <>
+        <script is:inline>
+          window.webAnalyticsBeforeSend = (event) => ({ ...event, url: event.url.split(/[?#]/)[0] });
+        </script>
+        <Analytics />
+      </>
+    )}
   </body>
 </html>
